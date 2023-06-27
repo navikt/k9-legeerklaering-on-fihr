@@ -104,7 +104,7 @@ jobs:
 #        uses: nais/deploy/actions/deploy@v1
 #        env:
 #          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: dev-gcp
+#          CLUSTER: prod-gcp
 #          RESOURCE: nais/naiserator.yml
-#          VARS: nais/dev-gcp.json
+#          VARS: nais/prod-gcp.json
 #          IMAGE: ${{ env.DOCKER_IMAGE }}:${{ steps.docker-tag.outputs.TAG }}
