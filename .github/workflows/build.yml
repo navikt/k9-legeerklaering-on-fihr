@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  workflow_call:
+    secrets:
+      READER_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hente kode
+        uses: actions/checkout@v3.3.0
+
+      - name: Sette opp Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
+
+      - name: Installere moduler
+        run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: Bygge kode
+        run: yarn build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: .next/
