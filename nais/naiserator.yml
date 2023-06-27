@@ -9,13 +9,13 @@ spec:
   image: {{ image }}
   port: 8080
   liveness:
-    path: health/isAlive
+    path: api/health/isAlive
     initialDelay: 20
     periodSeconds: 5
     timeout: 1
     failureThreshold: 10
   readiness:
-    path: health/isReady
+    path: api/health/isReady
     initialDelay: 20
     timeout: 1
   resources:
