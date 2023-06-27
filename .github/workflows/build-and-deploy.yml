@@ -92,7 +92,7 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/naiserator.yml
           VARS: nais/dev-gcp.json,
-          IMAGE: ${{ env.DOCKER_IMAGE }}:${{ steps.docker-tag.outputs.TAG }}
+          IMAGE: ${{ env.DOCKER_IMAGE }}:${{ needs.docker.outputs.TAG }}
 
 
 #  deploy-prod-gcp:
