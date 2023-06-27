@@ -91,7 +91,7 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/naiserator.yml
-          VARS: nais/dev-gcp.json,
+          VARS: nais/dev-gcp.json
           IMAGE: ${{ env.DOCKER_IMAGE }}:${{ needs.docker.outputs.TAG }}
 
 
