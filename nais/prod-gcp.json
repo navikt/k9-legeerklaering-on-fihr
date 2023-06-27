@@ -1,0 +1,13 @@
+{
+  "app": "k9-legeerklaering-on-fihr",
+  "namespace": "k9saksbehandling",
+  "team": "k9saksbehandling",
+  "minReplicas": "2",
+  "maxReplicas": "4",
+  "ingresses": [
+    "https://k9-legeerklaering.intern.nav.no"
+  ],
+  "env": {
+    "DIPS_API_URL": "https://api.dips.no"
+  }
+}
