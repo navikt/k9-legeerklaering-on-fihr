@@ -1,5 +1,8 @@
+const naviktTailwindPreset= require('@navikt/ds-tailwind')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  presets: [naviktTailwindPreset],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -14,5 +17,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: []
 }
