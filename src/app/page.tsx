@@ -1,7 +1,7 @@
 "use client";
 
 import "@navikt/ds-css";
-import { GuidePanel, Panel } from '@navikt/ds-react';
+import { GuidePanel } from '@navikt/ds-react';
 import Header from '@/app/components/Header';
 import React from 'react';
 import { FhirContextProvider } from "./context/FHIRContext";
@@ -15,9 +15,7 @@ export default function Home() {
             <GuidePanel className="m-12">
                 Her kan du registrere digitalt legeerklæring for pleiepenger sykt barn.
             </GuidePanel>
-            <Panel border>
-                <Legeerklaering/>
-            </Panel>
+            <Legeerklaering/>
         </FhirContextProvider>
     )
 }

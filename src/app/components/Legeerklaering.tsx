@@ -1,18 +1,23 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
+import { Panel } from '@navikt/ds-react';
 
 export default function Legeerklaering() {
-    const {patient} = useContext(FHIRContext);
+    const {patient, client} = useContext(FHIRContext);
 
     const patientName = patient?.name?.pop();
     return (
-        <div>
-            {patientName !== undefined && (
-                <div>
-                    <h1>Pasient data</h1>
-                    <p>{`${patientName.prefix ?? ""} ${patientName.family}, ${patientName.given?.pop()}`}</p>
-                </div>
+        <>
+            {client !== undefined && (
+                <Panel border>
+                    {patientName !== undefined && (
+                        <div>
+                            <h1>Pasient data</h1>
+                            <p>{`${patientName.prefix ?? ""} ${patientName.family}, ${patientName.given?.pop()}`}</p>
+                        </div>
+                    )}
+                </Panel>
             )}
-        </div>
+        </>
     );
 }
