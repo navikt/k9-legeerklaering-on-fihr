@@ -7,7 +7,7 @@ export default function Legeerklaering() {
 
     const patientName = patient?.name?.pop();
     return (
-        <>
+        <div>
             {client !== undefined && (
                 <Panel border>
                     {patientName !== undefined && (
@@ -18,6 +18,6 @@ export default function Legeerklaering() {
                     )}
                 </Panel>
             )}
-        </>
+        </div>
     );
 }

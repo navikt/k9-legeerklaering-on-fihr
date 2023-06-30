@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { FhirContextProvider } from '@/app/context/FHIRContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,8 +12,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}
-      </body>
+    <FhirContextProvider>
+        <body className={inter.className}>{children}</body>
+    </FhirContextProvider>
     </html>
   )
 }
