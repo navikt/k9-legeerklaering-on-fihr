@@ -1,36 +1,22 @@
-"use client";
 
-import { Dropdown, InternalHeader } from '@navikt/ds-react';
-import React, { useState } from 'react';
-import Client from 'fhirclient/lib/Client';
-import { oauth2 as SMART } from 'fhirclient';
-import { fhirclient } from 'fhirclient/lib/types';
+import { InternalHeader } from '@navikt/ds-react';
+import React, { useContext } from 'react';
+import { FHIRContext } from '@/app/context/FHIRContext';
 
 export default function Header() {
-    const [client, setClient] = useState<Client>(undefined!);
+    const {practitioner} = useContext(FHIRContext);
 
-    React.useEffect(() => {
-        SMART.ready()
-            .then(c => {
-                if (client === undefined) {
-                    setClient(c);
-                    console.log("client", c);
-                }
-            })
-    }, [])
-
+    const practitionerName = practitioner?.name?.pop();
     return (
         <header>
             <InternalHeader className="flex justify-between">
                 <InternalHeader.Title as="h1">Legeerklæring - pleiepenger sykt barn</InternalHeader.Title>
-                {client?.getUserId() && (
-                    <Dropdown>
-                        <InternalHeader.UserButton
-                            as={Dropdown.Toggle}
-                            name={client.getUserId() ?? "Ukjent"}
-                            className="ml-auto"
-                        />
-                    </Dropdown>
+                {practitionerName !== undefined && (
+                    <InternalHeader.User
+                        name={`${practitionerName.prefix ?? ""} ${practitionerName.family}, ${practitionerName.given?.pop()}`}
+                        description={`ID: ${practitioner?.id}`}
+                        className="ml-auto"
+                    />
                 )}
             </InternalHeader>
         </header>
