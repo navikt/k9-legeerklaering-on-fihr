@@ -1,11 +1,12 @@
 "use client";
 
 import "@navikt/ds-css";
-import { GuidePanel, Loader, Skeleton } from '@navikt/ds-react';
+import { ExpansionCard, Heading, Skeleton } from '@navikt/ds-react';
 import Header from '@/app/components/Header';
 import React, { useContext } from 'react';
 import { FHIRContext } from "./context/FHIRContext";
-import Legeerklaering from '@/app/components/Legeerklaering';
+import Legeerklaering from '@/app/components/legeerklaering/Legeerklaering';
+import { StethoscopeIcon } from '@navikt/aksel-icons';
 
 
 export default function Home() {
@@ -13,21 +14,47 @@ export default function Home() {
     return (
         <div>
             <Header/>
-            <div className="flex flex-col items-center">
+            <div className="mx-auto mt-16 max-w-4xl p-4 pb-32">
+                <Heading level="1" size="xlarge">Legeærklæring - pleiepenger sykt barn</Heading>
                 {client !== undefined && (
                     <>
-                        <GuidePanel className="m-12">
-                            Her kan du registrere digitalt legeerklæring for pleiepenger sykt barn.
-                        </GuidePanel>
+                        <ExpansionCard aria-label="om-legeerklæringen" className="mt-8 mb-8">
+                            <ExpansionCard.Header>
+                                <div className="flex items-center space-x-4">
+                                    <div className="text-6xl flex-shrink-0 grid place-content-center">
+                                        <StethoscopeIcon aria-hidden/>
+                                    </div>
+                                    <div>
+                                        <ExpansionCard.Title>
+                                            Om legeerklæringen
+                                        </ExpansionCard.Title>
+                                    </div>
+                                </div>
+                            </ExpansionCard.Header>
+                            <ExpansionCard.Content>
+                                <p>Legeerklæringen skal fylles ut av behandlende lege. Det er kun sykehusleger og leger
+                                    i
+                                    spesialisthelsetjenesten som kan skrive legeerklæring for pleiepenger for sykt
+                                    barn.</p>
+                                <br/>
+
+                                <p>NAV trenger tidsnære opplysninger for å behandle søknad om pleiepenger. Det innebærer
+                                    at
+                                    NAV trenger oppdaterte medisinske opplysninger for åvurdere om vilkårene for rett
+                                    til
+                                    pleiepenger er oppfylt. </p><br/>
+                            </ExpansionCard.Content>
+
+                        </ExpansionCard>
                         <Legeerklaering/>
                     </>
                 )}
                 {client === undefined && (
                     <div className="grid w-full gap-2 h-full">
-                        <Skeleton variant="text" width="60%" />
-                        <Skeleton variant="circle" width={60} height={60} />
-                        <Skeleton variant="rectangle" width="100%" height={30} />
-                        <Skeleton variant="rounded" width="100%" height={40} />
+                        <Skeleton variant="text" width="60%"/>
+                        <Skeleton variant="circle" width={60} height={60}/>
+                        <Skeleton variant="rectangle" width="100%" height={30}/>
+                        <Skeleton variant="rounded" width="100%" height={40}/>
                     </div>
                 )}
             </div>
