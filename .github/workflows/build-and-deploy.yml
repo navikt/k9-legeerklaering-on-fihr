@@ -54,9 +54,6 @@ jobs:
           name: dist
           path: ./.next
 
-      - name: Installere moduler
-        run: npm ci
-
       - name: Login to docker
         uses: docker/login-action@v2.1.0
         with:
