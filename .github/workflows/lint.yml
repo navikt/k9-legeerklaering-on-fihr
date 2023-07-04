@@ -21,8 +21,8 @@ jobs:
           scope: '@navikt'
 
       - name: Installere moduler
-        run: yarn install --immutable
+        run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Sjekke opp mot Lint-regler
-        run: yarn run lint
+        run: npm run lint

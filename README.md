@@ -4,11 +4,11 @@
 
 ### install dependencies
 ```bash
-yarn install --immutable
+npm ci
  ```
 ### Run the development server
 ```bash
-yarn run dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
