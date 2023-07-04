@@ -53,7 +53,7 @@ jobs:
           path: ./.next
 
       - name: Installere moduler
-        run: yarn install --immutable
+        run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
