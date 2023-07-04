@@ -673,10 +673,10 @@
     react-day-picker "8.3.4"
     react-modal "3.15.1"
 
-"@navikt/ds-tailwind@^4.4.2":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-tailwind/-/ds-tailwind-4.5.0.tgz#a1a370a33ab14ee5df759aa18433597cb6909a57"
-  integrity sha512-V9WpqgNqnvP6zGVZX4TDVhPlnhHslBXKA14QKR7YBOEBYs1STjE79oLHwHdjpnHpI/6KhpWtnR6iN73gXJRf3w==
+"@navikt/ds-tailwind@^4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-tailwind/-/ds-tailwind-4.6.1.tgz#0856e1c31dcfc035125ed75da3165e044ee5002e"
+  integrity sha512-YH1O6z8v61rgZs10aA3bIR/31cBSai7skenQM4sDwYx0kgBp5uQd3YxN7/ixNnf16QXRIVKuybu1bH8dgAU+Qw==
 
 "@navikt/ds-tokens@^4.4.2":
   version "4.5.0"
