@@ -33,6 +33,8 @@ jobs:
     if: startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/heads/main') || github.event.deployment.payload.triggered # Build and push docker if branch is either main or dev-*
     runs-on: ubuntu-latest
     needs: [ lint, test, build ]
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
     outputs:
       TAG: ${{ steps.docker-tag.outputs.TAG }}
     steps:
@@ -54,8 +56,6 @@ jobs:
 
       - name: Installere moduler
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Login to docker
         uses: docker/login-action@v2.1.0
