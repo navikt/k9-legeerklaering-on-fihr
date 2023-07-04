@@ -678,10 +678,10 @@
   resolved "https://registry.yarnpkg.com/@navikt/ds-tailwind/-/ds-tailwind-4.5.0.tgz#a1a370a33ab14ee5df759aa18433597cb6909a57"
   integrity sha512-V9WpqgNqnvP6zGVZX4TDVhPlnhHslBXKA14QKR7YBOEBYs1STjE79oLHwHdjpnHpI/6KhpWtnR6iN73gXJRf3w==
 
-"@navikt/ds-tokens@^4.4.2":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@navikt/ds-tokens/-/ds-tokens-4.5.0.tgz#fe35094bce286f1699df5cb1c23dcccda6c64030"
-  integrity sha512-hZ//8aJDXhyg8Tjhf421eCJ0ghAg+P9iDMpF7HFSACcl+sFVsenvVVUd3/LT12wwIIDWxRTMGYXQt5gTJ6rVuA==
+"@navikt/ds-tokens@^4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@navikt/ds-tokens/-/ds-tokens-4.6.1.tgz#d48f7c8bad197297dfb59b20685a6843f41f269e"
+  integrity sha512-pBX5MLUpFftvRGZcbS9wWoMmzeH/iLNvOdMPvMbYTBnU7LUjU3XHLByfc0ogb2eT3gRevpD4DbjzWVx65ZzULw==
 
 "@next/env@13.4.7":
   version "13.4.7"
