@@ -14,6 +14,7 @@ import {
 import { useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
+import { IAddress } from '@ahryman40k/ts-fhir-types/lib/R4';
 
 type Periode = {
     fra: Date;
@@ -98,6 +99,16 @@ export default function Legeerklaering() {
 
     const legensNavn = practitioner?.name?.pop();
     const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
+
+    const adresse: IAddress | undefined = practitioner?.address?.pop();
+    const gate = adresse?.line?.pop();
+    const postnummer = adresse?.postalCode;
+    const poststed = adresse?.city;
+
+    console.log(
+        "--> pasient", patient,
+        "--> lege", practitioner,
+    );
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
@@ -244,35 +255,37 @@ export default function Legeerklaering() {
                         label={tekst("legeerklaering.felles.navn.label")}
                         {...register("sykehus.navn", {required: true})}
                         error={errors.sykehus?.navn ? tekst("legeerklaering.om-sykuset.navn.paakrevd") : ""}
-                        className="w-1/2"
+                        className="w-3/4"
                     />
                     <TextField
                         label={tekst("legeerklaering.om-sykuset.tlf.label")}
                         type="tel"
                         {...register("sykehus.telefon", {required: true})}
                         error={errors.sykehus?.telefon ? tekst("legeerklaering.om-sykuset.tlf.paakrevd") : ""}
-                        className="w-1/3"
+                        className="w-1/4"
                     /></div>
                 <TextField
                     label={tekst("legeerklaering.om-sykuset.gateadresse.label")}
+                    defaultValue={gate}
                     {...register("sykehus.adresse.gate", {required: true})}
                     error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykuset.gateadresse.paakrevd") : ""}
-                    className="mb-4"
+                    className="mb-4 w-3/4"
                 />
                 <div className="flex mb-4 space-x-4">
                     <TextField
                         label={tekst("legeerklaering.om-sykuset.postnummer.label")}
+                        defaultValue={postnummer}
+                        type="number"
                         {...register("sykehus.adresse.postnummer", {required: true})}
                         error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykuset.postnummer.paakrevd") : ""}
                         className="w-1/4"
                     />
                     <TextField
                         label={tekst("legeerklaering.om-sykuset.poststed.label")}
-                        type="number"
-                        max={9999}
+                        defaultValue={poststed}
                         {...register("sykehus.adresse.poststed", {required: true})}
                         error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykuset.poststed.paakrevd") : ""}
-                        className="w-1/2"
+                        className="w-3/4"
                     />
                 </div>
             </Section>
