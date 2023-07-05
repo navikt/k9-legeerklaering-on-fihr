@@ -34,7 +34,7 @@ export const LegeerklaeringTekster = {
     "legeerklaering.innleggelse-varighet.tom.label": "Til og med dato",
     "legeerklaering.innleggelse-varighet.tom.paakrevd": "Til og med dato er påkrevd",
 
-    "legeerklaering.om-legen.tittel": "Perioder for innleggelser på helseinstitusjon",
+    "legeerklaering.om-legen.tittel": "Opplysninger om legen",
     "legeerklaering.om-legen.navn.paakrevd": "Legens navn er påkrevd",
     "legeerklaering.om-legen.hrp-nummer.label": "HRP-nummer",
     "legeerklaering.om-legen.hrp-nummer.paakrevd": "Legens HRP-nummer er påkrevd",
