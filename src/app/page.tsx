@@ -15,7 +15,7 @@ export default function Home() {
         <div>
             <Header/>
             <div className="mx-auto mt-16 max-w-4xl p-4 pb-32">
-                <Heading level="1" size="xlarge">Legeærklæring - pleiepenger sykt barn</Heading>
+                <Heading level="1" size="xlarge">Legeerklæring - pleiepenger sykt barn</Heading>
                 {client !== undefined && (
                     <>
                         <ExpansionCard aria-label="om-legeerklæringen" className="mt-8 mb-8">

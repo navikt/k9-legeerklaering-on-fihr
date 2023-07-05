@@ -12,8 +12,8 @@ import {
     useDatepicker
 } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
-import { LegeerklaeringTekster } from '@/app/components/legeerklaering/legeerklaering-tekster';
 import Section from '@/app/components/Section';
+import { tekst } from '@/utils/tekster';
 
 type Periode = {
     fra: Date;
@@ -55,14 +55,14 @@ type LegeerklaeringFormData = {
     hoveddiagnosekode: string;
     bidiagnoser: Diagnose[];
     tilsynPeriode: Periode;
+    innleggelsesPeriode: Periode;
     lege: Lege;
     sykehus: Sykehus;
 };
 
 export default function Legeerklaering() {
     const {datepickerProps, inputProps} = useDatepicker({
-        today: new Date(),
-        onDateChange: console.log,
+        today: new Date()
     });
 
     const {patient, practitioner, client} = useContext(FHIRContext);
@@ -98,68 +98,64 @@ export default function Legeerklaering() {
 
     const legensNavn = practitioner?.name?.pop();
     const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
-    console.log("Legeerklæring", practitioner);
+
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
             <Section
-                title={LegeerklaeringTekster['legeerklaering.om-barnet.tittel']}
-                helpText="Hvis barnet ikke har fått fødselsnummer enda skriver du inn barnets fødselsdato."
+                title={tekst("legeerklaering.om-barnet.tittel")}
+                helpText={tekst("legeerklaering.om-barnet.hjelpetekst")}
             >
                 <TextField
-                    label="Barnets navn"
+                    label={tekst("legeerklaering.felles.navn.label")}
                     defaultValue={pasientensFulleNavn}
                     {...register("barn.navn", {required: true})}
-                    error={errors.barn?.navn ? "Barnets navn er påkrevd" : ""}
+                    error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 />
                 <div className="mb-4">
                     <TextField
-                        label="Barnets fødselsnummer"
+                        label={tekst("legeerklaering.om-barnet.ident.label")}
                         {...register("barn.ident", {required: true})}
-                        error={errors.barn?.ident ? "Barnets norske ID er påkrevd" : ""}
+                        error={errors.barn?.ident ? tekst("legeerklaering.om-barnet.ident.paakrevd") : ""}
                         className="w-1/2 mb-4"
                     />
                     <DatePicker{...datepickerProps}>
                         <DatePicker.Input
+                            label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
                             {...inputProps}
                             {...register("barn.foedselsdato", {required: true})}
-                            error={errors.barn?.foedselsdato ? "Fra og med dato er påkrevd" : ""}
-                            label="Barnets fødselsdato"
+                            error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
                     </DatePicker>
                 </div>
             </Section>
 
             <Section
-                title="Legens vurdering av barnets tilstand"
-                helpText="Her skal du gi din vurdering av barnets nåværende tilstand og funksjonsnivå. I tillegg må du gi en vurdering av forventet tilstand i perioden barnet har behov for tilsyn og pleie."
+                title={tekst("legeerklaering.legens-vurdering.tittel")}
+                helpText={tekst("legeerklaering.legens-vurdering.hjelpetekst")}
             >
-                <ReadMore size='small' header="Beskrivelse av barnets medisinske tilstand og funksjonsnivå"
-                          className="mb-8">
-                    1. Beskriv barnets medisinske tilstand og funksjonsnivå. Gi en vurdering av behovet for kontinuerlig
-                    tilsyn og pleie, samt sykdomsutvikling og prognose.<br/><br/>
-                    2. Gi en vurdering av om det er behov én eller to personer samtidig for å pleie og/eller ha tilsyn
-                    med barnet når barnet er hjemme.<br/><br/>
-                    Merk: Hvis pasienten er over 18 må du gi en vurdering av om pasienten er utviklingshemmet og svært
-                    alvorlig eller livstruende syk.
+                <ReadMore
+                    size='small'
+                    header={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
+                    className="mb-8">
+                    {tekst("legeerklaering.legens-vurdering.les-mer.tekst")}
                 </ReadMore>
                 <Textarea
-                    label="Vurdering av barnets tilstand"
+                    label={tekst("legeerklaering.legens-vurdering.label")}
                     {...register("legensVurdering", {required: true})}
-                    error={errors.legensVurdering ? "Legens vurdering er påkrevd" : ""}
+                    error={errors.legensVurdering ? tekst("legeerklaering.legens-vurdering.paakrevd") : ""}
                     minRows={10}
                 />
             </Section>
 
             <Section
-                title="Diagnose"
-                helpText="Benytt kodene fra ICD-10 hvis det er satt en diagnose. Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke skrive noe her."
+                title={tekst("legeerklaering.diagnose.tittel")}
+                helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
             >
-
                 <Select
-                    label="Hoveddiagnosekode"
+                    label={tekst("legeerklaering.diagnose.hoveddiagnose.label")}
                     {...register("hoveddiagnosekode", {required: true})}
-                    error={errors.hoveddiagnosekode ? "Hoveddiagnosekode er påkrevd" : ""}
+                    error={errors.hoveddiagnosekode ? tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 >
                     {diagnoser.map((diagnose) => (
@@ -169,9 +165,9 @@ export default function Legeerklaering() {
                 </Select>
 
                 <Select
-                    label="Bidiagnose(r)"
+                    label={tekst("legeerklaering.diagnose.bidiagnoser.label")}
                     {...register("bidiagnoser", {required: true})}
-                    error={errors.bidiagnoser ? "Bidiagnose(r) er påkrevd" : ""}
+                    error={errors.bidiagnoser ? tekst("legeerklaering.diagnose.bidiagnoser.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 >
                     {diagnoser.map((diagnose) => (
@@ -182,60 +178,62 @@ export default function Legeerklaering() {
             </Section>
 
             <Section
-                title="Forventet varighet på tilsyns- og pleiebehovet"
-                helpText="Her skal du sette en dato på hvor langt fram i tid du forventer at barnet har behov for kontinuerlig tilsyn og pleie. Hvis du er usikker på varigheten setter du en dato så langt frem i tid som du er sikker på per nå."
+                title={tekst("legeerklaering.tilsyn-varighet.tittel")}
+                helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <div className="flex space-x-4">
                     <DatePicker{...datepickerProps}>
                         <DatePicker.Input
+                            label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
                             {...inputProps}
                             {...register("tilsynPeriode.fra", {required: true})}
-                            error={errors.tilsynPeriode?.fra ? "Fra og med dato er påkrevd" : ""}
-                            label="Fra og med dato"
+                            error={errors.tilsynPeriode?.fra ? tekst("legeerklaering.tilsyn-varighet.fom.paakrevd") : ""}
                         />
                     </DatePicker>
                     <DatePicker{...datepickerProps}>
                         <DatePicker.Input
+                            label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
                             {...inputProps}
                             {...register("tilsynPeriode.til", {required: true})}
-                            error={errors.tilsynPeriode?.til ? "Til og med dato er påkrevd" : ""}
-                            label="Til og med dato"/>
+                            error={errors.tilsynPeriode?.til ? tekst("legeerklaering.tilsyn-varighet.tom.paakrevd") : ""}
+                        />
                     </DatePicker>
                 </div>
             </Section>
 
-            <Section title="Perioder for innleggelser på helseinstitusjon">
+            <Section title={tekst("legeerklaering.innleggelse-varighet.tittel")}>
                 <div className="flex space-x-4">
                     <DatePicker{...datepickerProps}>
                         <DatePicker.Input
+                            label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
                             {...inputProps}
                             {...register("tilsynPeriode.fra", {required: true})}
-                            error={errors.tilsynPeriode?.fra ? "Fra og med dato er påkrevd" : ""}
-                            label="Fra og med dato"
+                            error={errors.innleggelsesPeriode?.fra ? tekst("legeerklaering.innleggelse-varighet.fom.paakrevd") : ""}
                         />
                     </DatePicker>
                     <DatePicker{...datepickerProps}>
                         <DatePicker.Input
+                            label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
                             {...inputProps}
                             {...register("tilsynPeriode.til", {required: true})}
-                            error={errors.tilsynPeriode?.til ? "Til og med dato er påkrevd" : ""}
-                            label="Til og med dato"/>
+                            error={errors.tilsynPeriode?.til ? tekst("legeerklaering.innleggelse-varighet.tom.paakrevd") : ""}
+                        />
                     </DatePicker>
                 </div>
             </Section>
 
-            <Section title="Opplysninger om legen">
+            <Section title={tekst("legeerklaering.om-legen.tittel")}>
                 <TextField
                     defaultValue={legensFulleNavn}
-                    label="Legens navn"
+                    label={tekst("legeerklaering.felles.navn.label")}
                     {...register("lege.navn", {required: true})}
-                    error={errors.lege?.navn ? "Legens navn er påkrevd" : ""}
+                    error={errors.lege?.navn ? tekst("legeerklaering.om-legen.navn.paakrevd") : ""}
                     className="mb-4 w-1/2"
                 />
                 <TextField
-                    label="Legens HRP-nummer"
+                    label={tekst("legeerklaering.om-legen.hrp-nummer.label")}
                     {...register("lege.hrpNummer", {required: true})}
-                    error={errors.lege?.hrpNummer ? "Legens HRP-nummer er påkrevd" : ""}
+                    error={errors.lege?.hrpNummer ? tekst("legeerklaering.om-legen.hrp-nummer.paakrevd") : ""}
                     className="w-1/2"
                 />
             </Section>
@@ -243,37 +241,37 @@ export default function Legeerklaering() {
             <Section title="Opplysninger om sykehuset">
                 <div className="flex space-x-4 mb-4">
                     <TextField
-                        label="Sykehusets navn"
+                        label={tekst("legeerklaering.felles.navn.label")}
                         {...register("sykehus.navn", {required: true})}
-                        error={errors.sykehus?.navn ? "Sykehusets navn er påkrevd" : ""}
+                        error={errors.sykehus?.navn ? tekst("legeerklaering.om-sykuset.navn.paakrevd") : ""}
                         className="w-1/2"
                     />
                     <TextField
-                        label="Sykehusets telefonnummer"
+                        label={tekst("legeerklaering.om-sykuset.tlf.label")}
                         type="tel"
                         {...register("sykehus.telefon", {required: true})}
-                        error={errors.sykehus?.telefon ? "Sykehusets telefonnummer er påkrevd" : ""}
+                        error={errors.sykehus?.telefon ? tekst("legeerklaering.om-sykuset.tlf.paakrevd") : ""}
                         className="w-1/3"
                     /></div>
                 <TextField
-                    label="Gateadresse"
+                    label={tekst("legeerklaering.om-sykuset.gateadresse.label")}
                     {...register("sykehus.adresse.gate", {required: true})}
-                    error={errors.sykehus?.adresse?.gate ? "Gateadresse er påkrevd" : ""}
+                    error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykuset.gateadresse.paakrevd") : ""}
                     className="mb-4"
                 />
                 <div className="flex mb-4 space-x-4">
                     <TextField
-                        label="Postnummer"
+                        label={tekst("legeerklaering.om-sykuset.postnummer.label")}
                         {...register("sykehus.adresse.postnummer", {required: true})}
-                        error={errors.sykehus?.adresse?.postnummer ? "Postnummer er påkrevd" : ""}
+                        error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykuset.postnummer.paakrevd") : ""}
                         className="w-1/4"
                     />
                     <TextField
-                        label="Poststed"
+                        label={tekst("legeerklaering.om-sykuset.poststed.label")}
                         type="number"
                         max={9999}
                         {...register("sykehus.adresse.poststed", {required: true})}
-                        error={errors.sykehus?.adresse?.poststed ? "Poststed er påkrevd" : ""}
+                        error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykuset.poststed.paakrevd") : ""}
                         className="w-1/2"
                     />
                 </div>

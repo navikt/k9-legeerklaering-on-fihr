@@ -7,7 +7,7 @@ export default function Header() {
     const {practitioner} = useContext(FHIRContext);
 
     const practitionerName = practitioner?.name?.pop();
-    console.log("Header", practitioner);
+
     return (
         <header>
             <InternalHeader className="flex justify-between">
