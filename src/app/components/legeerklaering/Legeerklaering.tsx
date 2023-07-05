@@ -123,7 +123,7 @@ export default function Legeerklaering() {
         handleSubmit,
         formState: {errors},
         watch
-    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValues})
+    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValues}) // TODO: Fix default value
 
     const diagnoser: Diagnose[] = [
         {
@@ -156,6 +156,7 @@ export default function Legeerklaering() {
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
                     {...register("barn.navn", {required: true})}
+                    defaultValue={pasientensFulleNavn}
                     error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 />
@@ -170,6 +171,7 @@ export default function Legeerklaering() {
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
                             {...barnFoedselsInputProps}
+                            {...register("barn.foedselsdato", {required: true})}
                             value={barnFoedselsInputProps.value}
                             error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
@@ -234,12 +236,14 @@ export default function Legeerklaering() {
                             <DatePicker.Input
                                 label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
                                 {...tilsynFraInputProps}
+                                {...register("tilsynPeriode.fra", {required: true})}
                                 value={tilsynFraInputProps.value}
                                 error={errors.tilsynPeriode?.fra ? tekst("legeerklaering.tilsyn-varighet.fom.paakrevd") : ""}
                             />
                             <DatePicker.Input
                                 label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
                                 {...tilsynTilInputProps}
+                                {...register("tilsynPeriode.til", {required: true})}
                                 value={tilsynTilInputProps.value}
                                 error={errors.tilsynPeriode?.til ? tekst("legeerklaering.tilsyn-varighet.tom.paakrevd") : ""}
                             />
@@ -255,12 +259,14 @@ export default function Legeerklaering() {
                             <DatePicker.Input
                                 label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
                                 {...innleggelseFraInputProps}
+                                {...register("innleggelsesPeriode.fra", {required: true})}
                                 value={innleggelseFraInputProps.value}
                                 error={errors.innleggelsesPeriode?.fra ? tekst("legeerklaering.innleggelse-varighet.fom.paakrevd") : ""}
                             />
                             <DatePicker.Input
                                 label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
                                 {...innleggelseTilInputProps}
+                                {...register("innleggelsesPeriode.til", {required: true})}
                                 value={innleggelseTilInputProps.value}
                                 error={errors.innleggelsesPeriode?.til ? tekst("legeerklaering.innleggelse-varighet.tom.paakrevd") : ""}
                             />
