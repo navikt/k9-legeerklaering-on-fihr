@@ -80,8 +80,8 @@ export default function Legeerklaering() {
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
-            setValue('tilsynPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
-            setValue('tilsynPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.from !== undefined) setValue('tilsynPeriode.fra', dato?.from, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.to !== undefined) setValue('tilsynPeriode.til', dato?.to, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
         }
     });
 
@@ -93,8 +93,8 @@ export default function Legeerklaering() {
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
-            setValue('innleggelsesPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
-            setValue('innleggelsesPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.from !== undefined)setValue('innleggelsesPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.to !== undefined) setValue('innleggelsesPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
         }
     });
 
