@@ -9,7 +9,7 @@ import {
     Select,
     Textarea,
     TextField,
-    useDatepicker
+    useDatepicker, useRangeDatepicker
 } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
@@ -62,17 +62,68 @@ type LegeerklaeringFormData = {
 };
 
 export default function Legeerklaering() {
-    const {datepickerProps, inputProps} = useDatepicker({
-        today: new Date()
+    const {
+        datepickerProps: barnFoedselDatepickerProps,
+        inputProps: barnFoedselsInputProps
+    } = useDatepicker({
+        today: new Date(),
+        onDateChange: (dato) => {
+            setValue('barn.foedselsdato', dato!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+        }
+    });
+
+    const {
+        datepickerProps: tilsynDatepickerProps,
+        fromInputProps: tilsynFraInputProps,
+        toInputProps: tilsynTilInputProps,
+        selectedRange: valgtTilsynPeriode
+    } = useRangeDatepicker({
+        today: new Date(),
+        onRangeChange: (dato) => {
+            setValue('tilsynPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            setValue('tilsynPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+        }
+    });
+
+    const {
+        datepickerProps: innleggelseDatepickerProps,
+        fromInputProps: innleggelseFraInputProps,
+        toInputProps: innleggelseTilInputProps,
+        selectedRange: valgtInnleggelsePeriode
+    } = useRangeDatepicker({
+        today: new Date(),
+        onRangeChange: (dato) => {
+            setValue('innleggelsesPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            setValue('innleggelsesPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+        }
     });
 
     const {patient, practitioner, client} = useContext(FHIRContext);
+    const pasientNavn = patient?.name?.pop();
+    const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
+
+    const legensNavn = practitioner?.name?.pop();
+    const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
+
+    const adresse: IAddress | undefined = practitioner?.address?.pop();
+    const gate = adresse?.line?.pop();
+    const postnummer = adresse?.postalCode;
+    const poststed = adresse?.city;
+
+    const defaultFormValues = {
+        barn: {
+            navn: pasientensFulleNavn,
+            ident: patient?.identifier?.pop()?.value || ""
+        },
+    }
 
     const {
         register,
+        setValue,
         handleSubmit,
-        formState: {errors}
-    } = useForm<LegeerklaeringFormData>();
+        formState: {errors},
+        watch
+    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValues})
 
     const diagnoser: Diagnose[] = [
         {
@@ -89,26 +140,12 @@ export default function Legeerklaering() {
         }
     ];
 
+    console.log("form errors", errors);
+    console.log("form watch", watch());
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        console.log("Form data", data);
     };
-
-    const pasientNavn = patient?.name?.pop();
-    const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
-
-    const legensNavn = practitioner?.name?.pop();
-    const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
-
-    const adresse: IAddress | undefined = practitioner?.address?.pop();
-    const gate = adresse?.line?.pop();
-    const postnummer = adresse?.postalCode;
-    const poststed = adresse?.city;
-
-    console.log(
-        "--> pasient", patient,
-        "--> lege", practitioner,
-    );
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
@@ -118,7 +155,6 @@ export default function Legeerklaering() {
             >
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={pasientensFulleNavn}
                     {...register("barn.navn", {required: true})}
                     error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
@@ -130,11 +166,11 @@ export default function Legeerklaering() {
                         error={errors.barn?.ident ? tekst("legeerklaering.om-barnet.ident.paakrevd") : ""}
                         className="w-1/2 mb-4"
                     />
-                    <DatePicker{...datepickerProps}>
+                    <DatePicker{...barnFoedselDatepickerProps}>
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
-                            {...inputProps}
-                            {...register("barn.foedselsdato", {required: true})}
+                            {...barnFoedselsInputProps}
+                            value={barnFoedselsInputProps.value}
                             error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
                     </DatePicker>
@@ -193,42 +229,42 @@ export default function Legeerklaering() {
                 helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <div className="flex space-x-4">
-                    <DatePicker{...datepickerProps}>
-                        <DatePicker.Input
-                            label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
-                            {...inputProps}
-                            {...register("tilsynPeriode.fra", {required: true})}
-                            error={errors.tilsynPeriode?.fra ? tekst("legeerklaering.tilsyn-varighet.fom.paakrevd") : ""}
-                        />
-                    </DatePicker>
-                    <DatePicker{...datepickerProps}>
-                        <DatePicker.Input
-                            label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
-                            {...inputProps}
-                            {...register("tilsynPeriode.til", {required: true})}
-                            error={errors.tilsynPeriode?.til ? tekst("legeerklaering.tilsyn-varighet.tom.paakrevd") : ""}
-                        />
+                    <DatePicker {...tilsynDatepickerProps} onChange={(event) => console.log(event)}>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            <DatePicker.Input
+                                label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
+                                {...tilsynFraInputProps}
+                                value={tilsynFraInputProps.value}
+                                error={errors.tilsynPeriode?.fra ? tekst("legeerklaering.tilsyn-varighet.fom.paakrevd") : ""}
+                            />
+                            <DatePicker.Input
+                                label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
+                                {...tilsynTilInputProps}
+                                value={tilsynTilInputProps.value}
+                                error={errors.tilsynPeriode?.til ? tekst("legeerklaering.tilsyn-varighet.tom.paakrevd") : ""}
+                            />
+                        </div>
                     </DatePicker>
                 </div>
             </Section>
 
             <Section title={tekst("legeerklaering.innleggelse-varighet.tittel")}>
                 <div className="flex space-x-4">
-                    <DatePicker{...datepickerProps}>
-                        <DatePicker.Input
-                            label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
-                            {...inputProps}
-                            {...register("tilsynPeriode.fra", {required: true})}
-                            error={errors.innleggelsesPeriode?.fra ? tekst("legeerklaering.innleggelse-varighet.fom.paakrevd") : ""}
-                        />
-                    </DatePicker>
-                    <DatePicker{...datepickerProps}>
-                        <DatePicker.Input
-                            label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
-                            {...inputProps}
-                            {...register("tilsynPeriode.til", {required: true})}
-                            error={errors.tilsynPeriode?.til ? tekst("legeerklaering.innleggelse-varighet.tom.paakrevd") : ""}
-                        />
+                    <DatePicker {...innleggelseDatepickerProps}>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            <DatePicker.Input
+                                label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
+                                {...innleggelseFraInputProps}
+                                value={innleggelseFraInputProps.value}
+                                error={errors.innleggelsesPeriode?.fra ? tekst("legeerklaering.innleggelse-varighet.fom.paakrevd") : ""}
+                            />
+                            <DatePicker.Input
+                                label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
+                                {...innleggelseTilInputProps}
+                                value={innleggelseTilInputProps.value}
+                                error={errors.innleggelsesPeriode?.til ? tekst("legeerklaering.innleggelse-varighet.tom.paakrevd") : ""}
+                            />
+                        </div>
                     </DatePicker>
                 </div>
             </Section>
