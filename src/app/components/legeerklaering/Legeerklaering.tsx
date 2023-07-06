@@ -62,10 +62,14 @@ type LegeerklaeringFormData = {
 
 export default function Legeerklaering() {
     const {patient, practitioner, client} = useContext(FHIRContext);
+
     const [pasientensFulleNavn, setPasientensFulleNavn] = useState<string>();
     const [pasientensFoedselsdag, setPasientensFoedselsdag] = useState<Date>();
     const [pasientensIdent, setPasientensIdent] = useState<string>();
+
     const [legensFulleNavn, setLegensFulleNavn] = useState<string>();
+    const [legensId, setLegensId] = useState<string>();
+
     const [gate, setGate] = useState<string>();
     const [postnummer, setPostnummer] = useState<string>();
     const [poststed, setPoststed] = useState<string>();
@@ -75,8 +79,21 @@ export default function Legeerklaering() {
             navn: pasientensFulleNavn,
             ident: pasientensIdent,
             foedselsdato: pasientensFoedselsdag
-        }
-    };
+        },
+        lege: {
+            navn: legensFulleNavn,
+            hrpNummer: legensId
+        },
+        sykehus: {
+            adresse: {
+                gate: gate,
+                postnummer: postnummer,
+                poststed: poststed
+            }
+        },
+        legensVurdering: "",
+    } as LegeerklaeringFormData;
+
     const {
         register,
         setValue,
@@ -87,36 +104,44 @@ export default function Legeerklaering() {
 
     useEffect(() => {
         if (!patient || !practitioner) {
-            console.log('Data is not yet available');
+            if (!patient) console.log('Patient data is not yet available');
+            if (!practitioner) console.log('Practitioner data is not yet available');
         } else {
-            console.log('Data is available', {patient, practitioner, client});
-            setDefaultFormFelter(patient, practitioner);
+            console.log('Patient and practitioner data are available', { patient, practitioner, client });
+            setDefaultPasientFormFelter(patient);
+            setDefaultLegeFelter(practitioner);
         }
+
     }, [patient, practitioner, client]);
 
 
-    const setDefaultFormFelter = (patient: IPatient, practitioner: IPractitioner) => {
+    const setDefaultPasientFormFelter = (patient: IPatient) => {
         const pasientNavn = patient?.name?.pop();
         const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
-        const pasientensIdent = patient?.identifier?.pop()?.value || "";
-        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
+        setPasientensFulleNavn(pasientensFulleNavn);
 
+        const pasientensIdent = patient?.identifier?.pop()?.value || "";
+        setPasientensIdent(pasientensIdent);
+
+        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
+        setPasientensFoedselsdag(pasientensFoedselsdag);
+        console.log("pasientensFoedselsdag", pasientensFoedselsdag?.toISOString());
+    }
+    const setDefaultLegeFelter = (practitioner: IPractitioner) => {
         const legensNavn = practitioner?.name?.pop();
-        const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
+        if (legensNavn) {
+            setLegensFulleNavn(`${legensNavn?.family}, ${legensNavn?.given?.pop()}`);
+        }
+        setLegensId(practitioner.id)
 
         const adresse: IAddress | undefined = practitioner?.address?.pop();
         const gate = adresse?.line?.pop();
-        const postnummer = adresse?.postalCode;
-        const poststed = adresse?.city;
-
-        setPasientensFulleNavn(pasientensFulleNavn);
-        setPasientensIdent(pasientensIdent);
-        console.log("pasientensFoedselsdag", pasientensFoedselsdag?.toISOString());
-        setPasientensFoedselsdag(pasientensFoedselsdag);
-
-        setLegensFulleNavn(legensFulleNavn);
         setGate(gate);
+
+        const postnummer = adresse?.postalCode;
         setPostnummer(postnummer);
+
+        const poststed = adresse?.city;
         setPoststed(poststed);
     }
 
@@ -196,11 +221,6 @@ export default function Legeerklaering() {
         console.log("Form data", data);
     };
 
-    const formatDate = (date: Date | undefined) => {
-        if (!date) return undefined;
-        return date.toDateString().split('T')[0];
-    }
-
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
             <Section
@@ -232,7 +252,6 @@ export default function Legeerklaering() {
                         {/*TODO: Fiks default value. Barnets fødselsdato er ikke valgt i datepicker.*/}
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
-                            defaultValue={formatDate(pasientensFoedselsdag)}
                             {...barnFoedselsInputProps}
                             {...register("barn.foedselsdato", {required: true, value: pasientensFoedselsdag})}
                             value={barnFoedselsInputProps.value}
@@ -340,15 +359,22 @@ export default function Legeerklaering() {
 
             <Section title={tekst("legeerklaering.om-legen.tittel")}>
                 <TextField
-                    defaultValue={legensFulleNavn}
                     label={tekst("legeerklaering.felles.navn.label")}
-                    {...register("lege.navn", {required: true})}
+                    defaultValue={defaultFormValue.lege.navn}
+                    {...register("lege.navn", {
+                        required: true,
+                        value: legensFulleNavn
+                    })}
                     error={errors.lege?.navn ? tekst("legeerklaering.om-legen.navn.paakrevd") : ""}
                     className="mb-4 w-1/2"
                 />
                 <TextField
                     label={tekst("legeerklaering.om-legen.hrp-nummer.label")}
-                    {...register("lege.hrpNummer", {required: true})}
+                    defaultValue={defaultFormValue.lege.hrpNummer}
+                    {...register("lege.hrpNummer", {
+                        required: true,
+                        value: legensId
+                    })}
                     error={errors.lege?.hrpNummer ? tekst("legeerklaering.om-legen.hrp-nummer.paakrevd") : ""}
                     className="w-1/2"
                 />
