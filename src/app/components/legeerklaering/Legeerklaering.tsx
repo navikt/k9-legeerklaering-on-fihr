@@ -53,7 +53,6 @@ type LegeerklaeringFormData = {
     barn: Barn;
     legensVurdering: string;
     hoveddiagnose: Diagnose;
-    hoveddiagnosekode: string;
     bidiagnoser: Diagnose[];
     tilsynPeriode: Periode;
     innleggelsesPeriode: Periode;
@@ -203,8 +202,8 @@ export default function Legeerklaering() {
             >
                 <Select
                     label={tekst("legeerklaering.diagnose.hoveddiagnose.label")}
-                    {...register("hoveddiagnosekode", {required: true})}
-                    error={errors.hoveddiagnosekode ? tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd") : ""}
+                    {...register("hoveddiagnose", {required: true})}
+                    error={errors.hoveddiagnose ? tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 >
                     {diagnoser.map((diagnose) => (
