@@ -1,12 +1,15 @@
 
 import { InternalHeader } from '@navikt/ds-react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
 
 export default function Header() {
     const {practitioner} = useContext(FHIRContext);
-
     const practitionerName = practitioner?.name?.pop();
+
+    useEffect(() => {
+
+    }, [practitionerName])
 
     return (
         <header>

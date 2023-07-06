@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
 import {
     BodyLong,
@@ -14,7 +14,7 @@ import {
 import { useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
-import { IAddress } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { IAddress, IPatient, IPractitioner } from '@ahryman40k/ts-fhir-types/lib/R4';
 
 type Periode = {
     fra: Date;
@@ -61,13 +61,73 @@ type LegeerklaeringFormData = {
 };
 
 export default function Legeerklaering() {
+    const {patient, practitioner, client} = useContext(FHIRContext);
+    const [pasientensFulleNavn, setPasientensFulleNavn] = useState<string>();
+    const [pasientensFoedselsdag, setPasientensFoedselsdag] = useState<Date>();
+    const [pasientensIdent, setPasientensIdent] = useState<string>();
+    const [legensFulleNavn, setLegensFulleNavn] = useState<string>();
+    const [gate, setGate] = useState<string>();
+    const [postnummer, setPostnummer] = useState<string>();
+    const [poststed, setPoststed] = useState<string>();
+
+    const defaultFormValue = {
+        barn: {
+            navn: pasientensFulleNavn,
+            ident: pasientensIdent,
+            foedselsdato: pasientensFoedselsdag
+        }
+    };
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        formState: {errors},
+        watch
+    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValue})
+
+    useEffect(() => {
+        if (!patient || !practitioner) {
+            console.log('Data is not yet available');
+        } else {
+            console.log('Data is available', {patient, practitioner, client});
+            setDefaultFormFelter(patient, practitioner);
+        }
+    }, [patient, practitioner, client]);
+
+
+    const setDefaultFormFelter = (patient: IPatient, practitioner: IPractitioner) => {
+        const pasientNavn = patient?.name?.pop();
+        const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
+        const pasientensIdent = patient?.identifier?.pop()?.value || "";
+        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
+
+        const legensNavn = practitioner?.name?.pop();
+        const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
+
+        const adresse: IAddress | undefined = practitioner?.address?.pop();
+        const gate = adresse?.line?.pop();
+        const postnummer = adresse?.postalCode;
+        const poststed = adresse?.city;
+
+        setPasientensFulleNavn(pasientensFulleNavn);
+        setPasientensIdent(pasientensIdent);
+        console.log("pasientensFoedselsdag", pasientensFoedselsdag?.toISOString());
+        setPasientensFoedselsdag(pasientensFoedselsdag);
+
+        setLegensFulleNavn(legensFulleNavn);
+        setGate(gate);
+        setPostnummer(postnummer);
+        setPoststed(poststed);
+    }
+
     const {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
     } = useDatepicker({
-        today: new Date(),
+        defaultSelected: pasientensFoedselsdag,
         onDateChange: (dato) => {
-            setValue('barn.foedselsdato', dato!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            setValue('barn.foedselsdato', dato!!, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
+            setPasientensFoedselsdag(dato);
         }
     });
 
@@ -79,8 +139,16 @@ export default function Legeerklaering() {
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
-            if (dato?.from !== undefined) setValue('tilsynPeriode.fra', dato?.from, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
-            if (dato?.to !== undefined) setValue('tilsynPeriode.til', dato?.to, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.from !== undefined) setValue('tilsynPeriode.fra', dato?.from, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true
+            })
+            if (dato?.to !== undefined) setValue('tilsynPeriode.til', dato?.to, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true
+            })
         }
     });
 
@@ -92,37 +160,19 @@ export default function Legeerklaering() {
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
-            if (dato?.from !== undefined)setValue('innleggelsesPeriode.fra', dato?.from!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
-            if (dato?.to !== undefined) setValue('innleggelsesPeriode.til', dato?.to!!, { shouldDirty: true, shouldTouch: true, shouldValidate: true })
+            if (dato?.from !== undefined) setValue('innleggelsesPeriode.fra', dato?.from!!, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true
+            })
+            if (dato?.to !== undefined) setValue('innleggelsesPeriode.til', dato?.to!!, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true
+            })
         }
     });
 
-    const {patient, practitioner, client} = useContext(FHIRContext);
-    const pasientNavn = patient?.name?.pop();
-    const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
-
-    const legensNavn = practitioner?.name?.pop();
-    const legensFulleNavn = legensNavn !== undefined ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
-
-    const adresse: IAddress | undefined = practitioner?.address?.pop();
-    const gate = adresse?.line?.pop();
-    const postnummer = adresse?.postalCode;
-    const poststed = adresse?.city;
-
-    const defaultFormValues = {
-        barn: {
-            navn: pasientensFulleNavn,
-            ident: patient?.identifier?.pop()?.value || ""
-        },
-    }
-
-    const {
-        register,
-        setValue,
-        handleSubmit,
-        formState: {errors},
-        watch
-    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValues}) // TODO: Fix default value
 
     const diagnoser: Diagnose[] = [
         {
@@ -146,6 +196,11 @@ export default function Legeerklaering() {
         console.log("Form data", data);
     };
 
+    const formatDate = (date: Date | undefined) => {
+        if (!date) return undefined;
+        return date.toDateString().split('T')[0];
+    }
+
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
             <Section
@@ -154,23 +209,32 @@ export default function Legeerklaering() {
             >
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    {...register("barn.navn", {required: true})}
-                    defaultValue={pasientensFulleNavn}
+                    defaultValue={defaultFormValue.barn.navn}
+                    {...register("barn.navn", {
+                        required: true,
+                        value: pasientensFulleNavn
+                    })}
                     error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 />
                 <div className="mb-4">
                     <TextField
                         label={tekst("legeerklaering.om-barnet.ident.label")}
-                        {...register("barn.ident", {required: true})}
+                        defaultValue={defaultFormValue.barn.ident}
+                        {...register("barn.ident", {
+                            required: true,
+                            value: pasientensIdent
+                        })}
                         error={errors.barn?.ident ? tekst("legeerklaering.om-barnet.ident.paakrevd") : ""}
                         className="w-1/2 mb-4"
                     />
                     <DatePicker{...barnFoedselDatepickerProps}>
+                        {/*TODO: Fiks default value. Barnets fødselsdato er ikke valgt i datepicker.*/}
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
+                            defaultValue={formatDate(pasientensFoedselsdag)}
                             {...barnFoedselsInputProps}
-                            {...register("barn.foedselsdato", {required: true})}
+                            {...register("barn.foedselsdato", {required: true, value: pasientensFoedselsdag})}
                             value={barnFoedselsInputProps.value}
                             error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
