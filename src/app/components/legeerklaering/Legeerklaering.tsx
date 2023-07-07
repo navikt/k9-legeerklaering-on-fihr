@@ -1,15 +1,20 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
 import {
+    Accordion,
     BodyLong,
     Button,
     DatePicker,
+    Heading,
+    Ingress,
     Link,
+    Modal,
     ReadMore,
     Select,
     Textarea,
     TextField,
-    useDatepicker, useRangeDatepicker
+    useDatepicker,
+    useRangeDatepicker
 } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
@@ -25,6 +30,7 @@ type Diagnose = {
     kode: string;
     term: string;
 }
+
 
 type Barn = {
     navn: string;
@@ -62,6 +68,7 @@ type LegeerklaeringFormData = {
 
 export default function Legeerklaering() {
     const {patient, practitioner, client} = useContext(FHIRContext);
+    const [showModal, setShowModal] = useState(false);
     const [state, setState] = useState<LegeerklaeringFormData>({
         barn: {
             navn: "",
@@ -167,6 +174,35 @@ export default function Legeerklaering() {
 
     }, [patient, practitioner, client, setDefaultPasientFormFelter, setDefaultLegeFelter]);
 
+    /*
+    TODO: Fix react modal
+    * app-index.js:32 Warning: react-modal: App element is not defined.
+    * Please use `Modal.setAppElement(el)` or set `appElement={el}`.
+    * This is needed so screen readers don't see main content when modal is opened.
+    * It is not recommended, but you can opt-out by setting `ariaHideApp={false}`.
+    */
+    useEffect(() => {
+        if (document.getElementById('root')) {
+            Modal.setAppElement('#root');
+        }
+    }, []);
+
+    const [selectedDiagnose, setSelectedDiagnose] = useState<Diagnose | undefined>();
+    const hoveddiagnose = watch('hoveddiagnose');
+
+    const [selectedBidiagnose, setSelectedBidiagnose] = useState<Diagnose | undefined>();
+    const bidiagnoser = watch('bidiagnoser');
+    useEffect(() => {
+        if (typeof hoveddiagnose === 'string') {
+            const diagnose = diagnoser.find(d => d.kode === hoveddiagnose);
+            setSelectedDiagnose(diagnose);
+        }
+        if (typeof bidiagnoser === 'string') {
+            const diagnose = diagnoser.find(d => d.kode === bidiagnoser);
+            setSelectedBidiagnose(diagnose);
+        }
+    }, [hoveddiagnose, bidiagnoser]);
+
     const {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
@@ -239,7 +275,9 @@ export default function Legeerklaering() {
     console.log("form watch", watch());
 
     const onSubmit = (data: any) => {
-        console.log("Form data", data);
+        const registrertSkjema = data as LegeerklaeringFormData;
+        setShowModal(true)
+        console.log("Form data", registrertSkjema);
     };
 
     return <form onSubmit={handleSubmit(onSubmit)}>
@@ -297,13 +335,19 @@ export default function Legeerklaering() {
             >
                 <Select
                     label={tekst("legeerklaering.diagnose.hoveddiagnose.label")}
-                    {...register("hoveddiagnose", {required: true})}
+                    {...register("hoveddiagnose", {
+                        required: true,
+                        onChange: (value: any) => {
+                            console.log("hoveddiagnose", value.target.value);
+                        }
+                    })}
                     error={errors.hoveddiagnose ? tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 >
                     {diagnoser.map((diagnose) => (
-                        <option key={diagnose.kode}
-                                value={diagnose.term}>{diagnose.kode} - {diagnose.term}</option>
+                        <option key={diagnose.kode} value={diagnose.kode}>
+                            {diagnose.kode} - {diagnose.term}
+                        </option>
                     ))}
                 </Select>
 
@@ -314,8 +358,9 @@ export default function Legeerklaering() {
                     className="w-1/2 mb-4"
                 >
                     {diagnoser.map((diagnose) => (
-                        <option key={diagnose.kode}
-                                value={diagnose.term}>{diagnose.kode} - {diagnose.term}</option>
+                        <option key={diagnose.kode} value={diagnose.kode}>
+                            {diagnose.kode} - {diagnose.term}
+                        </option>
                     ))}
                 </Select>
             </Section>
@@ -391,43 +436,149 @@ export default function Legeerklaering() {
                     <TextField
                         label={tekst("legeerklaering.felles.navn.label")}
                         {...register("sykehus.navn", {required: true})}
-                        error={errors.sykehus?.navn ? tekst("legeerklaering.om-sykuset.navn.paakrevd") : ""}
+                        error={errors.sykehus?.navn ? tekst("legeerklaering.om-sykehuset.navn.paakrevd") : ""}
                         className="w-3/4"
                     />
                     <TextField
-                        label={tekst("legeerklaering.om-sykuset.tlf.label")}
+                        label={tekst("legeerklaering.om-sykehuset.tlf.label")}
                         type="tel"
                         {...register("sykehus.telefon", {required: true})}
-                        error={errors.sykehus?.telefon ? tekst("legeerklaering.om-sykuset.tlf.paakrevd") : ""}
+                        error={errors.sykehus?.telefon ? tekst("legeerklaering.om-sykehuset.tlf.paakrevd") : ""}
                         className="w-1/4"
                     /></div>
                 <TextField
-                    label={tekst("legeerklaering.om-sykuset.gateadresse.label")}
+                    label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
                     defaultValue={state.sykehus.adresse.gate}
                     {...register("sykehus.adresse.gate", {required: true})}
-                    error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykuset.gateadresse.paakrevd") : ""}
+                    error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykehuset.gateadresse.paakrevd") : ""}
                     className="mb-4 w-3/4"
                 />
                 <div className="flex mb-4 space-x-4">
                     <TextField
-                        label={tekst("legeerklaering.om-sykuset.postnummer.label")}
+                        label={tekst("legeerklaering.om-sykehuset.postnummer.label")}
                         defaultValue={state.sykehus.adresse.postnummer}
                         type="number"
                         {...register("sykehus.adresse.postnummer", {required: true})}
-                        error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykuset.postnummer.paakrevd") : ""}
+                        error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykehuset.postnummer.paakrevd") : ""}
                         className="w-1/4"
                     />
                     <TextField
-                        label={tekst("legeerklaering.om-sykuset.poststed.label")}
+                        label={tekst("legeerklaering.om-sykehuset.poststed.label")}
                         defaultValue={state.sykehus.adresse.poststed}
                         {...register("sykehus.adresse.poststed", {required: true})}
-                        error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykuset.poststed.paakrevd") : ""}
+                        error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykehuset.poststed.paakrevd") : ""}
                         className="w-3/4"
                     />
                 </div>
             </Section>
 
             <div className="ml-4 mt-4 mb-16"><Button type="submit">Registrer</Button></div>
+
+
+            <Modal
+                open={showModal}
+                aria-label="Modal demo"
+                onClose={() => setShowModal((x) => !x)}
+                aria-labelledby="modal-heading"
+            >
+                <Modal.Content>
+                    <Heading spacing level="1" size="large" id="modal-heading">Oppsummering</Heading>
+
+                    <Accordion>
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.om-barnet.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
+                                <Ingress spacing>{watch("barn.navn")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-barnet.ident.label")}</Heading>
+                                <Ingress spacing>{watch("barn.ident")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-barnet.foedselsdato.label")}</Heading>
+                                <Ingress spacing>{watch("barn.foedselsdato")?.toDateString()}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst('legeerklaering.legens-vurdering.tittel')}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.legens-vurdering.label")}</Heading>
+                                <Ingress spacing>{watch("legensVurdering")}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.diagnose.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.diagnose.hoveddiagnose.label")}</Heading>
+                                <Ingress spacing>{`${selectedDiagnose?.kode} - ${selectedDiagnose?.term}`}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.diagnose.bidiagnoser.label")}</Heading>
+                                <Ingress spacing>{`${selectedBidiagnose?.kode} - ${selectedBidiagnose?.term}`}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.tilsyn-varighet.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5" size="xsmall">Periode</Heading>
+                                <Ingress
+                                    spacing>{`${valgtTilsynPeriode?.from?.toDateString()} - ${valgtTilsynPeriode?.to?.toDateString()}`}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.innleggelse-varighet.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5" size="xsmall">Periode</Heading>
+                                <Ingress
+                                    spacing>{`${valgtInnleggelsePeriode?.from?.toDateString()} - ${valgtInnleggelsePeriode?.to?.toDateString()}`}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.om-legen.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
+                                <Ingress spacing>{watch("lege.navn")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-legen.hrp-nummer.label")}</Heading>
+                                <Ingress spacing>{watch("lege.hrpNummer")}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+
+                        <Accordion.Item defaultOpen>
+                            <Accordion.Header>{tekst("legeerklaering.om-sykehuset.tittel")}</Accordion.Header>
+                            <Accordion.Content>
+                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
+                                <Ingress spacing>{watch("sykehus.navn")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.tlf.label")}</Heading>
+                                <Ingress spacing>{watch("sykehus.telefon")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.gateadresse.label")}</Heading>
+                                <Ingress spacing>{watch("sykehus.adresse.gate")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.postnummer.label")}</Heading>
+                                <Ingress spacing>{watch("sykehus.adresse.postnummer")}</Ingress>
+
+                                <Heading level="5"
+                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.poststed.label")}</Heading>
+                                <Ingress spacing>{watch("sykehus.adresse.poststed")}</Ingress>
+                            </Accordion.Content>
+                        </Accordion.Item>
+                    </Accordion>
+                </Modal.Content>
+            </Modal>
 
             <Section title="Kontakt oss">
                 <BodyLong>
