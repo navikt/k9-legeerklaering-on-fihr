@@ -2,10 +2,14 @@ import { InternalHeader } from '@navikt/ds-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
 
+type HeaderState = {
+    practitionerName: string | undefined;
+    practitionerId: string | undefined;
+}
+
 export default function Header() {
     const {practitioner, client} = useContext(FHIRContext);
-    const [practitionerName, setPractitionerName] = useState<string>()
-    const [practitionerId, setPractitionerId] = useState<string>()
+    const [headerState, setHeaderState] = useState<HeaderState>()
 
     useEffect(() => {
         if (!practitioner) {
@@ -13,21 +17,24 @@ export default function Header() {
         } else {
             console.log('Data is available', {practitioner});
             const name = practitioner?.name?.pop();
+            console.log('1. Legens navn', {name});
             if (name) {
-                setPractitionerName(`${name.prefix ?? ""} ${name.family}, ${name.given?.pop()}`)
+                setHeaderState({
+                    practitionerName: `${name.prefix ?? ""} ${name.family}, ${name.given?.pop()}`,
+                    practitionerId: practitioner?.id
+                })
             }
-            setPractitionerId(practitioner?.id)
         }
-    }, [practitioner, practitionerName, practitionerId])
+    }, [practitioner, headerState])
 
     return (
         <header>
             <InternalHeader className="flex justify-between">
                 <InternalHeader.Title as="h1">Legeerklæring - pleiepenger sykt barn</InternalHeader.Title>
-                {practitionerName !== undefined && (
+                {headerState?.practitionerName !== undefined && (
                     <InternalHeader.User
-                        name={practitionerName}
-                        description={`ID: ${practitionerId}`}
+                        name={headerState.practitionerName}
+                        description={`ID: ${headerState.practitionerId}`}
                         className="ml-auto"
                     />
                 )}

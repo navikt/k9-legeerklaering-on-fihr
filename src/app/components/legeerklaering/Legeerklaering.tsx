@@ -52,7 +52,7 @@ type Sykehus = {
 type LegeerklaeringFormData = {
     barn: Barn;
     legensVurdering: string;
-    hoveddiagnose: Diagnose;
+    hoveddiagnose?: Diagnose;
     bidiagnoser: Diagnose[];
     tilsynPeriode: Periode;
     innleggelsesPeriode: Periode;
@@ -81,10 +81,7 @@ export default function Legeerklaering() {
                 poststed: "",
             }
         },
-        hoveddiagnose: {
-            kode: "",
-            term: ""
-        },
+        hoveddiagnose: undefined,
         bidiagnoser: [],
         legensVurdering: "",
         tilsynPeriode: {
@@ -97,7 +94,6 @@ export default function Legeerklaering() {
         }
     });
 
-    // Create a memoized version of setDefaultPasientFormFelter to avoid unnecessary re-renders.
     const setDefaultPasientFormFelter = useCallback((patient: IPatient) => {
         const pasientNavn = patient?.name?.pop();
         const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
@@ -175,7 +171,7 @@ export default function Legeerklaering() {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
     } = useDatepicker({
-        defaultSelected: state.barn.foedselsdato,
+        defaultSelected: patient?.birthDate ? new Date(patient?.birthDate) : undefined,
         onDateChange: (dato) => {
             setValue('barn.foedselsdato', dato!!, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
@@ -268,12 +264,9 @@ export default function Legeerklaering() {
                         className="w-1/2 mb-4"
                     />
                     <DatePicker{...barnFoedselDatepickerProps}>
-                        {/*TODO: Fiks default value. Barnets fødselsdato er ikke valgt i datepicker.*/}
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
                             {...barnFoedselsInputProps}
-                            {...register("barn.foedselsdato", {required: true})}
-                            value={barnFoedselsInputProps.value}
                             error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
                     </DatePicker>

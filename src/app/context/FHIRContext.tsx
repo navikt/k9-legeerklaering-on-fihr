@@ -10,6 +10,7 @@ interface IClientContext {
     patient: IPatient,
     practitioner: IPractitioner,
     error: Error,
+    loading: boolean
 }
 
 export const FHIRContext = createContext<Partial<IClientContext>>({});
@@ -19,6 +20,7 @@ export const FhirContextProvider = (props: any) => {
     const [patient, setPatient] = useState<IPatient>();
     const [practitioner, setPractitioner] = useState<IPractitioner>();
     const [error, setError] = useState<Error>();
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         async function fetchData() {
@@ -35,28 +37,34 @@ export const FhirContextProvider = (props: any) => {
                 // setting this!
                 completeInTarget: true
             });
-            const readyClient = await oauth2.ready();
-            setClient(readyClient);
 
-            if (readyClient) {
-                const [p, u] = await Promise.all([
-                    readyClient.patient.read(),
-                    readyClient.user.read()
-                ]);
-                setPatient(p as IPatient);
-                setPractitioner(u as IPractitioner);
-            }
+            await oauth2.ready()
+                .then(async c => {
+                    setClient(c);
+
+                    const [p, u] = await Promise.all([
+                        c.patient.read(),
+                        c.user.read()
+                    ]);
+                    setPatient(p as IPatient);
+                    setPractitioner(u as IPractitioner);
+                    setLoading(false);
+                }).catch(e => {
+                    setLoading(false);
+                    console.error(e);
+                    setError(e)
+                });
         }
 
         try {
             fetchData()
         } catch (e: Error | any) {
             setError(e)
+            setLoading(false);
         }
-
     }, []);
 
-    const context = {client, patient, practitioner, error} as IClientContext;
+    const context = {client, patient, practitioner, loading, error} as IClientContext;
 
     return (
         <>
