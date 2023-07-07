@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FHIRContext } from '@/app/context/FHIRContext';
 import {
     BodyLong,
@@ -29,7 +29,7 @@ type Diagnose = {
 type Barn = {
     navn: string;
     ident: string;
-    foedselsdato: Date;
+    foedselsdato?: Date;
 }
 
 type Lege = {
@@ -62,37 +62,94 @@ type LegeerklaeringFormData = {
 
 export default function Legeerklaering() {
     const {patient, practitioner, client} = useContext(FHIRContext);
-
-    const [pasientensFulleNavn, setPasientensFulleNavn] = useState<string>();
-    const [pasientensFoedselsdag, setPasientensFoedselsdag] = useState<Date>();
-    const [pasientensIdent, setPasientensIdent] = useState<string>();
-
-    const [legensFulleNavn, setLegensFulleNavn] = useState<string>();
-    const [legensId, setLegensId] = useState<string>();
-
-    const [gate, setGate] = useState<string>();
-    const [postnummer, setPostnummer] = useState<string>();
-    const [poststed, setPoststed] = useState<string>();
-
-    const defaultFormValue = {
+    const [state, setState] = useState<LegeerklaeringFormData>({
         barn: {
-            navn: pasientensFulleNavn,
-            ident: pasientensIdent,
-            foedselsdato: pasientensFoedselsdag
+            navn: "",
+            ident: "",
+            foedselsdato: undefined,
         },
         lege: {
-            navn: legensFulleNavn,
-            hrpNummer: legensId
+            hrpNummer: "",
+            navn: "",
         },
         sykehus: {
+            navn: "",
+            telefon: "",
             adresse: {
-                gate: gate,
-                postnummer: postnummer,
-                poststed: poststed
+                gate: "",
+                postnummer: "",
+                poststed: "",
             }
         },
+        hoveddiagnose: {
+            kode: "",
+            term: ""
+        },
+        bidiagnoser: [],
         legensVurdering: "",
-    } as LegeerklaeringFormData;
+        tilsynPeriode: {
+            fra: new Date(),
+            til: new Date(),
+        },
+        innleggelsesPeriode: {
+            fra: new Date(),
+            til: new Date(),
+        }
+    });
+
+    // Create a memoized version of setDefaultPasientFormFelter to avoid unnecessary re-renders.
+    const setDefaultPasientFormFelter = useCallback((patient: IPatient) => {
+        const pasientNavn = patient?.name?.pop();
+        const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
+        const pasientensIdent = patient?.identifier?.pop()?.value || "";
+        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
+
+        setValue('barn.navn', pasientensFulleNavn)
+        setValue('barn.ident', pasientensIdent)
+        setValue('barn.foedselsdato', pasientensFoedselsdag)
+
+        setState(prevState => ({
+            ...prevState,
+            barn: {
+                navn: pasientensFulleNavn,
+                foedselsdato: pasientensFoedselsdag,
+                ident: pasientensIdent,
+            },
+        }));
+    }, []);
+
+    const setDefaultLegeFelter = useCallback((practitioner: IPractitioner) => {
+        const legensNavn = practitioner?.name?.pop();
+        const legensFulleNavn = legensNavn ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
+        const legensId = practitioner.id || "";
+
+        const adresse: IAddress | undefined = practitioner?.address?.pop();
+        const gate = adresse?.line?.pop() || "";
+        const postnummer = adresse?.postalCode || "";
+        const poststed = adresse?.city || "";
+
+        setValue('lege.navn', legensFulleNavn)
+        setValue('lege.hrpNummer', legensId)
+        setValue('sykehus.adresse.gate', gate)
+        setValue('sykehus.adresse.postnummer', postnummer)
+        setValue('sykehus.adresse.poststed', poststed)
+
+        setState(prevState => ({
+            ...prevState,
+            lege: {
+                navn: legensFulleNavn,
+                hrpNummer: legensId,
+            },
+            sykehus: {
+                ...prevState.sykehus,
+                adresse: {
+                    gate: gate,
+                    postnummer: postnummer,
+                    poststed: poststed,
+                }
+            }
+        }));
+    }, []);
 
     const {
         register,
@@ -100,59 +157,27 @@ export default function Legeerklaering() {
         handleSubmit,
         formState: {errors},
         watch
-    } = useForm<LegeerklaeringFormData>({defaultValues: defaultFormValue})
+    } = useForm<LegeerklaeringFormData>()
 
     useEffect(() => {
         if (!patient || !practitioner) {
             if (!patient) console.log('Patient data is not yet available');
             if (!practitioner) console.log('Practitioner data is not yet available');
         } else {
-            console.log('Patient and practitioner data are available', { patient, practitioner, client });
+            console.log('Patient and practitioner data are available', {patient, practitioner, client});
             setDefaultPasientFormFelter(patient);
             setDefaultLegeFelter(practitioner);
         }
 
-    }, [patient, practitioner, client]);
-
-
-    const setDefaultPasientFormFelter = (patient: IPatient) => {
-        const pasientNavn = patient?.name?.pop();
-        const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
-        setPasientensFulleNavn(pasientensFulleNavn);
-
-        const pasientensIdent = patient?.identifier?.pop()?.value || "";
-        setPasientensIdent(pasientensIdent);
-
-        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
-        setPasientensFoedselsdag(pasientensFoedselsdag);
-        console.log("pasientensFoedselsdag", pasientensFoedselsdag?.toISOString());
-    }
-    const setDefaultLegeFelter = (practitioner: IPractitioner) => {
-        const legensNavn = practitioner?.name?.pop();
-        if (legensNavn) {
-            setLegensFulleNavn(`${legensNavn?.family}, ${legensNavn?.given?.pop()}`);
-        }
-        setLegensId(practitioner.id)
-
-        const adresse: IAddress | undefined = practitioner?.address?.pop();
-        const gate = adresse?.line?.pop();
-        setGate(gate);
-
-        const postnummer = adresse?.postalCode;
-        setPostnummer(postnummer);
-
-        const poststed = adresse?.city;
-        setPoststed(poststed);
-    }
+    }, [patient, practitioner, client, setDefaultPasientFormFelter, setDefaultLegeFelter]);
 
     const {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
     } = useDatepicker({
-        defaultSelected: pasientensFoedselsdag,
+        defaultSelected: state.barn.foedselsdato,
         onDateChange: (dato) => {
             setValue('barn.foedselsdato', dato!!, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
-            setPasientensFoedselsdag(dato);
         }
     });
 
@@ -229,22 +254,16 @@ export default function Legeerklaering() {
             >
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={defaultFormValue.barn.navn}
-                    {...register("barn.navn", {
-                        required: true,
-                        value: pasientensFulleNavn
-                    })}
+                    defaultValue={state.barn.navn}
+                    {...register("barn.navn", {required: true})}
                     error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
                 />
                 <div className="mb-4">
                     <TextField
                         label={tekst("legeerklaering.om-barnet.ident.label")}
-                        defaultValue={defaultFormValue.barn.ident}
-                        {...register("barn.ident", {
-                            required: true,
-                            value: pasientensIdent
-                        })}
+                        defaultValue={state.barn.ident}
+                        {...register("barn.ident", {required: true})}
                         error={errors.barn?.ident ? tekst("legeerklaering.om-barnet.ident.paakrevd") : ""}
                         className="w-1/2 mb-4"
                     />
@@ -253,7 +272,7 @@ export default function Legeerklaering() {
                         <DatePicker.Input
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
                             {...barnFoedselsInputProps}
-                            {...register("barn.foedselsdato", {required: true, value: pasientensFoedselsdag})}
+                            {...register("barn.foedselsdato", {required: true})}
                             value={barnFoedselsInputProps.value}
                             error={errors.barn?.foedselsdato ? tekst("legeerklaering.om-barnet.foedselsdato.paakrevd") : ""}
                         />
@@ -360,21 +379,15 @@ export default function Legeerklaering() {
             <Section title={tekst("legeerklaering.om-legen.tittel")}>
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={defaultFormValue.lege.navn}
-                    {...register("lege.navn", {
-                        required: true,
-                        value: legensFulleNavn
-                    })}
+                    defaultValue={state.lege.navn}
+                    {...register("lege.navn", {required: true})}
                     error={errors.lege?.navn ? tekst("legeerklaering.om-legen.navn.paakrevd") : ""}
                     className="mb-4 w-1/2"
                 />
                 <TextField
                     label={tekst("legeerklaering.om-legen.hrp-nummer.label")}
-                    defaultValue={defaultFormValue.lege.hrpNummer}
-                    {...register("lege.hrpNummer", {
-                        required: true,
-                        value: legensId
-                    })}
+                    defaultValue={state.lege.hrpNummer}
+                    {...register("lege.hrpNummer", {required: true})}
                     error={errors.lege?.hrpNummer ? tekst("legeerklaering.om-legen.hrp-nummer.paakrevd") : ""}
                     className="w-1/2"
                 />
@@ -397,7 +410,7 @@ export default function Legeerklaering() {
                     /></div>
                 <TextField
                     label={tekst("legeerklaering.om-sykuset.gateadresse.label")}
-                    defaultValue={gate}
+                    defaultValue={state.sykehus.adresse.gate}
                     {...register("sykehus.adresse.gate", {required: true})}
                     error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykuset.gateadresse.paakrevd") : ""}
                     className="mb-4 w-3/4"
@@ -405,7 +418,7 @@ export default function Legeerklaering() {
                 <div className="flex mb-4 space-x-4">
                     <TextField
                         label={tekst("legeerklaering.om-sykuset.postnummer.label")}
-                        defaultValue={postnummer}
+                        defaultValue={state.sykehus.adresse.postnummer}
                         type="number"
                         {...register("sykehus.adresse.postnummer", {required: true})}
                         error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykuset.postnummer.paakrevd") : ""}
@@ -413,7 +426,7 @@ export default function Legeerklaering() {
                     />
                     <TextField
                         label={tekst("legeerklaering.om-sykuset.poststed.label")}
-                        defaultValue={poststed}
+                        defaultValue={state.sykehus.adresse.poststed}
                         {...register("sykehus.adresse.poststed", {required: true})}
                         error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykuset.poststed.paakrevd") : ""}
                         className="w-3/4"
