@@ -22,7 +22,7 @@
     "autoprefixer": "10.4.14",
     "encoding": "^0.1.13",
     "eslint": "8.43.0",
-    "eslint-config-next": "13.4.7",
+    "eslint-config-next": "13.4.10",
     "fhirclient": "^2.5.2",
     "next": "13.4.7",
     "postcss": "8.4.24",
