@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { FHIRContext } from '@/app/context/FHIRContext';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {FHIRContext} from '@/app/context/FHIRContext';
 import {
     Accordion,
     BodyLong,
@@ -10,61 +10,18 @@ import {
     Link,
     Modal,
     ReadMore,
-    Select,
     Textarea,
     TextField,
     useDatepicker,
     useRangeDatepicker
 } from '@navikt/ds-react';
-import { useForm } from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
-import { tekst } from '@/utils/tekster';
-import { IAddress, IPatient, IPractitioner } from '@ahryman40k/ts-fhir-types/lib/R4';
-
-type Periode = {
-    fra: Date;
-    til: Date;
-}
-
-type Diagnose = {
-    kode: string;
-    term: string;
-}
-
-
-type Barn = {
-    navn: string;
-    ident: string;
-    foedselsdato?: Date;
-}
-
-type Lege = {
-    navn: string;
-    hrpNummer: string;
-}
-
-type Adresse = {
-    gate: string;
-    postnummer: string;
-    poststed: string;
-}
-
-type Sykehus = {
-    navn: string;
-    telefon: string;
-    adresse: Adresse;
-}
-
-type LegeerklaeringFormData = {
-    barn: Barn;
-    legensVurdering: string;
-    hoveddiagnose?: Diagnose;
-    bidiagnoser: Diagnose[];
-    tilsynPeriode: Periode;
-    innleggelsesPeriode: Periode;
-    lege: Lege;
-    sykehus: Sykehus;
-};
+import {tekst} from '@/utils/tekster';
+import {IAddress, IPatient, IPractitioner} from '@ahryman40k/ts-fhir-types/lib/R4';
+import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
+import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
+import {LegeerklaeringFormData} from "@/models/legeerklæring";
 
 export default function Legeerklaering() {
     const {patient, practitioner, client} = useContext(FHIRContext);
@@ -160,7 +117,37 @@ export default function Legeerklaering() {
         handleSubmit,
         formState: {errors},
         watch
-    } = useForm<LegeerklaeringFormData>()
+    } = useForm<LegeerklaeringFormData>({defaultValues: {
+        barn: {
+            navn: "",
+            ident: "",
+            foedselsdato: undefined,
+        },
+        lege: {
+            hrpNummer: "",
+            navn: "",
+        },
+        sykehus: {
+            navn: "",
+            telefon: "",
+            adresse: {
+                gate: "",
+                postnummer: "",
+                poststed: "",
+            }
+        },
+        hoveddiagnose: undefined,
+        bidiagnoser: [],
+        legensVurdering: "",
+        tilsynPeriode: {
+            fra: new Date(),
+            til: new Date(),
+        },
+        innleggelsesPeriode: {
+            fra: new Date(),
+            til: new Date(),
+        }
+    }})
 
     useEffect(() => {
         if (!patient || !practitioner) {
@@ -174,34 +161,9 @@ export default function Legeerklaering() {
 
     }, [patient, practitioner, client, setDefaultPasientFormFelter, setDefaultLegeFelter]);
 
-    /*
-    TODO: Fix react modal
-    * app-index.js:32 Warning: react-modal: App element is not defined.
-    * Please use `Modal.setAppElement(el)` or set `appElement={el}`.
-    * This is needed so screen readers don't see main content when modal is opened.
-    * It is not recommended, but you can opt-out by setting `ariaHideApp={false}`.
-    */
     useEffect(() => {
-        if (document.getElementById('root')) {
-            Modal.setAppElement('#root');
-        }
+        Modal.setAppElement(document.body);
     }, []);
-
-    const [selectedDiagnose, setSelectedDiagnose] = useState<Diagnose | undefined>();
-    const hoveddiagnose = watch('hoveddiagnose');
-
-    const [selectedBidiagnose, setSelectedBidiagnose] = useState<Diagnose | undefined>();
-    const bidiagnoser = watch('bidiagnoser');
-    useEffect(() => {
-        if (typeof hoveddiagnose === 'string') {
-            const diagnose = diagnoser.find(d => d.kode === hoveddiagnose);
-            setSelectedDiagnose(diagnose);
-        }
-        if (typeof bidiagnoser === 'string') {
-            const diagnose = diagnoser.find(d => d.kode === bidiagnoser);
-            setSelectedBidiagnose(diagnose);
-        }
-    }, [hoveddiagnose, bidiagnoser]);
 
     const {
         datepickerProps: barnFoedselDatepickerProps,
@@ -256,29 +218,17 @@ export default function Legeerklaering() {
     });
 
 
-    const diagnoser: Diagnose[] = [
-        {
-            kode: "A00",
-            term: "Kolera"
-        },
-        {
-            kode: "A01",
-            term: "Tyfoid- og paratyfoidfeber"
-        },
-        {
-            kode: "A02",
-            term: "Andre salmonellose"
-        }
-    ];
-
-    console.log("form errors", errors);
-    console.log("form watch", watch());
+    // console.log("form errors", errors);
+    // console.log("form watch", watch());
 
     const onSubmit = (data: any) => {
         const registrertSkjema = data as LegeerklaeringFormData;
         setShowModal(true)
         console.log("Form data", registrertSkjema);
     };
+
+    const hoveddiagnose = watch('hoveddiagnose')
+    const bidiagnoser = watch('bidiagnoser')
 
     return <form onSubmit={handleSubmit(onSubmit)}>
         <>
@@ -333,36 +283,11 @@ export default function Legeerklaering() {
                 title={tekst("legeerklaering.diagnose.tittel")}
                 helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
             >
-                <Select
-                    label={tekst("legeerklaering.diagnose.hoveddiagnose.label")}
-                    {...register("hoveddiagnose", {
-                        required: true,
-                        onChange: (value: any) => {
-                            console.log("hoveddiagnose", value.target.value);
-                        }
-                    })}
-                    error={errors.hoveddiagnose ? tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd") : ""}
-                    className="w-1/2 mb-4"
-                >
-                    {diagnoser.map((diagnose) => (
-                        <option key={diagnose.kode} value={diagnose.kode}>
-                            {diagnose.kode} - {diagnose.term}
-                        </option>
-                    ))}
-                </Select>
+                <HoveddiagnoseSelect value={hoveddiagnose} onChange={dk => setValue('hoveddiagnose', dk)} />
 
-                <Select
-                    label={tekst("legeerklaering.diagnose.bidiagnoser.label")}
-                    {...register("bidiagnoser", {required: true})}
-                    error={errors.bidiagnoser ? tekst("legeerklaering.diagnose.bidiagnoser.paakrevd") : ""}
-                    className="w-1/2 mb-4"
-                >
-                    {diagnoser.map((diagnose) => (
-                        <option key={diagnose.kode} value={diagnose.kode}>
-                            {diagnose.kode} - {diagnose.term}
-                        </option>
-                    ))}
-                </Select>
+                <div className="mt-4">
+                <BidiagnoseSelect value={bidiagnoser} onChange={(diagnosekoder) => setValue("bidiagnoser", diagnosekoder)} />
+                </div>
             </Section>
 
             <Section
@@ -515,11 +440,11 @@ export default function Legeerklaering() {
                             <Accordion.Content>
                                 <Heading level="5"
                                          size="xsmall">{tekst("legeerklaering.diagnose.hoveddiagnose.label")}</Heading>
-                                <Ingress spacing>{`${selectedDiagnose?.kode} - ${selectedDiagnose?.term}`}</Ingress>
+                                <Ingress spacing>{`${state.hoveddiagnose?.code} - ${state.hoveddiagnose?.text}`}</Ingress>
 
                                 <Heading level="5"
                                          size="xsmall">{tekst("legeerklaering.diagnose.bidiagnoser.label")}</Heading>
-                                <Ingress spacing>{`${selectedBidiagnose?.kode} - ${selectedBidiagnose?.term}`}</Ingress>
+                                <Ingress spacing>TODO bidiagnose liste</Ingress>
                             </Accordion.Content>
                         </Accordion.Item>
 

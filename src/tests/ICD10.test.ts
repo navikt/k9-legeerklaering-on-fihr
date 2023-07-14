@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import {Diagnosekode, diagnosekoder, searchDiagnosekoder} from "@/app/diagnosekoder/api/ICD10";
+import {Diagnosekode, diagnosekoder, searchDiagnosekoder} from "@/app/api/diagnosekoder/ICD10";
 
 const a001: Diagnosekode = {code: 'A001', text: "Kolera som skyldes Vibrio cholerae 01, biovar eltor"};
 const v4n4r: Diagnosekode = {code: 'V4n4r', text: "Tr.uly bil;skole m.v;Annen aktivitet"};
