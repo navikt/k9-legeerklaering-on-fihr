@@ -1,6 +1,6 @@
 "use client"
 
-import {Alert, Button, Search, Table} from "@navikt/ds-react";
+import {Alert, Button, Loader, Search, Table} from "@navikt/ds-react";
 import {Diagnosekode} from "@/app/api/diagnosekoder/ICD10";
 import {
     ForwardedRef,
@@ -17,6 +17,8 @@ import {ArrowRightIcon, ChevronDownDoubleIcon} from '@navikt/aksel-icons';
 
 import diagnosekoderCss from './diagnosekoder.module.css';
 import debounce, {AbortedDebounce} from "@/utils/debounce";
+
+import dkCss from './diagnosekoder.module.css';
 
 interface DiagnosekoderProp {
     readonly diagnosekoder: Diagnosekode[];
@@ -68,6 +70,7 @@ const FetchDiagnosekoderErrorAlert = ({error}: {error: Error}) => {
 
 export interface DiagnosekodeTableProps extends DiagnosekoderProp, OnSelectedDiagnose {
     onKeyDown?(event: KeyboardEvent<HTMLTableElement>): void;
+    readonly isLoading?: boolean;
 }
 
 export interface DiagnosekodeTableMethods {
@@ -91,7 +94,9 @@ export interface DiagnosekodeTableMethods {
     focusPrevious(): void;
 }
 
-const DiagnosekodeTable = forwardRef(({diagnosekoder, onSelectedDiagnose, onKeyDown}: DiagnosekodeTableProps, ref: ForwardedRef<DiagnosekodeTableMethods>) => {
+const DiagnosekodeTable = forwardRef(({diagnosekoder, onSelectedDiagnose, onKeyDown, isLoading}: DiagnosekodeTableProps, ref: ForwardedRef<DiagnosekodeTableMethods>) => {
+    const [isSlowLoading, setIsSlowLoading] = useState(false)
+
     // The ref and css selector stuff here depends on the html structure of the subcomponents used (DiagnosekodeRows, ...).
     // So we must take care not to break this. Could probably avoid the fragility by pushing using more refs and imperative
     // handlers further down the component chain, but don't want to spend time doing that atm.
@@ -120,19 +125,36 @@ const DiagnosekodeTable = forwardRef(({diagnosekoder, onSelectedDiagnose, onKeyD
         }
     }, [tableRef]);
 
+    // If table is loading, add a delayed set of the slow-loading flag, which will trigger the full loading indicator display after 150ms
+    useEffect(() => {
+        if (isLoading) {
+            const timeoutId = window.setTimeout(() => {
+                setIsSlowLoading(isLoading);
+            }, 1500);
+            return () => {
+                window.clearTimeout(timeoutId);
+            }
+        } else {
+            setIsSlowLoading(false)
+        }
+    }, [isLoading])
+
     return (
-        <Table ref={tableRef} onKeyDown={onKeyDown}>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell scope="col">Kode</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Beskrivelse</Table.HeaderCell>
-                    <Table.HeaderCell scope="col"></Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                <DiagnosekodeRows diagnosekoder={diagnosekoder} onSelectedDiagnose={onSelectedDiagnose} />
-            </Table.Body>
-        </Table>
+        <div>
+            {isSlowLoading ? <Loader className={dkCss.centerOverlay} variant="neutral" size="3xlarge" title="Laster søkeresultat" /> : null}
+            <Table ref={tableRef} onKeyDown={onKeyDown}>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell scope="col" className={dkCss.diagnosekodeCol}>Kode</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">Beskrivelse</Table.HeaderCell>
+                        <Table.HeaderCell scope="col" className={dkCss.actionCol}></Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body className={isLoading ? dkCss.transparent : dkCss.nonTransparent} >
+                    <DiagnosekodeRows diagnosekoder={diagnosekoder} onSelectedDiagnose={onSelectedDiagnose} />
+                </Table.Body>
+            </Table>
+        </div>
     )
 })
 DiagnosekodeTable.displayName = "DiagnosekodeTable"
@@ -162,6 +184,7 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
     const [searchParams, setSearchParams] = useState(initSearchParams)
     const [searchResult, setSearchResult] = useState<DiagnosekodeSearchResult>(emptySearchResult)
     const [error, setError] = useState<Error | null>(null)
+    const [isLoading, setIsLoading] = useState(false);
     const diagnosekodeTableRef = useRef<DiagnosekodeTableMethods>(null)
 
     const trimmedSearchText = searchParams.searchText.trim(); // No point in doing a new search if user just adds/removes a space
@@ -172,18 +195,23 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
         const fetchDiagnosekoder = async (): Promise<void> => {
             try {
                 await debounce(100, abortController.signal)
-                const searchResult = await searchDiagnosekoderFetch(trimmedSearchText, pageNumber, abortController.signal);
-                if (pageNumber > 1) {
-                    // The search result is a paging continuation, add it to the existing result
-                    setSearchResult(existing =>
-                        ({
-                            diagnosekoder: [...existing.diagnosekoder, ...searchResult.diagnosekoder],
-                            pageNumber: searchResult.pageNumber,
-                            foundCount: searchResult.foundCount,
-                        })
-                    );
-                } else { // Search result is a new first page result
-                    setSearchResult(searchResult)
+                try {
+                    setIsLoading(true)
+                    const searchResult = await searchDiagnosekoderFetch(trimmedSearchText, pageNumber, abortController.signal);
+                    if (pageNumber > 1) {
+                        // The search result is a paging continuation, add it to the existing result
+                        setSearchResult(existing =>
+                            ({
+                                diagnosekoder: [...existing.diagnosekoder, ...searchResult.diagnosekoder],
+                                pageNumber: searchResult.pageNumber,
+                                foundCount: searchResult.foundCount,
+                            })
+                        );
+                    } else { // Search result is a new first page result
+                        setSearchResult(searchResult)
+                    }
+                } finally {
+                    setIsLoading(false)
                 }
             } catch (err) {
                 if (err instanceof AbortedDebounce) {
@@ -243,6 +271,7 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
             diagnosekoder={searchResult.diagnosekoder}
             onSelectedDiagnose={onSelectedDiagnose}
             onKeyDown={handleDiagnosekodeTableKeyDown}
+            isLoading={isLoading}
         />;
 
     const showMoreElements = searchResult.foundCount > searchResult.pageNumber * pageSize ?
