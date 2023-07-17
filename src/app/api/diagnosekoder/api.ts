@@ -16,13 +16,13 @@ export const instanceOfDiagnosekodeSearchResult = (some: any): some is Diagnosek
     instanceOfDiagnosekodeArray(some.diagnosekoder) &&
     'foundCount' in some
 
-export const searchDiagnosekoderFetch = async (searchText: string, pageNumber: number): Promise<DiagnosekodeSearchResult> => {
+export const searchDiagnosekoderFetch = async (searchText: string, pageNumber: number, abortSignal: AbortSignal): Promise<DiagnosekodeSearchResult> => {
     const url = new URL(diagnosekoderApiPath, window.location.origin)
     if(searchText.length > 0) {
         url.searchParams.append("search", searchText)
     }
     url.searchParams.append("page", pageNumber.toString());
-    const resp = await fetch(url.toString())
+    const resp = await fetch(url.toString(), {signal: abortSignal})
     if (resp.ok) {
         const data = await resp.json()
         if (instanceOfDiagnosekodeSearchResult(data)) {

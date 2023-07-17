@@ -16,6 +16,7 @@ import {DiagnosekodeSearchResult, pageSize, searchDiagnosekoderFetch} from "@/ap
 import {ArrowRightIcon, ChevronDownDoubleIcon} from '@navikt/aksel-icons';
 
 import diagnosekoderCss from './diagnosekoder.module.css';
+import debounce, {AbortedDebounce} from "@/utils/debounce";
 
 interface DiagnosekoderProp {
     readonly diagnosekoder: Diagnosekode[];
@@ -167,11 +168,11 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
     const pageNumber = searchParams.pageNumber;
 
     useEffect(() => {
-        let isSubscribed = true;
-        // TODO AbortController for the fetch?
+        const abortController = new AbortController();
         const fetchDiagnosekoder = async (): Promise<void> => {
-            const searchResult = await searchDiagnosekoderFetch(trimmedSearchText, pageNumber);
-            if (isSubscribed) {
+            try {
+                await debounce(100, abortController.signal)
+                const searchResult = await searchDiagnosekoderFetch(trimmedSearchText, pageNumber, abortController.signal);
                 if (pageNumber > 1) {
                     // The search result is a paging continuation, add it to the existing result
                     setSearchResult(existing =>
@@ -184,7 +185,15 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
                 } else { // Search result is a new first page result
                     setSearchResult(searchResult)
                 }
-            }// else another fetch has been started, ignore this
+            } catch (err) {
+                if (err instanceof AbortedDebounce) {
+                    // Do nothing, we just debounced and started a new search
+                } else if (err instanceof DOMException && err.name === "AbortError") {
+                    // Do nothing we just aborted a request because of new search input
+                } else {
+                    throw err;
+                }
+            }
         };
 
         fetchDiagnosekoder()
@@ -193,14 +202,16 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
                     setError(null)
                 } , err => {
                     if(err instanceof Error) {
+                        console.error(`fetchDiagnosekoder failed`, err)
                         setError(err)
                     } else {
+                        console.error(`fetchDiagnosekoder failed`, err)
                         setError(new Error(err))
                     }
                 }
             )
         return () => {
-            isSubscribed = false;
+            abortController.abort('New search input')
         };
     }, [trimmedSearchText, pageNumber])
 
