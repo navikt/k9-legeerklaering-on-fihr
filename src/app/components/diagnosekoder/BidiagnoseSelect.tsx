@@ -21,6 +21,11 @@ export const appendNewDiagnosekode = (diagnosekoder: Diagnosekode[], newDiagnose
     }
 }
 
+/**
+ * Lets the user search for and select zero or more secondary diagnoses. Made for the Legeerklaering form component.
+ * Since it is currently not a required field in Legeerklaering there is no possible user errors, and so support for
+ * validation/displaying error message has not been added yet.
+ */
 const BidiagnoseSelect = ({value, onChange, className}: BidiagnoseSelectProps) => {
     const [showModal, setShowModal] = useState(false);
     const id = useId(); // Id to make label htmlFor happy
