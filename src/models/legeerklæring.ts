@@ -1,4 +1,4 @@
-import {Diagnosekode} from "@/app/api/diagnosekoder/ICD10";
+import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 
 export type Periode = {
     fra: Date;

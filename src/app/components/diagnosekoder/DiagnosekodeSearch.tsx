@@ -1,7 +1,7 @@
 "use client"
 
 import {Alert, Button, Loader, Search, Table} from "@navikt/ds-react";
-import {Diagnosekode} from "@/app/api/diagnosekoder/ICD10";
+import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import {
     ForwardedRef,
     forwardRef,
@@ -12,13 +12,14 @@ import {
     useRef,
     useState
 } from "react";
-import {DiagnosekodeSearchResult, pageSize, searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/api";
 import {ArrowRightIcon, ChevronDownDoubleIcon} from '@navikt/aksel-icons';
 
 import diagnosekoderCss from './diagnosekoder.module.css';
 import debounce, {AbortedDebounce} from "@/utils/debounce";
 
 import dkCss from './diagnosekoder.module.css';
+import type {DiagnosekodeSearchResult} from "@/app/api/diagnosekoder/DiagnosekodeSearchResult";
+import {searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/client";
 
 interface DiagnosekoderProp {
     readonly diagnosekoder: Diagnosekode[];
@@ -162,7 +163,7 @@ DiagnosekodeTable.displayName = "DiagnosekodeTable"
 const emptySearchResult: DiagnosekodeSearchResult = {
     diagnosekoder: [],
     pageNumber: 0,
-    foundCount: 0
+    hasMore: false,
 };
 
 interface SearchParams {
@@ -204,7 +205,7 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
                             ({
                                 diagnosekoder: [...existing.diagnosekoder, ...searchResult.diagnosekoder],
                                 pageNumber: searchResult.pageNumber,
-                                foundCount: searchResult.foundCount,
+                                hasMore: searchResult.hasMore,
                             })
                         );
                     } else { // Search result is a new first page result
@@ -274,7 +275,7 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
             isLoading={isLoading}
         />;
 
-    const showMoreElements = searchResult.foundCount > searchResult.pageNumber * pageSize ?
+    const showMoreElements = searchResult.hasMore ?
         <div className="flex justify-center py-4">
             <Button onClick={handleShowMoreClicked} variant="tertiary" icon={<ChevronDownDoubleIcon aria-hidden />}>Vis flere rader</Button>
         </div> :

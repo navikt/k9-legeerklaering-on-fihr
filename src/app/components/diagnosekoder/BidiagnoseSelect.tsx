@@ -1,8 +1,10 @@
-import {Diagnosekode} from "@/app/api/diagnosekoder/ICD10";
+"use client"
+
 import React, {useId, useRef, useState} from "react";
 import {Button, Label} from "@navikt/ds-react";
 import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
+import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 
 import dkCss from './diagnosekoder.module.css';
 
