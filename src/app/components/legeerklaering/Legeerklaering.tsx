@@ -15,7 +15,7 @@ import {
     useDatepicker,
     useRangeDatepicker
 } from '@navikt/ds-react';
-import {useForm} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
 import {tekst} from '@/utils/tekster';
 import {IAddress, IPatient, IPractitioner} from '@ahryman40k/ts-fhir-types/lib/R4';
@@ -112,6 +112,7 @@ export default function Legeerklaering() {
     }, []);
 
     const {
+        control,
         register,
         setValue,
         handleSubmit,
@@ -283,11 +284,21 @@ export default function Legeerklaering() {
                 title={tekst("legeerklaering.diagnose.tittel")}
                 helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
             >
-                <HoveddiagnoseSelect value={hoveddiagnose} onChange={dk => setValue('hoveddiagnose', dk)} />
+                <Controller
+                    control={control}
+                    name="hoveddiagnose"
+                    render={({field: {onChange, value}}) => (
+                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}  />
+                    )}
+                />
 
-                <div className="mt-4">
-                <BidiagnoseSelect value={bidiagnoser} onChange={(diagnosekoder) => setValue("bidiagnoser", diagnosekoder)} />
-                </div>
+                <Controller
+                    control={control}
+                    name="bidiagnoser"
+                    render={({field: {onChange, value}}) => (
+                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange} />
+                    )}
+                />
             </Section>
 
             <Section

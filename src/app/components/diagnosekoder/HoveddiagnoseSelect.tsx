@@ -9,9 +9,10 @@ import dkCss from './diagnosekoder.module.css';
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;
     readonly onChange: (diagnosekode: Diagnosekode | undefined) => void;
+    readonly className?: string;
 }
 
-const HoveddiagnoseSelect = ({value, onChange}: HoveddiagnoseSelectProps) => {
+const HoveddiagnoseSelect = ({value, onChange, className}: HoveddiagnoseSelectProps) => {
     const [showModal, setShowModal] = useState(false);
     const id = useId(); // Id to make label htmlFor happy
     const selectBtnRef = useRef<HTMLButtonElement>(null)
@@ -31,8 +32,11 @@ const HoveddiagnoseSelect = ({value, onChange}: HoveddiagnoseSelectProps) => {
     const Divider = () => value ? <span>&nbsp;-&nbsp;</span> : null;
     const showModalBtnText = value === undefined ? 'Velg' : 'Endre';
 
+    // If className prop is set, prepend it to the inputwrapper class
+    const classNames = (className !== undefined ? `${className} ` : ``) + dkCss.inputwrapper;
+
     return (
-        <div className={dkCss.inputwrapper}>
+        <div className={classNames}>
             <Label htmlFor={id}>Hoveddiagnose</Label>
             <div className={dkCss.framedline} onClick={handleInputClick}>
                 <div className={dkCss.value}><span>{value?.code}</span><Divider /><span>{value?.text}</span></div>

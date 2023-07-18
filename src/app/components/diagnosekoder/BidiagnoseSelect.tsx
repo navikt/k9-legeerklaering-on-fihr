@@ -9,6 +9,7 @@ import dkCss from './diagnosekoder.module.css';
 export interface BidiagnoseSelectProps {
     readonly value: Diagnosekode[]
     readonly onChange: (diagnosekoder: Diagnosekode[]) => void;
+    readonly className?: string;
 }
 
 export const appendNewDiagnosekode = (diagnosekoder: Diagnosekode[], newDiagnosekode: Diagnosekode): Diagnosekode[] => {
@@ -20,7 +21,7 @@ export const appendNewDiagnosekode = (diagnosekoder: Diagnosekode[], newDiagnose
     }
 }
 
-const BidiagnoseSelect = ({value, onChange}: BidiagnoseSelectProps) => {
+const BidiagnoseSelect = ({value, onChange, className}: BidiagnoseSelectProps) => {
     const [showModal, setShowModal] = useState(false);
     const id = useId(); // Id to make label htmlFor happy
     const selectBtnRef = useRef<HTMLButtonElement>(null)
@@ -38,8 +39,11 @@ const BidiagnoseSelect = ({value, onChange}: BidiagnoseSelectProps) => {
         selectBtnRef.current?.focus();
     }
 
+    // If className prop is set, prepend it to the inputwrapper class
+    const classNames = (className !== undefined ? `${className} ` : ``) + dkCss.inputwrapper;
+
     return (
-        <div className={dkCss.inputwrapper}>
+        <div className={classNames}>
             <Label htmlFor={id}>Bidiagnose</Label>
             <div className={dkCss.framedlisting} onClick={handleInputClick}>
                 {value.map(dk => {
