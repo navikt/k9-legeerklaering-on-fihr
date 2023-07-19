@@ -195,6 +195,7 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
         const abortController = new AbortController();
         const fetchDiagnosekoder = async (): Promise<void> => {
             try {
+                // We can improve this later, to not debounce on the first run, or when it is the pageNumber that has changed.
                 await debounce(100, abortController.signal)
                 try {
                     setIsLoading(true)
