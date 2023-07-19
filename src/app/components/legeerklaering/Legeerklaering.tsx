@@ -1,12 +1,9 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FHIRContext} from '@/app/context/FHIRContext';
 import {
-    Accordion,
     BodyLong,
     Button,
     DatePicker,
-    Heading,
-    Ingress,
     Link,
     Modal,
     ReadMore,

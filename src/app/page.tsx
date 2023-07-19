@@ -10,10 +10,10 @@ import { StethoscopeIcon } from '@navikt/aksel-icons';
 
 
 export default function Home() {
-    const {loading, error} = useContext(FHIRContext);
+    const {loading, error, practitioner} = useContext(FHIRContext);
     return (
         <div>
-            <Header/>
+            <Header practitioner={practitioner}/>
             <div className="mx-auto mt-16 max-w-4xl p-4 pb-32">
                 {error && (
                     <Alert variant="error">
