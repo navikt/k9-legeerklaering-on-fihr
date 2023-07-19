@@ -22,10 +22,11 @@ import {IAddress, IPatient, IPractitioner} from '@ahryman40k/ts-fhir-types/lib/R
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import {LegeerklaeringFormData} from "@/models/legeerklæring";
+import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
 
 export default function Legeerklaering() {
     const {patient, practitioner, client} = useContext(FHIRContext);
-    const [showModal, setShowModal] = useState(false);
+    const [submittedData, setSubmittedData] = useState<LegeerklaeringFormData | null>(null);
     const [state, setState] = useState<LegeerklaeringFormData>({
         barn: {
             navn: "",
@@ -222,10 +223,9 @@ export default function Legeerklaering() {
     // console.log("form errors", errors);
     // console.log("form watch", watch());
 
-    const onSubmit = (data: any) => {
-        const registrertSkjema = data as LegeerklaeringFormData;
-        setShowModal(true)
-        console.log("Form data", registrertSkjema);
+    const onSubmit = (data: LegeerklaeringFormData) => {
+        setSubmittedData(data)
+        console.log("Form data", data);
     };
 
     const hoveddiagnose = watch('hoveddiagnose')
@@ -410,111 +410,10 @@ export default function Legeerklaering() {
 
             <div className="ml-4 mt-4 mb-16"><Button type="submit">Registrer</Button></div>
 
+             {/*(Temporary) summary modal displayed when user submits form*/}
+            <SummaryModal show={submittedData !== null} onClose={() => setSubmittedData(null)} data={submittedData} />
 
-            <Modal
-                open={showModal}
-                aria-label="Modal demo"
-                onClose={() => setShowModal((x) => !x)}
-                aria-labelledby="modal-heading"
-            >
-                <Modal.Content>
-                    <Heading spacing level="1" size="large" id="modal-heading">Oppsummering</Heading>
 
-                    <Accordion>
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.om-barnet.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                                <Ingress spacing>{watch("barn.navn")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-barnet.ident.label")}</Heading>
-                                <Ingress spacing>{watch("barn.ident")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-barnet.foedselsdato.label")}</Heading>
-                                <Ingress spacing>{watch("barn.foedselsdato")?.toDateString()}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst('legeerklaering.legens-vurdering.tittel')}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.legens-vurdering.label")}</Heading>
-                                <Ingress spacing>{watch("legensVurdering")}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.diagnose.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.diagnose.hoveddiagnose.label")}</Heading>
-                                <Ingress spacing>{`${state.hoveddiagnose?.code} - ${state.hoveddiagnose?.text}`}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.diagnose.bidiagnoser.label")}</Heading>
-                                <Ingress spacing>TODO bidiagnose liste</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.tilsyn-varighet.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5" size="xsmall">Periode</Heading>
-                                <Ingress
-                                    spacing>{`${valgtTilsynPeriode?.from?.toDateString()} - ${valgtTilsynPeriode?.to?.toDateString()}`}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.innleggelse-varighet.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5" size="xsmall">Periode</Heading>
-                                <Ingress
-                                    spacing>{`${valgtInnleggelsePeriode?.from?.toDateString()} - ${valgtInnleggelsePeriode?.to?.toDateString()}`}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.om-legen.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                                <Ingress spacing>{watch("lege.navn")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-legen.hrp-nummer.label")}</Heading>
-                                <Ingress spacing>{watch("lege.hrpNummer")}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-
-                        <Accordion.Item defaultOpen>
-                            <Accordion.Header>{tekst("legeerklaering.om-sykehuset.tittel")}</Accordion.Header>
-                            <Accordion.Content>
-                                <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                                <Ingress spacing>{watch("sykehus.navn")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.tlf.label")}</Heading>
-                                <Ingress spacing>{watch("sykehus.telefon")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.gateadresse.label")}</Heading>
-                                <Ingress spacing>{watch("sykehus.adresse.gate")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.postnummer.label")}</Heading>
-                                <Ingress spacing>{watch("sykehus.adresse.postnummer")}</Ingress>
-
-                                <Heading level="5"
-                                         size="xsmall">{tekst("legeerklaering.om-sykehuset.poststed.label")}</Heading>
-                                <Ingress spacing>{watch("sykehus.adresse.poststed")}</Ingress>
-                            </Accordion.Content>
-                        </Accordion.Item>
-                    </Accordion>
-                </Modal.Content>
-            </Modal>
 
             <Section title="Kontakt oss">
                 <BodyLong>
