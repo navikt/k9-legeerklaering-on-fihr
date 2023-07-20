@@ -14,7 +14,7 @@ const debounce = (millis: number, abortSignal: AbortSignal) => {
             // Abort signal already triggered, stop early.
             reject(new AbortedDebounce())
         }
-        let timeoutId: number | null = null
+        let timeoutId: number | null | NodeJS.Timeout = null // It is number in browser, NodeJS.Timeout in nodejs.
         // Create an abortListener that gets called if the AbortSignal is triggered.
         const abortListener = () => {
             if (timeoutId !== null) {
@@ -23,7 +23,7 @@ const debounce = (millis: number, abortSignal: AbortSignal) => {
             reject(new AbortedDebounce())
         }
         abortSignal.addEventListener("abort", abortListener);
-        timeoutId = window.setTimeout(() => {
+        timeoutId = setTimeout(() => {
             // Remove the abortListener
             abortSignal.removeEventListener("abort", abortListener)
             resolve()
