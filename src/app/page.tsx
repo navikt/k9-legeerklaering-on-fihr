@@ -1,6 +1,5 @@
 "use client";
 
-import "@navikt/ds-css";
 import { Alert, ExpansionCard, Heading, Skeleton } from '@navikt/ds-react';
 import Header from '@/app/components/Header';
 import React, { useContext } from 'react';
