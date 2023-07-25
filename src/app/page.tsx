@@ -9,6 +9,7 @@ import AboutExpansionCard from "@/app/components/legeerklaering/AboutExpansionCa
 import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
 import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
+import type NextPageProps from "@/utils/NextPageProps";
 
 
 interface PageState extends EhrInfoLegeerklaeringForm {
@@ -16,7 +17,7 @@ interface PageState extends EhrInfoLegeerklaeringForm {
     readonly error: Error | null;
 }
 
-export default function Home() {
+export default function Home({searchParams}: NextPageProps) {
     const [state, setState] = useState<PageState>({
         loading: true,
         error: null,
@@ -27,7 +28,9 @@ export default function Home() {
     useEffect(() => {
         const fetchFun = async () => {
             try {
-                const api = await clientInitInBrowser()
+                // If url has query argument "iss" set, this is a new launch from EHR system, so force a reauthorization.
+                const reAuth = searchParams["iss"] !== undefined;
+                const api = await clientInitInBrowser(reAuth)
                 const [doctor, patient, hospital] = await Promise.all([api.getDoctor(), api.getPatient(), api.getHospital()]);
                 setState(state => ({
                     loading: state.loading,

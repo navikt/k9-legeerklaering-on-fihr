@@ -22,8 +22,13 @@ const authParams: AuthorizeParams = {
  * roundtrip to the smart server. When it is not a launch URL, it looks for and uses the auth token stored in browser local
  * storage. If the auth token is not found in local storage, or is expired it will give a "not authorized" error. The
  * user must then reauthenticate by opening the window again from the EHR system to get a new launch url.
+ *
+ * @param reAuth set to true when launching a new context in a existing window/tab, to force a re-authentication
  */
-export const clientInitInBrowser = async (): Promise<ClientWrapper> => {
+export const clientInitInBrowser = async (reAuth: boolean): Promise<ClientWrapper> => {
+    if (reAuth) {
+        sessionStorage.clear();
+    }
     const client = await oauth2.init(authParams)
     return new ClientWrapper(client)
 }
