@@ -52,7 +52,7 @@ export default function Home({searchParams}: NextPageProps) {
         }
         fetchFun()
         return;
-    }, [])
+    }, [searchParams])
 
     return (
         <div>
