@@ -17,7 +17,7 @@
     "@navikt/ds-tailwind": "^4.4.2",
     "@navikt/ds-tokens": "^4.4.2",
     "@types/node": "20.3.2",
-    "@types/react": "18.2.14",
+    "@types/react": "18.2.16",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
     "encoding": "^0.1.13",
