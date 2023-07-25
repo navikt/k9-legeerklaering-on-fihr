@@ -49,7 +49,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             navn: ehrInfo.hospital?.name ?? "",
             telefon: ehrInfo.hospital?.phoneNumber ?? "",
             adresse: {
-                gate: ehrInfo.hospital?.address?.street ?? "",
+                gate: [ehrInfo.hospital?.address?.line1 ?? "", ehrInfo.hospital?.address?.line2 ?? ""].filter(l => l.trim().length > 0).join(", "),
                 postnummer: ehrInfo.hospital?.address?.postalCode ?? "",
                 poststed: ehrInfo.hospital?.address?.city ?? "",
             }

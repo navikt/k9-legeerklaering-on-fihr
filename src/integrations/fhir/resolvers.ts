@@ -1,7 +1,20 @@
 // This module has various resolver functions for converting a FHIR R4 datatype into a representation we want.
 
-import {HumanNameUseKind, IdentifierUseKind, IHumanName, IIdentifier, IPeriod} from "@ahryman40k/ts-fhir-types/lib/R4";
+import {
+    AddressTypeKind,
+    AddressUseKind,
+    ContactPointSystemKind,
+    ContactPointUseKind,
+    HumanNameUseKind,
+    IAddress,
+    IContactPoint,
+    IdentifierUseKind,
+    IHumanName,
+    IIdentifier,
+    IPeriod
+} from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod from "@/models/DatePeriod";
+import Address from "@/models/Address";
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -80,4 +93,51 @@ export const officialIdentifierResolver = (identifiers: IIdentifier[] | undefine
         identifiers.find(identifier => identifier.use === IdentifierUseKind._usual) ??
         identifiers[0]
     return identifier.value
+}
+
+/**
+ * Try resolving one postal address from the given addresses array.
+ * @param addresses
+ */
+export const postalAddressResolver = (addresses: IAddress[] | undefined): Address | undefined => {
+    if (addresses === undefined) {
+        return undefined
+    }
+    // Exclude addresses marked as "old"
+    const notOld = addresses.filter(address => address.use !== AddressUseKind._old);
+    // Look for addresses currently valid if there is given period info on them
+    const currentAddresses = notOld.filter(address => isDateWithinPeriod(new Date(), dateTimePeriodResolver(address.period)));
+    const postalAddresses =
+        currentAddresses.filter(address => address.type === AddressTypeKind._postal || address.type === AddressTypeKind._both) ??
+        notOld.filter(address => address.type === AddressTypeKind._postal || address.type === AddressTypeKind._both)
+    const chosenAddress = postalAddresses[0] ?? currentAddresses[0] ?? notOld[0];
+    if (chosenAddress !== undefined) {
+        return {
+            line1: chosenAddress.line?.[0],
+            line2: chosenAddress.line?.[1],
+            postalCode: chosenAddress.postalCode,
+            city: chosenAddress.city,
+        }
+    } else {
+        return undefined;
+    }
+}
+
+export const phoneContactResolver = (telecoms: IContactPoint[] | undefined): string | undefined => {
+    if (telecoms === undefined) {
+        return telecoms
+    }
+    // Exclude contact info that is not a phone number, and those marked old
+    const onlyPhonesNotOld = telecoms.filter(t => t.system === ContactPointSystemKind._phone && t.use !== ContactPointUseKind._old)
+    // Prefer the ones with active period if such info is given
+    const currentPhones = onlyPhonesNotOld.filter(phone => isDateWithinPeriod(new Date(), dateTimePeriodResolver(phone.period)))
+    const phonesRankedReducer = (prevPhone: IContactPoint, currentPhone: IContactPoint) => ((prevPhone.rank ?? 0) >= (currentPhone.rank ?? 0)) ? prevPhone : currentPhone;
+    const chosenPhone = currentPhones.length > 1 ?
+        currentPhones.reduce(phonesRankedReducer) :
+        currentPhones[0] ??
+        onlyPhonesNotOld.length > 1 ?
+            onlyPhonesNotOld.reduce(phonesRankedReducer) :
+            onlyPhonesNotOld[0]
+
+    return chosenPhone?.value
 }

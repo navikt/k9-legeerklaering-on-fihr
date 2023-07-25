@@ -1,6 +1,13 @@
-import {dateTimePeriodResolver, dateTimeResolver, isDateWithinPeriod} from "@/integrations/fhir/resolvers";
-import {IPeriod} from "@ahryman40k/ts-fhir-types/lib/R4";
+import {
+    dateTimePeriodResolver,
+    dateTimeResolver,
+    isDateWithinPeriod,
+    phoneContactResolver,
+    postalAddressResolver
+} from "@/integrations/fhir/resolvers";
+import {ContactPointSystemKind, IContactPoint, IPeriod} from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod, {datePeriod} from "@/models/DatePeriod";
+import Address from "@/models/Address";
 
 describe(`fhir dateTime resolver`, () => {
     const validTestcases = {
@@ -66,4 +73,42 @@ describe('fhir isDateWithinPeriod', () => {
         expect(isDateWithinPeriod(before, period)).toBeUndefined()
         expect(isDateWithinPeriod(period.end!, period)).toBeUndefined()
     })
+})
+
+describe('fhir postalAddressResolver', () => {
+    const input1 = [
+        {
+            "line": [
+                "235 NORTH PEARL STREET"
+            ],
+            "city": "BROCKTON",
+            "state": "MA",
+            "postalCode": "02301",
+            "country": "US"
+        }
+    ]
+    const expect1: Address = {
+        line1: input1[0].line[0],
+        line2: undefined,
+        postalCode: input1[0].postalCode,
+        city: input1[0].city
+    }
+    test('with one address without any filtering info, return it', () => {
+        expect(postalAddressResolver(input1)).toEqual(expect1)
+    })
+    // XXX Add more testcases as real world data is found
+})
+
+describe('fhir phoneContactResolver', () => {
+    const input1: IContactPoint[] = [
+        {
+            "system": ContactPointSystemKind._phone,
+            "value": "5084273000"
+        }
+    ];
+    const expected1 = input1[0].value
+    test('with one phone without any filtering info, return it', () => {
+        expect(phoneContactResolver(input1)).toEqual(expected1)
+    })
+    // XXX Add more testcases as real world data is found
 })

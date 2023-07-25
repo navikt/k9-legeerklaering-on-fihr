@@ -4,7 +4,12 @@ import {R4} from '@ahryman40k/ts-fhir-types';
 import {Validation} from "io-ts";
 import {PathReporter} from "io-ts/es6/PathReporter";
 import Patient from "@/models/Patient";
-import {dateTimeResolver, officialHumanNameResolver, officialIdentifierResolver} from "@/integrations/fhir/resolvers";
+import {
+    dateTimeResolver,
+    officialHumanNameResolver,
+    officialIdentifierResolver,
+    phoneContactResolver, postalAddressResolver
+} from "@/integrations/fhir/resolvers";
 import Hospital from "@/models/Hospital";
 
 
@@ -56,16 +61,18 @@ export default class ClientWrapper {
     }
 
     public async getHospital(): Promise<Hospital> {
-        // TODO Implement this to return hospital client has been initialize in.
-        console.warn('TODO: getHospital not implemented yet')
-        return {
-            name: 'Fake hospital',
-            phoneNumber: '33 44 99 11',
-            address: {
-                street: 'Fake street 34',
-                postalCode: '3355',
-                city: 'Fake city',
+        const encounter = ClientWrapper.validateOrThrow(R4.RTTI_Encounter.decode(await this.client.encounter.read()));
+        if (encounter.serviceProvider?.reference !== undefined) {
+            const organization = ClientWrapper.validateOrThrow(R4.RTTI_Organization.decode(await this.client.request({
+                url: encounter.serviceProvider?.reference,
+            })));
+            return {
+                name: organization.name,
+                phoneNumber: phoneContactResolver(organization.telecom),
+                address: postalAddressResolver(organization.address),
             }
+        } else {
+            throw new Error(`encounter serviceProvider reference not defined, cannot resolve hospital information`)
         }
     }
 }
