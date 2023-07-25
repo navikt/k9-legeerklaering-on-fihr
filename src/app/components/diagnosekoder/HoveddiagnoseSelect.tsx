@@ -15,8 +15,8 @@ export interface HoveddiagnoseSelectProps {
 }
 
 /*
- * Lets the user search for and select zero or one main diagnoses. Made for the Legeerklaering form component.
- * Since it is currently not a required field in Legeerklaering there is no possible user errors, and so support for
+ * Lets the user search for and select zero or one main diagnoses. Made for the LegeerklaeringForm form component.
+ * Since it is currently not a required field in LegeerklaeringForm there is no possible user errors, and so support for
  * validation/displaying error message has not been added yet.
  */
 const HoveddiagnoseSelect = ({value, onChange, className}: HoveddiagnoseSelectProps) => {

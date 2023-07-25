@@ -1,10 +1,7 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {FHIRContext} from '@/app/context/FHIRContext';
+import React, {useEffect, useState} from 'react';
 import {
-    BodyLong,
     Button,
     DatePicker,
-    Link,
     Modal,
     ReadMore,
     Textarea,
@@ -15,124 +12,46 @@ import {
 import {Controller, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
 import {tekst} from '@/utils/tekster';
-import {IAddress, IPatient, IPractitioner} from '@ahryman40k/ts-fhir-types/lib/R4';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import {LegeerklaeringFormData} from "@/models/legeerklæring";
 import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
+import Doctor from "@/models/Doctor";
+import Patient from "@/models/Patient";
+import Hospital from "@/models/Hospital";
 
-export default function Legeerklaering() {
-    const {patient, practitioner, client} = useContext(FHIRContext);
+export interface EhrInfoLegeerklaeringForm {
+    readonly doctor: Doctor | undefined;
+    readonly patient: Patient | undefined;
+    readonly hospital: Hospital | undefined;
+}
+
+export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
     const [submittedData, setSubmittedData] = useState<LegeerklaeringFormData | null>(null);
-    const [state, setState] = useState<LegeerklaeringFormData>({
-        barn: {
-            navn: "",
-            ident: "",
-            foedselsdato: undefined,
-        },
-        lege: {
-            hrpNummer: "",
-            navn: "",
-        },
-        sykehus: {
-            navn: "",
-            telefon: "",
-            adresse: {
-                gate: "",
-                postnummer: "",
-                poststed: "",
-            }
-        },
-        hoveddiagnose: undefined,
-        bidiagnoser: [],
-        legensVurdering: "",
-        tilsynPeriode: {
-            fra: new Date(),
-            til: new Date(),
-        },
-        innleggelsesPeriode: {
-            fra: new Date(),
-            til: new Date(),
-        }
-    });
-
-    const setDefaultPasientFormFelter = useCallback((patient: IPatient) => {
-        const pasientNavn = patient?.name?.pop();
-        const pasientensFulleNavn = pasientNavn !== undefined ? `${pasientNavn?.family}, ${pasientNavn?.given?.pop()}` : "";
-        const pasientensIdent = patient?.identifier?.pop()?.value || "";
-        const pasientensFoedselsdag = patient?.birthDate ? new Date(patient?.birthDate) : undefined;
-
-        setValue('barn.navn', pasientensFulleNavn)
-        setValue('barn.ident', pasientensIdent)
-        setValue('barn.foedselsdato', pasientensFoedselsdag)
-
-        setState(prevState => ({
-            ...prevState,
-            barn: {
-                navn: pasientensFulleNavn,
-                foedselsdato: pasientensFoedselsdag,
-                ident: pasientensIdent,
-            },
-        }));
-    }, []);
-
-    const setDefaultLegeFelter = useCallback((practitioner: IPractitioner) => {
-        const legensNavn = practitioner?.name?.pop();
-        const legensFulleNavn = legensNavn ? `${legensNavn?.family}, ${legensNavn?.given?.pop()}` : "";
-        const legensId = practitioner.id || "";
-
-        const adresse: IAddress | undefined = practitioner?.address?.pop();
-        const gate = adresse?.line?.pop() || "";
-        const postnummer = adresse?.postalCode || "";
-        const poststed = adresse?.city || "";
-
-        setValue('lege.navn', legensFulleNavn)
-        setValue('lege.hrpNummer', legensId)
-        setValue('sykehus.adresse.gate', gate)
-        setValue('sykehus.adresse.postnummer', postnummer)
-        setValue('sykehus.adresse.poststed', poststed)
-
-        setState(prevState => ({
-            ...prevState,
-            lege: {
-                navn: legensFulleNavn,
-                hrpNummer: legensId,
-            },
-            sykehus: {
-                ...prevState.sykehus,
-                adresse: {
-                    gate: gate,
-                    postnummer: postnummer,
-                    poststed: poststed,
-                }
-            }
-        }));
-    }, []);
 
     const {
         control,
         register,
         setValue,
         handleSubmit,
-        formState: {errors},
-        watch
+        formState: {errors, defaultValues},
     } = useForm<LegeerklaeringFormData>({defaultValues: {
         barn: {
-            navn: "",
-            ident: "",
-            foedselsdato: undefined,
+            navn: ehrInfo.patient?.name ?? "",
+            ident: ehrInfo.patient?.identifier ?? "",
+            foedselsdato: ehrInfo.patient?.birthDate,
         },
         lege: {
-            hrpNummer: "",
-            navn: "",
+            hrpNummer: ehrInfo.doctor?.id ?? "",
+            navn: ehrInfo.doctor?.name ?? "",
         },
         sykehus: {
-            navn: "",
-            telefon: "",
+            navn: ehrInfo.hospital?.name ?? "",
+            telefon: ehrInfo.hospital?.phoneNumber ?? "",
             adresse: {
-                gate: "",
-                postnummer: "",
-                poststed: "",
+                gate: ehrInfo.hospital?.address?.street ?? "",
+                postnummer: ehrInfo.hospital?.address?.postalCode ?? "",
+                poststed: ehrInfo.hospital?.address?.city ?? "",
             }
         },
         hoveddiagnose: undefined,
@@ -149,18 +68,6 @@ export default function Legeerklaering() {
     }})
 
     useEffect(() => {
-        if (!patient || !practitioner) {
-            if (!patient) console.log('Patient data is not yet available');
-            if (!practitioner) console.log('Practitioner data is not yet available');
-        } else {
-            console.log('Patient and practitioner data are available', {patient, practitioner, client});
-            setDefaultPasientFormFelter(patient);
-            setDefaultLegeFelter(practitioner);
-        }
-
-    }, [patient, practitioner, client, setDefaultPasientFormFelter, setDefaultLegeFelter]);
-
-    useEffect(() => {
         Modal.setAppElement(document.body);
     }, []);
 
@@ -168,9 +75,9 @@ export default function Legeerklaering() {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
     } = useDatepicker({
-        defaultSelected: patient?.birthDate ? new Date(patient?.birthDate) : undefined,
+        defaultSelected: ehrInfo.patient?.birthDate,
         onDateChange: (dato) => {
-            setValue('barn.foedselsdato', dato!!, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
+            setValue('barn.foedselsdato', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
     });
 
@@ -178,7 +85,6 @@ export default function Legeerklaering() {
         datepickerProps: tilsynDatepickerProps,
         fromInputProps: tilsynFraInputProps,
         toInputProps: tilsynTilInputProps,
-        selectedRange: valgtTilsynPeriode
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
@@ -199,7 +105,6 @@ export default function Legeerklaering() {
         datepickerProps: innleggelseDatepickerProps,
         fromInputProps: innleggelseFraInputProps,
         toInputProps: innleggelseTilInputProps,
-        selectedRange: valgtInnleggelsePeriode
     } = useRangeDatepicker({
         today: new Date(),
         onRangeChange: (dato) => {
@@ -217,26 +122,20 @@ export default function Legeerklaering() {
     });
 
 
-    // console.log("form errors", errors);
-    // console.log("form watch", watch());
-
     const onSubmit = (data: LegeerklaeringFormData) => {
         setSubmittedData(data)
         console.log("Form data", data);
     };
 
-    const hoveddiagnose = watch('hoveddiagnose')
-    const bidiagnoser = watch('bidiagnoser')
-
-    return <form onSubmit={handleSubmit(onSubmit)}>
-        <>
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
             <Section
                 title={tekst("legeerklaering.om-barnet.tittel")}
                 helpText={tekst("legeerklaering.om-barnet.hjelpetekst")}
             >
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={state.barn.navn}
+                    defaultValue={defaultValues?.barn?.navn}
                     {...register("barn.navn", {required: true})}
                     error={errors.barn?.navn ? tekst("legeerklaering.om-barnet.navn.paakrevd") : ""}
                     className="w-1/2 mb-4"
@@ -244,7 +143,7 @@ export default function Legeerklaering() {
                 <div className="mb-4">
                     <TextField
                         label={tekst("legeerklaering.om-barnet.ident.label")}
-                        defaultValue={state.barn.ident}
+                        defaultValue={defaultValues?.barn?.ident}
                         {...register("barn.ident", {required: true})}
                         error={errors.barn?.ident ? tekst("legeerklaering.om-barnet.ident.paakrevd") : ""}
                         className="w-1/2 mb-4"
@@ -350,14 +249,14 @@ export default function Legeerklaering() {
             <Section title={tekst("legeerklaering.om-legen.tittel")}>
                 <TextField
                     label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={state.lege.navn}
+                    defaultValue={defaultValues?.lege?.navn}
                     {...register("lege.navn", {required: true})}
                     error={errors.lege?.navn ? tekst("legeerklaering.om-legen.navn.paakrevd") : ""}
                     className="mb-4 w-1/2"
                 />
                 <TextField
                     label={tekst("legeerklaering.om-legen.hrp-nummer.label")}
-                    defaultValue={state.lege.hrpNummer}
+                    defaultValue={defaultValues?.lege?.hrpNummer}
                     {...register("lege.hrpNummer", {required: true})}
                     error={errors.lege?.hrpNummer ? tekst("legeerklaering.om-legen.hrp-nummer.paakrevd") : ""}
                     className="w-1/2"
@@ -381,7 +280,7 @@ export default function Legeerklaering() {
                     /></div>
                 <TextField
                     label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
-                    defaultValue={state.sykehus.adresse.gate}
+                    defaultValue={defaultValues?.sykehus?.adresse?.gate}
                     {...register("sykehus.adresse.gate", {required: true})}
                     error={errors.sykehus?.adresse?.gate ? tekst("legeerklaering.om-sykehuset.gateadresse.paakrevd") : ""}
                     className="mb-4 w-3/4"
@@ -389,7 +288,7 @@ export default function Legeerklaering() {
                 <div className="flex mb-4 space-x-4">
                     <TextField
                         label={tekst("legeerklaering.om-sykehuset.postnummer.label")}
-                        defaultValue={state.sykehus.adresse.postnummer}
+                        defaultValue={defaultValues?.sykehus?.adresse?.postnummer}
                         type="number"
                         {...register("sykehus.adresse.postnummer", {required: true})}
                         error={errors.sykehus?.adresse?.postnummer ? tekst("legeerklaering.om-sykehuset.postnummer.paakrevd") : ""}
@@ -397,7 +296,7 @@ export default function Legeerklaering() {
                     />
                     <TextField
                         label={tekst("legeerklaering.om-sykehuset.poststed.label")}
-                        defaultValue={state.sykehus.adresse.poststed}
+                        defaultValue={defaultValues?.sykehus?.adresse?.poststed}
                         {...register("sykehus.adresse.poststed", {required: true})}
                         error={errors.sykehus?.adresse?.poststed ? tekst("legeerklaering.om-sykehuset.poststed.paakrevd") : ""}
                         className="w-3/4"
@@ -407,21 +306,8 @@ export default function Legeerklaering() {
 
             <div className="ml-4 mt-4 mb-16"><Button type="submit">Registrer</Button></div>
 
-             {/*(Temporary) summary modal displayed when user submits form*/}
+            {/*(Temporary) summary modal displayed when user submits form*/}
             <SummaryModal show={submittedData !== null} onClose={() => setSubmittedData(null)} data={submittedData} />
-
-
-
-            <Section title="Kontakt oss">
-                <BodyLong>
-                    Har du flere spørsmål eller behov for mer veiledning? Her finner du mer <Link
-                    target="_blank"
-                    href="https://www.nav.no/samarbeidspartner/pleiepenger-barn#legeerklering-pleiepenger"> informasjon
-                    for helsepersonell om pleiepenger for sykt barn</Link>. Du kan også ringe oss på
-                    telefon
-                    55 55 33 36.
-                </BodyLong>
-            </Section>
-        </>
-    </form>
+        </form>
+    )
 }

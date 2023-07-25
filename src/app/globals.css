@@ -2,3 +2,9 @@
 @import '@navikt/ds-css';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+body {
+    /* Set this to avoid layout jank when loading is complete and scrollbar appears. */
+    /* Remove if we later make the form component itself be the scroll container */
+    overflow-y: scroll;
+}

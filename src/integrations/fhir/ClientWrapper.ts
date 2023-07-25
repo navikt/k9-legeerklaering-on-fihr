@@ -5,6 +5,7 @@ import {Validation} from "io-ts";
 import {PathReporter} from "io-ts/es6/PathReporter";
 import Patient from "@/models/Patient";
 import {dateTimeResolver, officialHumanNameResolver, officialIdentifierResolver} from "@/integrations/fhir/resolvers";
+import Hospital from "@/models/Hospital";
 
 
 /**
@@ -51,6 +52,20 @@ export default class ClientWrapper {
             }
         } else {
             throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${name})`);
+        }
+    }
+
+    public async getHospital(): Promise<Hospital> {
+        // TODO Implement this to return hospital client has been initialize in.
+        console.warn('TODO: getHospital not implemented yet')
+        return {
+            name: 'Fake hospital',
+            phoneNumber: '33 44 99 11',
+            address: {
+                street: 'Fake street 34',
+                postalCode: '3355',
+                city: 'Fake city',
+            }
         }
     }
 }
