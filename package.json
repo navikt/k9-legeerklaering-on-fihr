@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ahryman40k/ts-fhir-types": "^4.0.39",
+    "@hookform/resolvers": "^3.1.1",
     "@navikt/aksel-icons": "^4.4.1",
     "@navikt/ds-css": "^4.4.0",
     "@navikt/ds-react": "^4.4.0",
@@ -30,7 +31,8 @@
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.45.1"
+    "react-hook-form": "^7.45.1",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.17.0",
