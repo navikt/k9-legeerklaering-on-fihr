@@ -36,8 +36,8 @@ export const LegeerklaeringTekster = {
 
     "legeerklaering.om-legen.tittel": "Opplysninger om legen",
     "legeerklaering.om-legen.navn.paakrevd": "Legens navn er påkrevd",
-    "legeerklaering.om-legen.hrp-nummer.label": "HRP-nummer",
-    "legeerklaering.om-legen.hrp-nummer.paakrevd": "Legens HRP-nummer er påkrevd",
+    "legeerklaering.om-legen.hpr-nummer.label": "HPR-nummer",
+    "legeerklaering.om-legen.hpr-nummer.paakrevd": "Legens HPR-nummer er påkrevd",
 
     "legeerklaering.om-sykehuset.tittel": "Opplysninger om sykehuset",
     "legeerklaering.om-sykehuset.navn.paakrevd": "Sykehusets navn er påkrevd",

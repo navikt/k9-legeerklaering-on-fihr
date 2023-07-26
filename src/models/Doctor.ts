@@ -1,4 +1,4 @@
 export default interface Doctor {
-    readonly id: string;
+    readonly hprNumber: string;
     readonly name: string;
 }

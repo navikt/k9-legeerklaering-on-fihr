@@ -35,7 +35,7 @@ export default class ClientWrapper {
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
-                id: practitioner.id,
+                hprNumber: practitioner.id, // This is probably wrong. Is probably a separate identifier for norwegian HPR number
                 name,
             };
         } else {

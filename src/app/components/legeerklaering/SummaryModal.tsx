@@ -1,12 +1,12 @@
 import {Accordion, Heading, Ingress, List, Modal} from "@navikt/ds-react";
 import {tekst} from "@/utils/tekster";
 import React from "react";
-import {LegeerklaeringFormData} from "@/models/legeerklæring";
+import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 
 export interface SummaryModalProps {
     readonly show: boolean;
     readonly onClose: () => void;
-    readonly data: LegeerklaeringFormData | null;
+    readonly data: LegeerklaeringData | null;
 }
 
 const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
@@ -23,15 +23,15 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Header>{tekst("legeerklaering.om-barnet.tittel")}</Accordion.Header>
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                        <Ingress spacing>{data.barn.navn}</Ingress>
+                        <Ingress spacing>{data.barn.name}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-barnet.ident.label")}</Heading>
-                        <Ingress spacing>{data.barn.ident}</Ingress>
+                        <Ingress spacing>{data.barn.identifier}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-barnet.foedselsdato.label")}</Heading>
-                        <Ingress spacing>{data.barn.foedselsdato?.toDateString()}</Ingress>
+                        <Ingress spacing>{data.barn.birthDate?.toDateString()}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -65,7 +65,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">Periode</Heading>
                         <Ingress
-                            spacing>{`${data.tilsynPeriode.fra.toDateString()} - ${data.tilsynPeriode.til.toDateString()}`}</Ingress>
+                            spacing>{`${data.tilsynPeriode.start?.toDateString()} - ${data.tilsynPeriode.end?.toDateString()}`}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -74,7 +74,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">Periode</Heading>
                         <Ingress
-                            spacing>{`${data.innleggelsesPeriode.fra.toDateString()} - ${data.innleggelsesPeriode.til.toDateString()}`}</Ingress>
+                            spacing>{`${data.innleggelsesPeriode.start?.toDateString()} - ${data.innleggelsesPeriode.end?.toDateString()}`}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -82,11 +82,11 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Header>{tekst("legeerklaering.om-legen.tittel")}</Accordion.Header>
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                        <Ingress spacing>{data.lege.navn}</Ingress>
+                        <Ingress spacing>{data.lege.name}</Ingress>
 
                         <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-legen.hrp-nummer.label")}</Heading>
-                        <Ingress spacing>{data.lege.hrpNummer}</Ingress>
+                                 size="xsmall">{tekst("legeerklaering.om-legen.hpr-nummer.label")}</Heading>
+                        <Ingress spacing>{data.lege.hprNumber}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
 
@@ -94,23 +94,25 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Header>{tekst("legeerklaering.om-sykehuset.tittel")}</Accordion.Header>
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                        <Ingress spacing>{data.sykehus.navn}</Ingress>
+                        <Ingress spacing>{data.sykehus.name}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-sykehuset.tlf.label")}</Heading>
-                        <Ingress spacing>{data.sykehus.telefon}</Ingress>
+                        <Ingress spacing>{data.sykehus.phoneNumber}</Ingress>
 
-                        <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-sykehuset.gateadresse.label")}</Heading>
-                        <Ingress spacing>{data.sykehus.adresse.gate}</Ingress>
+                        <Heading level="5" size="xsmall">
+                            {tekst("legeerklaering.om-sykehuset.gateadresse.label")}
+                        </Heading>
+                        <Ingress spacing>{data.sykehus.address?.line1}</Ingress>
+                        <Ingress spacing>{data.sykehus.address?.line2}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-sykehuset.postnummer.label")}</Heading>
-                        <Ingress spacing>{data.sykehus.adresse.postnummer}</Ingress>
+                        <Ingress spacing>{data.sykehus.address?.postalCode}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-sykehuset.poststed.label")}</Heading>
-                        <Ingress spacing>{data.sykehus.adresse.poststed}</Ingress>
+                        <Ingress spacing>{data.sykehus.address?.city}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
