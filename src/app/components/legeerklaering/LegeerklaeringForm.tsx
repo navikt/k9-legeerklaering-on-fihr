@@ -238,7 +238,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     control={control}
                     name="hoveddiagnose"
                     render={({field: {onChange, value}}) => (
-                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}  />
+                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.hoveddiagnose?.message}  />
                     )}
                 />
 
@@ -246,7 +246,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     control={control}
                     name="bidiagnoser"
                     render={({field: {onChange, value}}) => (
-                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange} />
+                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.bidiagnoser?.message} />
                     )}
                 />
             </Section>

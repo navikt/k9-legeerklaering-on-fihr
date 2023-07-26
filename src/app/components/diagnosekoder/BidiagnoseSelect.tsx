@@ -1,17 +1,19 @@
 "use client"
 
-import React, {useId, useRef, useState} from "react";
+import React, {ReactNode, useId, useRef, useState} from "react";
 import {Button, Label} from "@navikt/ds-react";
 import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 
 import dkCss from './diagnosekoder.module.css';
+import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
 
 export interface BidiagnoseSelectProps {
     readonly value: Diagnosekode[]
     readonly onChange: (diagnosekoder: Diagnosekode[]) => void;
     readonly className?: string;
+    readonly error?: ReactNode;
 }
 
 export const appendNewDiagnosekode = (diagnosekoder: Diagnosekode[], newDiagnosekode: Diagnosekode): Diagnosekode[] => {
@@ -28,7 +30,7 @@ export const appendNewDiagnosekode = (diagnosekoder: Diagnosekode[], newDiagnose
  * Since it is currently not a required field in LegeerklaeringForm there is no possible user errors, and so support for
  * validation/displaying error message has not been added yet.
  */
-const BidiagnoseSelect = ({value, onChange, className}: BidiagnoseSelectProps) => {
+const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectProps) => {
     const [showModal, setShowModal] = useState(false);
     const id = useId(); // Id to make label htmlFor happy
     const selectBtnRef = useRef<HTMLButtonElement>(null)
@@ -46,8 +48,9 @@ const BidiagnoseSelect = ({value, onChange, className}: BidiagnoseSelectProps) =
         selectBtnRef.current?.focus();
     }
 
-    // If className prop is set, prepend it to the inputwrapper class
-    const classNames = (className !== undefined ? `${className} ` : ``) + dkCss.inputwrapper;
+    // Always have the navds--form-field class first, then any provided by user, then the inputWrapper
+    // navds-form-field was added to get styling of ErrorMessage to match the aksel components.
+    const classNames = ["navds-form-field", className, dkCss.inputwrapper].filter(c => c !== undefined).join(" ")
 
     return (
         <div className={classNames}>
@@ -71,6 +74,7 @@ const BidiagnoseSelect = ({value, onChange, className}: BidiagnoseSelectProps) =
                     Legg til <u>bi</u>diagnose
                 </Button>
             </div>
+            <ErrorMessager error={error} />
             <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)} onSelectedDiagnose={handleSelectedDiagnose} />
         </div>
     )

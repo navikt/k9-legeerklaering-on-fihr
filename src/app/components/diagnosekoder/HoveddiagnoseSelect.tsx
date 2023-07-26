@@ -2,16 +2,18 @@
 
 import {Button, Label} from "@navikt/ds-react";
 import {PencilIcon, TrashIcon} from "@navikt/aksel-icons";
-import React, {useId, useRef, useState} from "react";
+import React, {ReactNode, useId, useRef, useState} from "react";
 import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 
 import dkCss from './diagnosekoder.module.css';
+import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
 
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;
     readonly onChange: (diagnosekode: Diagnosekode | undefined) => void;
     readonly className?: string;
+    readonly error?: ReactNode;
 }
 
 /*
@@ -19,7 +21,7 @@ export interface HoveddiagnoseSelectProps {
  * Since it is currently not a required field in LegeerklaeringForm there is no possible user errors, and so support for
  * validation/displaying error message has not been added yet.
  */
-const HoveddiagnoseSelect = ({value, onChange, className}: HoveddiagnoseSelectProps) => {
+const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseSelectProps) => {
     const [showModal, setShowModal] = useState(false);
     const id = useId(); // Id to make label htmlFor happy
     const selectBtnRef = useRef<HTMLButtonElement>(null)
@@ -39,9 +41,9 @@ const HoveddiagnoseSelect = ({value, onChange, className}: HoveddiagnoseSelectPr
     const Divider = () => value ? <span>&nbsp;-&nbsp;</span> : null;
     const showModalBtnText = value === undefined ? 'Velg' : 'Endre';
 
-    // If className prop is set, prepend it to the inputwrapper class
-    const classNames = (className !== undefined ? `${className} ` : ``) + dkCss.inputwrapper;
-
+    // Always have the navds--form-field class first, then any provided by user, then the inputWrapper
+    // navds-form-field was added to get styling of ErrorMessage to match the aksel components.
+    const classNames = ["navds-form-field", className, dkCss.inputwrapper].filter(c => c !== undefined).join(" ")
     return (
         <div className={classNames}>
             <Label htmlFor={id}>Hoveddiagnose</Label>
@@ -56,6 +58,7 @@ const HoveddiagnoseSelect = ({value, onChange, className}: HoveddiagnoseSelectPr
                     Fjern
                 </Button>
             </div>
+            <ErrorMessager error={error} />
             <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)} onSelectedDiagnose={handleSelectedDiagnose} />
         </div>
     )
