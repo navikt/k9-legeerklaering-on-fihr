@@ -9,7 +9,7 @@ import {
     useDatepicker,
     useRangeDatepicker
 } from '@navikt/ds-react';
-import {Controller, useForm} from 'react-hook-form';
+import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
 import {tekst} from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
@@ -71,6 +71,14 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     tilsynPeriode: yup.object({
         start: yup.date().required(tekst("legeerklaering.tilsyn-varighet.fom.paakrevd")),
         end: yup.date().required(tekst("legeerklaering.tilsyn-varighet.tom.paakrevd")),
+    }).required().test({
+        name: 'datePeriodStartBeforeEnd',
+        skipAbsent: true,
+        message: `Periode start må være før slutt`,
+        test: (period) =>
+            period.start === undefined ||
+            period.end === undefined ||
+            period.start.getTime() <= period.end.getTime()
     }),
     innleggelsesPeriode: yup.object({
         start: yup.date().required(tekst("legeerklaering.innleggelse-varighet.fom.paakrevd")),
@@ -113,12 +121,12 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             bidiagnoser: [],
             legensVurdering: undefined,
             tilsynPeriode: {
-                start: new Date(),
-                end: new Date(),
+                start: undefined,
+                end: undefined,
             },
             innleggelsesPeriode: {
-                start: new Date(),
-                end: new Date(),
+                start: undefined,
+                end: undefined,
             }
         }
     })
@@ -143,19 +151,18 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         toInputProps: tilsynTilInputProps,
     } = useRangeDatepicker({
         today: new Date(),
-        onRangeChange: (dato) => {
-            if (dato?.from !== undefined) setValue('tilsynPeriode.start', dato?.from, {
+        onRangeChange: (range) => {
+            setValue('tilsynPeriode.start', range?.from, {
+                shouldValidate: range?.from !== undefined,
                 shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true
             })
-            if (dato?.to !== undefined) setValue('tilsynPeriode.end', dato?.to, {
+            setValue('tilsynPeriode.end', range?.to, {
+                shouldValidate: range?.to !== undefined,
                 shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true
             })
         }
     });
+
 
     const {
         datepickerProps: innleggelseDatepickerProps,
@@ -163,16 +170,14 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         toInputProps: innleggelseTilInputProps,
     } = useRangeDatepicker({
         today: new Date(),
-        onRangeChange: (dato) => {
-            if (dato?.from !== undefined) setValue('innleggelsesPeriode.start', dato?.from!!, {
+        onRangeChange: (range) => {
+            setValue('innleggelsesPeriode.start', range?.from, {
+                shouldValidate: range?.from !== undefined,
                 shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true
             })
-            if (dato?.to !== undefined) setValue('innleggelsesPeriode.end', dato?.to!!, {
+            setValue('innleggelsesPeriode.end', range?.to, {
+                shouldValidate: range?.to !== undefined,
                 shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true
             })
         }
     });
@@ -183,8 +188,12 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         console.log("Form data", data);
     };
 
+    const onError: SubmitErrorHandler<LegeerklaeringData> = errors => {
+        console.warn("form validation errors", errors)
+    }
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
             <Section
                 title={tekst("legeerklaering.om-barnet.tittel")}
                 helpText={tekst("legeerklaering.om-barnet.hjelpetekst")}
@@ -258,20 +267,16 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <div className="flex space-x-4">
-                    <DatePicker {...tilsynDatepickerProps} onChange={(event) => console.log(event)}>
+                    <DatePicker {...tilsynDatepickerProps}>
                         <div className="flex flex-wrap justify-center gap-4">
                             <DatePicker.Input
                                 label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
                                 {...tilsynFraInputProps}
-                                {...register("tilsynPeriode.start", {required: true})}
-                                value={tilsynFraInputProps.value}
                                 error={errors.tilsynPeriode?.start?.message}
                             />
                             <DatePicker.Input
                                 label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
                                 {...tilsynTilInputProps}
-                                {...register("tilsynPeriode.end", {required: true})}
-                                value={tilsynTilInputProps.value}
                                 error={errors.tilsynPeriode?.end?.message}
                             />
                         </div>
@@ -286,15 +291,11 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                             <DatePicker.Input
                                 label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
                                 {...innleggelseFraInputProps}
-                                {...register("innleggelsesPeriode.start", {required: true})}
-                                value={innleggelseFraInputProps.value}
                                 error={errors.innleggelsesPeriode?.start?.message}
                             />
                             <DatePicker.Input
                                 label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
                                 {...innleggelseTilInputProps}
-                                {...register("innleggelsesPeriode.end", {required: true})}
-                                value={innleggelseTilInputProps.value}
                                 error={errors.innleggelsesPeriode?.end?.message}
                             />
                         </div>
