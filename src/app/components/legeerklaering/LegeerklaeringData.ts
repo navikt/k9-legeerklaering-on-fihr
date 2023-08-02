@@ -9,8 +9,8 @@ export default interface LegeerklaeringData {
     legensVurdering: string;
     hoveddiagnose: Diagnosekode | undefined;
     bidiagnoser: Diagnosekode[];
-    tilsynPeriode: DatePeriod;
-    innleggelsesPeriode: DatePeriod;
+    tilsynPerioder: DatePeriod[];
+    innleggelsesPerioder: DatePeriod[];
     lege: Doctor;
     sykehus: Hospital;
 }

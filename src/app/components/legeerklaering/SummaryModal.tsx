@@ -63,18 +63,32 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                 <Accordion.Item defaultOpen>
                     <Accordion.Header>{tekst("legeerklaering.tilsyn-varighet.tittel")}</Accordion.Header>
                     <Accordion.Content>
-                        <Heading level="5" size="xsmall">Periode</Heading>
-                        <Ingress
-                            spacing>{`${data.tilsynPeriode.start?.toDateString()} - ${data.tilsynPeriode.end?.toDateString()}`}</Ingress>
+                        <Heading level="5" size="xsmall">Perioder</Heading>
+                        <List>
+                            {
+                                data.tilsynPerioder.map(tilsynsPeriode =>
+                                    <List.Item key={`tilsynp-${tilsynsPeriode.start?.getTime()}-${tilsynsPeriode.end?.getTime()}`}>
+                                        {tilsynsPeriode.start?.toLocaleDateString('no-NO')} - {tilsynsPeriode.end?.toLocaleDateString('no-NO')}
+                                    </List.Item>
+                                )
+                            }
+                        </List>
                     </Accordion.Content>
                 </Accordion.Item>
 
                 <Accordion.Item defaultOpen>
                     <Accordion.Header>{tekst("legeerklaering.innleggelse-varighet.tittel")}</Accordion.Header>
                     <Accordion.Content>
-                        <Heading level="5" size="xsmall">Periode</Heading>
-                        <Ingress
-                            spacing>{`${data.innleggelsesPeriode.start?.toDateString()} - ${data.innleggelsesPeriode.end?.toDateString()}`}</Ingress>
+                        <Heading level="5" size="xsmall">Perioder</Heading>
+                        <List>
+                            {
+                                data.innleggelsesPerioder.map(innleggelsesPeriode =>
+                                    <List.Item key={`innleggp-${innleggelsesPeriode.start?.getTime()}-${innleggelsesPeriode.end?.getTime()}`}>
+                                        {innleggelsesPeriode.start?.toLocaleDateString('no-NO')} - {innleggelsesPeriode.end?.toLocaleDateString('no-NO')}
+                                    </List.Item>
+                                )
+                            }
+                        </List>
                     </Accordion.Content>
                 </Accordion.Item>
 

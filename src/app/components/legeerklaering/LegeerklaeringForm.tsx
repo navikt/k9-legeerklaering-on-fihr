@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    DatePicker,
-    Modal,
-    ReadMore,
-    Textarea,
-    TextField,
-    useDatepicker,
-    useRangeDatepicker
-} from '@navikt/ds-react';
+import {Button, DatePicker, Modal, ReadMore, Textarea, TextField, useDatepicker} from '@navikt/ds-react';
 import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
 import {tekst} from '@/utils/tekster';
@@ -23,6 +14,8 @@ import {ObjectSchema} from "yup";
 import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import {yupResolver} from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
+import DatePeriod from "@/models/DatePeriod";
+import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Doctor | undefined;
@@ -33,6 +26,19 @@ export interface EhrInfoLegeerklaeringForm {
 const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
     code: yup.string().required().min(4).max(10),
     text: yup.string().required()
+})
+
+const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
+    start: yup.date().required("Fra dato er påkrevd"),
+    end: yup.date().required("Til dato er påkrevd"),
+}).test({
+    name: 'datePeriodStartBeforeEnd',
+    skipAbsent: true,
+    message: `Periode start må være før slutt`,
+    test: (period) =>
+        period.start === undefined ||
+        period.end === undefined ||
+        period.start.getTime() <= period.end.getTime()
 })
 
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
@@ -68,22 +74,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.paakrevd")),
-    tilsynPeriode: yup.object({
-        start: yup.date().required(tekst("legeerklaering.tilsyn-varighet.fom.paakrevd")),
-        end: yup.date().required(tekst("legeerklaering.tilsyn-varighet.tom.paakrevd")),
-    }).required().test({
-        name: 'datePeriodStartBeforeEnd',
-        skipAbsent: true,
-        message: `Periode start må være før slutt`,
-        test: (period) =>
-            period.start === undefined ||
-            period.end === undefined ||
-            period.start.getTime() <= period.end.getTime()
-    }),
-    innleggelsesPeriode: yup.object({
-        start: yup.date().required(tekst("legeerklaering.innleggelse-varighet.fom.paakrevd")),
-        end: yup.date().required(tekst("legeerklaering.innleggelse-varighet.tom.paakrevd")),
-    })
+    tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
+    innleggelsesPerioder: yup.array().of(datePeriodValidation).required()
 })
 
 export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
@@ -120,14 +112,14 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             hoveddiagnose: undefined,
             bidiagnoser: [],
             legensVurdering: undefined,
-            tilsynPeriode: {
+            tilsynPerioder: [{
                 start: undefined,
                 end: undefined,
-            },
-            innleggelsesPeriode: {
+            }],
+            innleggelsesPerioder: [{
                 start: undefined,
                 end: undefined,
-            }
+            }]
         }
     })
 
@@ -144,44 +136,6 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             setValue('barn.birthDate', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
     });
-
-    const {
-        datepickerProps: tilsynDatepickerProps,
-        fromInputProps: tilsynFraInputProps,
-        toInputProps: tilsynTilInputProps,
-    } = useRangeDatepicker({
-        today: new Date(),
-        onRangeChange: (range) => {
-            setValue('tilsynPeriode.start', range?.from, {
-                shouldValidate: range?.from !== undefined,
-                shouldDirty: true,
-            })
-            setValue('tilsynPeriode.end', range?.to, {
-                shouldValidate: range?.to !== undefined,
-                shouldDirty: true,
-            })
-        }
-    });
-
-
-    const {
-        datepickerProps: innleggelseDatepickerProps,
-        fromInputProps: innleggelseFraInputProps,
-        toInputProps: innleggelseTilInputProps,
-    } = useRangeDatepicker({
-        today: new Date(),
-        onRangeChange: (range) => {
-            setValue('innleggelsesPeriode.start', range?.from, {
-                shouldValidate: range?.from !== undefined,
-                shouldDirty: true,
-            })
-            setValue('innleggelsesPeriode.end', range?.to, {
-                shouldValidate: range?.to !== undefined,
-                shouldDirty: true,
-            })
-        }
-    });
-
 
     const onSubmit = (data: LegeerklaeringData) => {
         setSubmittedData(data)
@@ -266,41 +220,33 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 title={tekst("legeerklaering.tilsyn-varighet.tittel")}
                 helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
-                <div className="flex space-x-4">
-                    <DatePicker {...tilsynDatepickerProps}>
-                        <div className="flex flex-wrap justify-center gap-4">
-                            <DatePicker.Input
-                                label={tekst("legeerklaering.tilsyn-varighet.fom.label")}
-                                {...tilsynFraInputProps}
-                                error={errors.tilsynPeriode?.start?.message}
-                            />
-                            <DatePicker.Input
-                                label={tekst("legeerklaering.tilsyn-varighet.tom.label")}
-                                {...tilsynTilInputProps}
-                                error={errors.tilsynPeriode?.end?.message}
-                            />
-                        </div>
-                    </DatePicker>
-                </div>
+                <Controller
+                    control={control}
+                    name="tilsynPerioder"
+                    render={({field: {onChange, value}}) => (
+                        <MultiDatePeriodInput
+                            value={value}
+                            onChange={onChange}
+                            error={errors.tilsynPerioder?.message}
+                            valueErrors={errors.tilsynPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)} // maps validation errors to the correct input row in MultiDatePeriodInput
+                        />
+                    )}
+                />
             </Section>
 
             <Section title={tekst("legeerklaering.innleggelse-varighet.tittel")}>
-                <div className="flex space-x-4">
-                    <DatePicker {...innleggelseDatepickerProps}>
-                        <div className="flex flex-wrap justify-center gap-4">
-                            <DatePicker.Input
-                                label={tekst("legeerklaering.innleggelse-varighet.fom.label")}
-                                {...innleggelseFraInputProps}
-                                error={errors.innleggelsesPeriode?.start?.message}
-                            />
-                            <DatePicker.Input
-                                label={tekst("legeerklaering.innleggelse-varighet.tom.label")}
-                                {...innleggelseTilInputProps}
-                                error={errors.innleggelsesPeriode?.end?.message}
-                            />
-                        </div>
-                    </DatePicker>
-                </div>
+                <Controller
+                    control={control}
+                    name="innleggelsesPerioder"
+                    render={({field: {onChange, value}}) => (
+                        <MultiDatePeriodInput
+                            value={value}
+                            onChange={onChange}
+                            error={errors.innleggelsesPerioder?.message}
+                            valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}
+                        />
+                    )}
+                />
             </Section>
 
             <Section title={tekst("legeerklaering.om-legen.tittel")}>
