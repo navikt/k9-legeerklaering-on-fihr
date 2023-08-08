@@ -3,11 +3,11 @@
 import {Button, Label} from "@navikt/ds-react";
 import {PencilIcon, TrashIcon} from "@navikt/aksel-icons";
 import React, {ReactNode, useId, useRef, useState} from "react";
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
+import type Diagnosekode from "@navikt/diagnosekoder/Diagnosekode";
 
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;

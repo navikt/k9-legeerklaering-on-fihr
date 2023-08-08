@@ -1,4 +1,4 @@
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import type Diagnosekode from "@navikt/diagnosekoder/Diagnosekode";
 import {DiagnosekodeSearcher} from "@/app/api/diagnosekoder/DiagnosekodeSearcher";
 import {expect, test} from "@jest/globals";
 import {icd10Diagnosekoder} from "@/app/api/diagnosekoder/ICD10";

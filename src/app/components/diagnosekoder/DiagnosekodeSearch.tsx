@@ -1,7 +1,7 @@
 "use client"
 
 import {Alert, Button, Loader, Search, Table} from "@navikt/ds-react";
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import type Diagnosekode from "@navikt/diagnosekoder/Diagnosekode";
 import {
     ForwardedRef,
     forwardRef,
