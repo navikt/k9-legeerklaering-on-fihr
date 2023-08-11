@@ -1,6 +1,6 @@
 import {render, waitFor, screen} from "@testing-library/react";
 import DiagnosekodeSearch from "@/app/components/diagnosekoder/DiagnosekodeSearch";
-import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import {type Diagnosekode} from "@navikt/diagnosekoder";
 import {searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/client";
 import {fakeDiagnosekoder} from "@/tests/DiagnosekodeSearcher.test";
 import "@testing-library/jest-dom";

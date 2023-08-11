@@ -4,7 +4,7 @@ import React, {ReactNode, useId, useRef, useState} from "react";
 import {Button, Label} from "@navikt/ds-react";
 import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import type {Diagnosekode} from "@navikt/diagnosekoder";
 
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";

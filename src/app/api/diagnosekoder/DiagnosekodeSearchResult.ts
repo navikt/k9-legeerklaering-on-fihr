@@ -1,4 +1,4 @@
-import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import {type Diagnosekode} from "@navikt/diagnosekoder";
 import {instanceOfDiagnosekodeArray} from "@/app/api/diagnosekoder/Diagnosekode";
 
 export interface DiagnosekodeSearchResult {

@@ -1,7 +1,8 @@
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import {type Diagnosekode, ICD10} from "@navikt/diagnosekoder";
 import {DiagnosekodeSearcher} from "@/app/api/diagnosekoder/DiagnosekodeSearcher";
 import {expect, test} from "@jest/globals";
-import {icd10Diagnosekoder} from "@/app/api/diagnosekoder/ICD10";
+
+const icd10Codes = ICD10;
 
 export const fakeDiagnosekoder: Diagnosekode[] = [
     {"code":"A000","text":"Diagnose 1"},
@@ -43,7 +44,7 @@ describe("DiagnosekodeSearcher with ICD10 input", () => {
         {code: 'B162', text: 'Akutt hepatitt B uten delta-agens med leverkoma'},
         {code: 'B169', text: 'Akutt hepatitt B uten deltavirus og uten leverkoma'},
     ];
-    const searcher = new DiagnosekodeSearcher(icd10Diagnosekoder, 100);
+    const searcher = new DiagnosekodeSearcher(icd10Codes, 100);
     test('with code A001 should return a single correct result', () => {
         const result = searcher.search('A001', 1);
         expect(result.diagnosekoder).toHaveLength(1);

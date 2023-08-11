@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
-import {icd10Diagnosekoder} from "@/app/api/diagnosekoder/ICD10";
 import {DiagnosekodeSearcher} from "@/app/api/diagnosekoder/DiagnosekodeSearcher";
 import {searchParametersFromUrl} from "@/app/api/diagnosekoder/DiagnosekodeSearchParameters";
+import {ICD10} from '@navikt/diagnosekoder';
 
 /**
  * We want to chache these responses for a long time (3 hours), since the data should only change once a year.
@@ -12,7 +12,7 @@ const addCacheHeader = (res: NextResponse): NextResponse => {
     return res;
 }
 
-const searcher = new DiagnosekodeSearcher(icd10Diagnosekoder, 100);
+const searcher = new DiagnosekodeSearcher(ICD10, 100);
 
 /**
  * Searches through the diagnosekoder json and returns a limited result set. The select dialog for diagnosekoder

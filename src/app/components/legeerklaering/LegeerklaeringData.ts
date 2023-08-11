@@ -1,8 +1,8 @@
 import Patient from "@/models/Patient";
-import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import DatePeriod from "@/models/DatePeriod";
 import Doctor from "@/models/Doctor";
 import Hospital from "@/models/Hospital";
+import {type Diagnosekode} from '@navikt/diagnosekoder'
 
 export default interface LegeerklaeringData {
     barn: Patient;
