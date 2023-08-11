@@ -1,4 +1,4 @@
-import type ICD10Diagnosekode from "@navikt/diagnosekoder/ICD10Diagnosekode";
-import ICD10 from "@navikt/diagnosekoder/ICD10";
+import ICD10 from './ICD10.json';
+import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 
-export const icd10Diagnosekoder: ReadonlyArray<ICD10Diagnosekode> = ICD10;
+export const icd10Diagnosekoder: Diagnosekode[] = ICD10;

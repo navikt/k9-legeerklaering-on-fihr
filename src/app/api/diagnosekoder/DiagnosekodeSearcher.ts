@@ -1,5 +1,5 @@
+import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import type {DiagnosekodeSearchResult} from "@/app/api/diagnosekoder/DiagnosekodeSearchResult";
-import Diagnosekode from "@navikt/diagnosekoder/Diagnosekode";
 
 /**
  * We add an uppercased text for doing case-insensitive search.
@@ -17,7 +17,7 @@ export class DiagnosekodeSearcher {
     public readonly diagnosekoderWithUppercased: DiagnosekodeWithUppercased[];
 
     public constructor(
-        public readonly diagnosekoder: ReadonlyArray<Diagnosekode>,
+        public readonly diagnosekoder: Diagnosekode[],
         public readonly pageSize: number,
     ) {
         this.diagnosekoderWithUppercased = this.diagnosekoder.map(dk =>

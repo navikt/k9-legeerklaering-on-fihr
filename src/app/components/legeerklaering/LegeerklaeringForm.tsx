@@ -11,7 +11,7 @@ import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
 import {ObjectSchema} from "yup";
-import Diagnosekode from "@navikt/diagnosekoder/Diagnosekode";
+import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
 import {yupResolver} from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import DatePeriod from "@/models/DatePeriod";
