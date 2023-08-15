@@ -1,4 +1,4 @@
-# K9 Leegerklæring on FIHR
+# K9 Leegerklæring on FHIR
 
 ## Getting Started
 
