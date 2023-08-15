@@ -1,7 +1,7 @@
 "use client"
 
 import {Alert, Button, Loader, Search, Table} from "@navikt/ds-react";
-import type {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import type {Diagnosekode, ICD10Diagnosekode} from "@navikt/diagnosekoder";
 import {
     ForwardedRef,
     forwardRef,
@@ -18,7 +18,7 @@ import diagnosekoderCss from './diagnosekoder.module.css';
 import debounce, {AbortedDebounce} from "@/utils/debounce";
 
 import dkCss from './diagnosekoder.module.css';
-import type {DiagnosekodeSearchResult} from "@/app/api/diagnosekoder/DiagnosekodeSearchResult";
+import type {DiagnosekodeSearchResult} from "@navikt/diagnosekoder";
 import {searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/client";
 
 interface DiagnosekoderProp {
@@ -160,7 +160,7 @@ const DiagnosekodeTable = forwardRef(({diagnosekoder, onSelectedDiagnose, onKeyD
 })
 DiagnosekodeTable.displayName = "DiagnosekodeTable"
 
-const emptySearchResult: DiagnosekodeSearchResult = {
+const emptySearchResult: DiagnosekodeSearchResult<ICD10Diagnosekode> = {
     diagnosekoder: [],
     pageNumber: 0,
     hasMore: false,
@@ -183,7 +183,7 @@ const keycodes = {
 
 const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
     const [searchParams, setSearchParams] = useState(initSearchParams)
-    const [searchResult, setSearchResult] = useState<DiagnosekodeSearchResult>(emptySearchResult)
+    const [searchResult, setSearchResult] = useState<DiagnosekodeSearchResult<ICD10Diagnosekode>>(emptySearchResult)
     const [error, setError] = useState<Error | null>(null)
     const [isLoading, setIsLoading] = useState(false);
     const diagnosekodeTableRef = useRef<DiagnosekodeTableMethods>(null)

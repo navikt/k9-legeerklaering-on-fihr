@@ -1,14 +1,24 @@
 import {render, waitFor, screen} from "@testing-library/react";
 import DiagnosekodeSearch from "@/app/components/diagnosekoder/DiagnosekodeSearch";
-import {Diagnosekode} from "@/app/api/diagnosekoder/Diagnosekode";
+import {type Diagnosekode, ICD10Diagnosekode, toIcd10Diagnosekode} from "@navikt/diagnosekoder";
 import {searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/client";
-import {fakeDiagnosekoder} from "@/tests/DiagnosekodeSearcher.test";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 
 jest.mock("@/app/api/diagnosekoder/client")
 
 const mockedSearchDiagnosekoderFetch = jest.mocked(searchDiagnosekoderFetch);
+
+const fakeDiagnosekoder: ICD10Diagnosekode[] = [
+    toIcd10Diagnosekode({"code":"A000","text":"Diagnose 1"}),
+    toIcd10Diagnosekode({"code":"A001","text":"Diagnose 2"}),
+    toIcd10Diagnosekode({"code":"A002","text":"Diagnose 3"}),
+    toIcd10Diagnosekode({"code":"A010","text":"Diagnose 4"}),
+    toIcd10Diagnosekode({"code":"C011","text":"Diagnose 5"}),
+    toIcd10Diagnosekode({"code":"v201","text":"Diagnose 6"}),
+    toIcd10Diagnosekode({"code":"v230","text":"Diagnose 7"}),
+]
+
 
 describe("DiagnosekodeSearch works", () => {
     test("initial empty search returns pages of results", async () => {
