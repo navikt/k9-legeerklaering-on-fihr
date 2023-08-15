@@ -1,15 +1,12 @@
 import validateRoute from "@/utils/validateRoute";
-import {
-    DiagnosekodeSearchResult,
-    instanceOfDiagnosekodeSearchResult
-} from "@/app/api/diagnosekoder/DiagnosekodeSearchResult";
+import { DiagnosekodeSearchResult, ICD10Diagnosekode, instanceOfDiagnosekodeSearchResult } from "@navikt/diagnosekoder";
 import {searchParametersToUrl} from "@/app/api/diagnosekoder/DiagnosekodeSearchParameters";
-
 
 export const diagnosekoderApiPath = validateRoute('/api/diagnosekoder');
 
+export const searchDiagnosekoderFetch =
+    async (searchText: string, pageNumber: number, abortSignal: AbortSignal): Promise<DiagnosekodeSearchResult<ICD10Diagnosekode>> => {
 
-export const searchDiagnosekoderFetch = async (searchText: string, pageNumber: number, abortSignal: AbortSignal): Promise<DiagnosekodeSearchResult> => {
     const baseUrl = new URL(window.location.origin);
     const url = searchParametersToUrl(
         new URL(diagnosekoderApiPath, baseUrl),
@@ -18,7 +15,7 @@ export const searchDiagnosekoderFetch = async (searchText: string, pageNumber: n
     const resp = await fetch(url.toString(), {signal: abortSignal})
     if (resp.ok) {
         const data = await resp.json()
-        if (instanceOfDiagnosekodeSearchResult(data)) {
+        if (instanceOfDiagnosekodeSearchResult<ICD10Diagnosekode>(data)) {
             return data;
         } else {
             const someData = JSON.stringify(data).substring(0, 80)

@@ -1,7 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
-import {DiagnosekodeSearcher} from "@/app/api/diagnosekoder/DiagnosekodeSearcher";
 import {searchParametersFromUrl} from "@/app/api/diagnosekoder/DiagnosekodeSearchParameters";
-import {ICD10} from '@navikt/diagnosekoder';
+import {DiagnosekodeSearcher, ICD10} from '@navikt/diagnosekoder';
 
 /**
  * We want to chache these responses for a long time (3 hours), since the data should only change once a year.
