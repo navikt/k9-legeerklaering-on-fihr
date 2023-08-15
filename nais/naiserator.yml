@@ -39,4 +39,4 @@ spec:
     value: "{{this}}"
   {{/each}}
   envFrom:
-    - secret: {{app}}-secret
+    - secret: {{app}}-secrets
