@@ -1,8 +1,7 @@
 import { oauth2 } from 'fhirclient';
 import ClientWrapper from "@/integrations/fhir/ClientWrapper";
 
-import { fhirClientAuthorizeParams } from '@/utils/environment';
-
+import { fhirClientId } from '@/utils/environment';
 
 /**
  * Initializes the smart client. If the URL is a "launch url" coming from the EHR system, that is used, and the resulting
@@ -13,14 +12,16 @@ import { fhirClientAuthorizeParams } from '@/utils/environment';
  *
  * @param reAuth set to true when launching a new context in a existing window/tab, to force a re-authentication
  */
-export const clientInitInBrowser = async (reAuth: boolean, launch: string | undefined): Promise<ClientWrapper> => {
+export const clientInitInBrowser = async (reAuth: boolean, issuer: string | undefined, launch: string | undefined): Promise<ClientWrapper> => {
     if (reAuth) {
         sessionStorage.clear();
     }
 
     const client = await oauth2.init({
-        ...await fhirClientAuthorizeParams(),
+        clientId: await fhirClientId(),
+        iss: issuer,
         launch: launch,
+        redirectUri: "/"
     });
     return new ClientWrapper(client)
 }

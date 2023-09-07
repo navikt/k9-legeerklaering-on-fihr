@@ -4,7 +4,6 @@ const nextConfig = {
     env: {
         FHIR_API_URL: process.env.FHIR_API_URL,
         FHIR_CLIENT_ID: process.env.FHIR_CLIENT_ID,
-        FHIR_CLIENT_SCOPE: process.env.FHIR_CLIENT_SCOPE,
         FHIR_SUBSCRIPTION_KEY: process.env.FHIR_SUBSCRIPTION_KEY,
     },
     experimental: {
