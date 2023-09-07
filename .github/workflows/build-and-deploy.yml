@@ -33,8 +33,6 @@ jobs:
       contents: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      FHIR_API_URL: ${{ secrets.FHIR_API_URL }}
-      FHIR_API_SCOPE: ${{ secrets.FHIR_API_SCOPE }}
       FHIR_API_CLIENT_ID: ${{ secrets.FHIR_API_CLIENT_ID }}
       FHIR_SUBSCRIPTION_KEY: ${{ secrets.FHIR_SUBSCRIPTION_KEY }}
     outputs:
