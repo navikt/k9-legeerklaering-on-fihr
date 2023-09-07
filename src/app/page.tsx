@@ -1,10 +1,10 @@
 'use client';
 
-import {Heading} from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import Header from '@/app/components/Header';
-import React, {useEffect, useState} from 'react';
-import LegeerklaeringForm, {EhrInfoLegeerklaeringForm} from '@/app/components/legeerklaering/LegeerklaeringForm';
-import {clientInitInBrowser} from "@/integrations/fhir/clientInit";
+import React, { useEffect, useState } from 'react';
+import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
+import { clientInitInBrowser } from "@/integrations/fhir/clientInit";
 import AboutExpansionCard from "@/app/components/legeerklaering/AboutExpansionCard";
 import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
@@ -30,7 +30,8 @@ export default function Home({searchParams}: NextPageProps) {
             try {
                 // If url has query argument "iss" set, this is a new launch from EHR system, so force a reauthorization.
                 const reAuth = searchParams["iss"] !== undefined;
-                const api = await clientInitInBrowser(reAuth)
+                const launch = searchParams["launch"] as string | undefined;
+                const api = await clientInitInBrowser(reAuth, launch)
                 const [doctor, patient, hospital] = await Promise.all([api.getDoctor(), api.getPatient(), api.getHospital()]);
                 setState(state => ({
                     loading: state.loading,

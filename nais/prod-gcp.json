@@ -8,6 +8,6 @@
     "https://k9-legeerklaering.intern.nav.no"
   ],
   "env": {
-    "DIPS_API_URL": "https://api.dips.no"
+    "DIPS_API_URL": "https://api.dips.no/fhir"
   }
 }

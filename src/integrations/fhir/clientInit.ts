@@ -1,20 +1,8 @@
-import {oauth2} from 'fhirclient';
+import { oauth2 } from 'fhirclient';
 import ClientWrapper from "@/integrations/fhir/ClientWrapper";
-import {fhirclient} from "fhirclient/lib/types";
-import AuthorizeParams = fhirclient.AuthorizeParams;
 
-/**
- * Authparams that should work in the "EHR launch" setting which we expect to operate.
- *
- * All other params are then expected to come in via request url query arguments from the EHR browser launch, and we expect
- * that the auth flow should be displayed in the same browser window, so we don't set the target option, and therefore don't
- * need to set the completeInTarget option or any of the width or height options either.
- */
-const authParams: AuthorizeParams = {
-    clientId: "NAV legeerklæring",
-    redirectUri: "/",
-    scope: "patient/*.read user/*.read openid fhirUser profile", // Not sure exactly what we need here yet.
-}
+import { fhirClientAuthorizeParams } from '@/utils/environment';
+
 
 /**
  * Initializes the smart client. If the URL is a "launch url" coming from the EHR system, that is used, and the resulting
@@ -25,11 +13,15 @@ const authParams: AuthorizeParams = {
  *
  * @param reAuth set to true when launching a new context in a existing window/tab, to force a re-authentication
  */
-export const clientInitInBrowser = async (reAuth: boolean): Promise<ClientWrapper> => {
+export const clientInitInBrowser = async (reAuth: boolean, launch: string | undefined): Promise<ClientWrapper> => {
     if (reAuth) {
         sessionStorage.clear();
     }
-    const client = await oauth2.init(authParams)
+
+    const client = await oauth2.init({
+        ...await fhirClientAuthorizeParams(),
+        launch: launch,
+    });
     return new ClientWrapper(client)
 }
 
