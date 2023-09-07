@@ -11,6 +11,8 @@ import { fhirClientId } from '@/utils/environment';
  * user must then reauthenticate by opening the window again from the EHR system to get a new launch url.
  *
  * @param reAuth set to true when launching a new context in a existing window/tab, to force a re-authentication
+ * @param issuer
+ * @param launch
  */
 export const clientInitInBrowser = async (reAuth: boolean, issuer: string | undefined, launch: string | undefined): Promise<ClientWrapper> => {
     if (reAuth) {
