@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Hente kode
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v4.0.0
 
       - name: Sette opp Node
         uses: actions/setup-node@v3
@@ -21,8 +21,8 @@ jobs:
           scope: '@navikt'
 
       - name: Installere moduler
-        run: yarn install --immutable
+        run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Sjekke opp mot Lint-regler
-        run: yarn run lint
+        run: npm run lint

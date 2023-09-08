@@ -23,21 +23,18 @@ jobs:
     secrets:
       READER_TOKEN: ${{ secrets.READER_TOKEN }}
 
-  build:
-    uses: ./.github/workflows/build.yml
-    secrets:
-      READER_TOKEN: ${{ secrets.READER_TOKEN }}
-
   docker:
     name: Build and push docker image
     if: startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/heads/main') || github.event.deployment.payload.triggered # Build and push docker if branch is either main or dev-*
     runs-on: ubuntu-latest
-    needs: [ lint, test, build ]
+    needs: [ lint, test ]
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
     outputs:
       TAG: ${{ steps.docker-tag.outputs.TAG }}
     steps:
       - name: Hente kode
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v4.0.0
 
       - name: Sette opp Node
         uses: actions/setup-node@v3
@@ -46,19 +43,11 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
 
-      - name: Laster ned distribusjonspakke
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: ./.next
-
       - name: Installere moduler
-        run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+        run: npm ci
 
       - name: Login to docker
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v2.2.0
         with:
           registry: ghcr.io
           username: ${{ github.REPOSITORY_OWNER }}
@@ -84,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ docker ]
     steps:
-      - uses: actions/checkout@v3.3.0
+      - uses: actions/checkout@v4.0.0
       - name: Deploye til dev-gcp
         uses: nais/deploy/actions/deploy@v1
         env:
@@ -101,7 +90,7 @@ jobs:
 #    runs-on: ubuntu-latest
 #    needs: [ docker ]
 #    steps:
-#      - uses: actions/checkout@v3.3.0
+#      - uses: actions/checkout@v4.0.0
 #      - name: Deploye til dev-gcp
 #        uses: nais/deploy/actions/deploy@v1
 #        env:
