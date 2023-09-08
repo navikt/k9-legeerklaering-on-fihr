@@ -1,7 +1,7 @@
 "use client";
 
 import "@navikt/ds-css";
-import { GuidePanel, Loader, Skeleton } from '@navikt/ds-react';
+import { GuidePanel, Skeleton } from '@navikt/ds-react';
 import Header from '@/app/components/Header';
 import React, { useContext } from 'react';
 import { FHIRContext } from "./context/FHIRContext";
