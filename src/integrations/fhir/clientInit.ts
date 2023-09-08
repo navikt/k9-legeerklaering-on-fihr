@@ -1,5 +1,5 @@
 import { oauth2 } from 'fhirclient';
-import ClientWrapper from "@/integrations/fhir/ClientWrapper";
+import FhirService from "@/integrations/fhir/FhirService";
 
 import { fhirClientId } from '@/utils/environment';
 import Client from 'fhirclient/lib/Client';
@@ -15,7 +15,7 @@ import Client from 'fhirclient/lib/Client';
  * @param issuer
  * @param launch
  */
-export const clientInitInBrowser = async (reAuth: boolean, issuer: string | undefined, launch: string | undefined): Promise<ClientWrapper> => {
+export const clientInitInBrowser = async (reAuth: boolean, issuer: string | undefined, launch: string | undefined): Promise<FhirService> => {
     if (reAuth) {
         sessionStorage.clear();
     }
@@ -27,10 +27,10 @@ export const clientInitInBrowser = async (reAuth: boolean, issuer: string | unde
         launch: launch,
         redirectUri: "/"
     });
-    return new ClientWrapper(client)
+    return new FhirService(client)
 }
 
 // XXX Wanted to create a initOnServer function here, and possibly do some server side rendering. Turned out to be a
 // bit difficult. (must create adapter with solution for sharing state storage between server and client(?))
-// export const clientInitOnServer = async (req): Promise<ClientWrapper> => {
+// export const clientInitOnServer = async (req): Promise<FhirService> => {
 // }

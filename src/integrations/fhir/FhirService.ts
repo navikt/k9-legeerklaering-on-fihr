@@ -22,7 +22,7 @@ import Bundle = fhirclient.FHIR.Bundle;
  * Wraps the imported FHIR client so that we can do our adaptions of what it provides, and provide our own argument
  * and return types to match our needs.
  */
-export default class ClientWrapper {
+export default class FhirService {
     private practitionerRole: Promise<IPractitionerRole>;
 
     public constructor(private client: Client) {
@@ -49,7 +49,7 @@ export default class ClientWrapper {
             throw new Error("No entries found in the bundle.");
         }
 
-        const practitionerRole = ClientWrapper.validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource as IPractitionerRole));
+        const practitionerRole = FhirService.validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource as IPractitionerRole));
 
         if (!practitionerRole) {
             throw new Error("Unable to decode the current user.");
@@ -68,7 +68,7 @@ export default class ClientWrapper {
                 "dips-subscription-key": await fhirSubscriptionKey(),
             }
         });
-        const practitioner = ClientWrapper.validateOrThrow(R4.RTTI_Practitioner.decode(user));
+        const practitioner = FhirService.validateOrThrow(R4.RTTI_Practitioner.decode(user));
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
@@ -86,7 +86,7 @@ export default class ClientWrapper {
                 "dips-subscription-key": await fhirSubscriptionKey(),
             }
         });
-        const patient = ClientWrapper.validateOrThrow(R4.RTTI_Patient.decode(p));
+        const patient = FhirService.validateOrThrow(R4.RTTI_Patient.decode(p));
         const name = officialHumanNameResolver(patient.name)
         const identifier = officialIdentifierResolver(patient.identifier);
         const birthDate = dateTimeResolver(patient.birthDate)
@@ -118,7 +118,7 @@ export default class ClientWrapper {
             }
         });
 
-        const organization = ClientWrapper.validateOrThrow(R4.RTTI_Organization.decode(orgResponse));
+        const organization = FhirService.validateOrThrow(R4.RTTI_Organization.decode(orgResponse));
 
         const {name, telecom, address} = organization;
 

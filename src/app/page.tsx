@@ -32,8 +32,13 @@ export default function Home({searchParams}: NextPageProps) {
                 const issuer = searchParams["iss"] as string | undefined;
                 const reAuth = issuer !== undefined;
                 const launch = searchParams["launch"] as string | undefined;
-                const api = await clientInitInBrowser(reAuth, issuer, launch)
-                const [doctor, patient, hospital] = await Promise.all([api.getDoctor(), api.getPatient(), api.getHospital()]);
+                const fhirService = await clientInitInBrowser(reAuth, issuer, launch)
+                const [doctor, patient, hospital] = await Promise.all([
+                    fhirService.getDoctor(),
+                    fhirService.getPatient(),
+                    fhirService.getHospital()
+                ]);
+
                 setState(state => ({
                     loading: state.loading,
                     doctor,
@@ -42,7 +47,7 @@ export default function Home({searchParams}: NextPageProps) {
                     error: null,
                 }))
             } catch (e) {
-                if(e instanceof Error) {
+                if (e instanceof Error) {
                     const error: Error = e;
                     setState(state => ({...state, error}));
                 } else {
@@ -61,14 +66,15 @@ export default function Home({searchParams}: NextPageProps) {
             <Header doctor={state.doctor}/>
             <div className="mx-auto mt-16 max-w-4xl p-4 pb-32 ">
                 <Heading level="1" size="xlarge">Legeerklæring - pleiepenger sykt barn</Heading>
-                <AboutExpansionCard />
+                <AboutExpansionCard/>
                 {
                     state.error ?
-                        <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error} /> :
-                        state.loading ? <LoadingIndicator /> :
-                            <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital} />
+                        <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/> :
+                        state.loading ? <LoadingIndicator/> :
+                            <LegeerklaeringForm doctor={state.doctor} patient={state.patient}
+                                                hospital={state.hospital}/>
                 }
-                <ContactInfoSection />
+                <ContactInfoSection/>
             </div>
         </div>
     )
