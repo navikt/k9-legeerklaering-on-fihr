@@ -1,6 +1,7 @@
 'use client';
 
 import { Heading } from '@navikt/ds-react';
+import "@navikt/ds-css";
 import Header from '@/app/components/Header';
 import React, { useEffect, useState } from 'react';
 import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
