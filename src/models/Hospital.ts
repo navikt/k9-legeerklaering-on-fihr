@@ -1,7 +1,7 @@
 import Address from "@/models/Address";
 
 export default interface Hospital {
-    readonly name: string | undefined;
-    readonly phoneNumber: string | undefined;
-    readonly address: Address | undefined;
+    readonly name?: string;
+    readonly phoneNumber?: string;
+    readonly address?: Address;
 }
