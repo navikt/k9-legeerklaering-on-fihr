@@ -2,7 +2,19 @@
 
 ## Getting Started
 
-### install dependencies
+### Requirements
+- [Node.js](https://nodejs.org/en/) >= 18.x.x
+- [npm](https://www.npmjs.com/) >= 9.x.x
+- @Navikt packages authenticated with Github Packages [Click here for guide](https://github.com/navikt/frontend#installere-pakker-lokalt)
+
+### Environment variables
+Create a .env file in the root of the project with the following variables: 
+- `FHIR_API_URL`
+- `FHIR_SUBSCRIPTION_KEY`
+
+The value of `FHIR_SUBSCRIPTION_KEY` can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile)
+
+### Install dependencies
 ```bash
 npm ci
  ```
@@ -10,9 +22,17 @@ npm ci
 ```bash
 npm run dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Build the server with docker
+```bash
+docker build -t k9-legeerklaering-on-fihr .
+```
+
+### Run the docker image
+```bash
+docker run -p 8080:8080 k9-legeerklaering-on-fihr:latest
+```
 
 ## Løsningsbeskrivelse
 Visualisert løsningsbeskrivelse som beskrevet i [Implementasjonsguide SMART App Launch Framework](https://helsenorge.atlassian.net/wiki/spaces/HELSENORGE/pages/67469415/Implementasjonsguide+SMART+App+Launch+Framework)
