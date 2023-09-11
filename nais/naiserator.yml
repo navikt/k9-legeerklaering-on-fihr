@@ -29,9 +29,6 @@ spec:
   {{#each ingresses as |url|}}
      - {{url}}
   {{/each}}
-  outbound:
-    external:
-      - host: api.dips.no
   replicas:
     min: {{ minReplicas }}
     max: {{ maxReplicas }}
