@@ -1,0 +1,120 @@
+.modal {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 16px;
+    /*
+    To get the searchresult to be the scroll container, we must set a caclulated absolute max height.
+
+    To avoid janking resizes when filtering the searchresult down to a low count, we set the height instead of just max-height.
+
+    To be correct the max height must be he view height minus padding, which in this the case of a nav Modal component
+    is based on the --a-spacing-4 css variable (16px)
+
+    To avoid a very tall modal on large screens we set it to 1200px as a max value
+    */
+    height: min(1200px, calc(100vh - 2 * var(--a-spacing-4, 16px)));
+
+    /* To avoid janking resizes when filtering, set a width, and max width for responsiveness */
+    width: 800px;
+    max-width: 99%;
+}
+
+.heading, .searchinput {
+    flex: 0 0 auto;
+}
+
+.searchresult {
+    flex: 0 1 auto;
+    overflow-y: auto;
+}
+
+.diagnosekoderow:hover {
+    cursor: pointer;
+}
+
+.inputwrapper {
+    display: grid;
+    justify-items: start;
+    gap: var(--a-spacing-2);
+}
+
+.inputwrapper :hover {
+    border-color: var(--ac-textfield-hover-border, var(--a-border-action));
+}
+
+.frame {
+    border: 1px solid var(--ac-textfield-border, var(--a-border-default));
+    border-radius: var(--a-border-radius-medium);
+    font-size: var(--a-font-size-large);
+    line-height: var(--a-font-line-height-large);
+    padding: var(--a-spacing-2);
+    color: var(--ac-textfield-text, var(--a-text-default));
+    background-color: var(--ac-textfield-bg, var(--a-surface-default));
+}
+
+.line {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    column-gap: var(--a-spacing-2);
+    width: 100%;
+    min-height: 48px;
+}
+
+.framedline {
+    composes: frame;
+    composes: line;
+}
+
+.inputwrapper .value {
+    width: 100%;
+}
+
+.inputwrapper button:focus {
+    outline: none;
+    box-shadow: var(--a-shadow-focus);
+}
+
+.framedlisting {
+    composes: frame;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+
+/* Css for overlaying loader on loading search result table */
+.centerOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    margin: auto;
+}
+
+/* transparent indicates stale content while loading new */
+.transparent {
+    opacity: 0.6;
+    transition-delay: 0.3s;
+    transition-property: opacity;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in;
+}
+
+/* nonTransparent is used as normal state to get a smooth transition back from transition. */
+.nonTransparent {
+    opacity: 1;
+    transition-delay: 0.05s;
+    transition-property: opacity;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in;
+}
+
+.diagnosekodeCol {
+    width: var(--a-spacing-16, 64px);
+}
+
+.actionCol {
+    width: var(--a-spacing-10);
+}

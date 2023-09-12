@@ -1,0 +1,802 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="navds-form-field multiwrapper undefined"
+      >
+        <div
+          class="navds-date__wrapper wrapper"
+        >
+          <div
+            class="inputwrapper"
+          >
+            <div
+              class="startInput navds-form-field navds-form-field--medium navds-date__field"
+            >
+              <label
+                class="navds-form-field__label navds-label"
+                for="datepicker-input-r9"
+              >
+                Fra og med
+              </label>
+              <div
+                class="navds-date__field-wrapper"
+              >
+                <input
+                  aria-controls="r8"
+                  autocomplete="off"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  id="datepicker-input-r9"
+                  size="14"
+                  value="01.04.2023"
+                />
+                <button
+                  class="navds-date__field-button"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-labelledby="title-ra"
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    pointer-events="none"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title
+                      id="title-ra"
+                    >
+                      Åpne datovelger
+                    </title>
+                    <path
+                      clip-rule="evenodd"
+                      d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="datepicker-input-error-r9"
+              />
+            </div>
+            <div
+              class="endInput navds-form-field navds-form-field--medium navds-date__field"
+            >
+              <label
+                class="navds-form-field__label navds-label"
+                for="datepicker-input-rb"
+              >
+                Til og med
+              </label>
+              <div
+                class="navds-date__field-wrapper"
+              >
+                <input
+                  aria-controls="r8"
+                  autocomplete="off"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  id="datepicker-input-rb"
+                  size="14"
+                  value="19.04.2023"
+                />
+                <button
+                  class="navds-date__field-button"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-labelledby="title-rc"
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    pointer-events="none"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title
+                      id="title-rc"
+                    >
+                      Åpne datovelger
+                    </title>
+                    <path
+                      clip-rule="evenodd"
+                      d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="datepicker-input-error-rb"
+              />
+            </div>
+            <div
+              class="description"
+            >
+              <p
+                class="navds-body-short"
+              >
+                = 19 dager
+              </p>
+            </div>
+            <div
+              class="actions"
+            >
+              <button
+                class="navds-button navds-button--secondary navds-button--small"
+              >
+                <span
+                  class="navds-button__icon"
+                >
+                  <svg
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M8.75 6c0-.69.56-1.25 1.25-1.25h4c.69 0 1.25.56 1.25 1.25v.25h-6.5V6Zm-1.5.25V6A2.75 2.75 0 0 1 10 3.25h4A2.75 2.75 0 0 1 16.75 6v.25h2.75a.75.75 0 0 1 0 1.5h-.805l-.876 11.384a1.75 1.75 0 0 1-1.745 1.616H7.926a1.75 1.75 0 0 1-1.745-1.616L5.305 7.75H4.5a.75.75 0 0 1 0-1.5h2.75Zm-.44 1.5h10.38l-.867 11.27a.25.25 0 0 1-.249.23H7.926a.25.25 0 0 1-.25-.23L6.81 7.75Zm3.19 2a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm4.75.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  aria-live="polite"
+                  class="navds-label navds-label--small"
+                >
+                  Fjern
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="navds-date__wrapper wrapper"
+        >
+          <div
+            class="inputwrapper"
+          >
+            <div
+              class="startInput navds-form-field navds-form-field--medium navds-date__field"
+            >
+              <label
+                class="navds-form-field__label navds-sr-only navds-label"
+                for="datepicker-input-rf"
+              >
+                Fra og med
+              </label>
+              <div
+                class="navds-date__field-wrapper"
+              >
+                <input
+                  aria-controls="re"
+                  autocomplete="off"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  id="datepicker-input-rf"
+                  size="14"
+                  value="15.05.2023"
+                />
+                <button
+                  class="navds-date__field-button"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-labelledby="title-rg"
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    pointer-events="none"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title
+                      id="title-rg"
+                    >
+                      Åpne datovelger
+                    </title>
+                    <path
+                      clip-rule="evenodd"
+                      d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="datepicker-input-error-rf"
+              />
+            </div>
+            <div
+              class="endInput navds-form-field navds-form-field--medium navds-date__field"
+            >
+              <label
+                class="navds-form-field__label navds-sr-only navds-label"
+                for="datepicker-input-rh"
+              >
+                Til og med
+              </label>
+              <div
+                class="navds-date__field-wrapper"
+              >
+                <input
+                  aria-controls="re"
+                  autocomplete="off"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  id="datepicker-input-rh"
+                  size="14"
+                  value="20.05.2023"
+                />
+                <button
+                  class="navds-date__field-button"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-labelledby="title-ri"
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    pointer-events="none"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title
+                      id="title-ri"
+                    >
+                      Åpne datovelger
+                    </title>
+                    <path
+                      clip-rule="evenodd"
+                      d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                aria-live="polite"
+                aria-relevant="additions removals"
+                class="navds-form-field__error"
+                id="datepicker-input-error-rh"
+              />
+            </div>
+            <div
+              class="description"
+            >
+              <p
+                class="navds-body-short"
+              >
+                = 6 dager
+              </p>
+            </div>
+            <div
+              class="actions"
+            >
+              <button
+                class="navds-button navds-button--secondary navds-button--small"
+              >
+                <span
+                  class="navds-button__icon"
+                >
+                  <svg
+                    fill="none"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M8.75 6c0-.69.56-1.25 1.25-1.25h4c.69 0 1.25.56 1.25 1.25v.25h-6.5V6Zm-1.5.25V6A2.75 2.75 0 0 1 10 3.25h4A2.75 2.75 0 0 1 16.75 6v.25h2.75a.75.75 0 0 1 0 1.5h-.805l-.876 11.384a1.75 1.75 0 0 1-1.745 1.616H7.926a1.75 1.75 0 0 1-1.745-1.616L5.305 7.75H4.5a.75.75 0 0 1 0-1.5h2.75Zm-.44 1.5h10.38l-.867 11.27a.25.25 0 0 1-.249.23H7.926a.25.25 0 0 1-.25-.23L6.81 7.75Zm3.19 2a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm4.75.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  aria-live="polite"
+                  class="navds-label navds-label--small"
+                >
+                  Fjern
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          class="addbutton navds-button navds-button--secondary navds-button--small"
+        >
+          <span
+            class="navds-button__icon"
+          >
+            <svg
+              fill="none"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M12.75 5.5a.75.75 0 0 0-1.5 0v5.75H5.5a.75.75 0 0 0 0 1.5h5.75v5.75a.75.75 0 0 0 1.5 0v-5.75h5.75a.75.75 0 0 0 0-1.5h-5.75V5.5Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            aria-live="polite"
+            class="navds-label navds-label--small"
+          >
+            Legg til
+          </span>
+        </button>
+        <div
+          aria-live="polite"
+          aria-relevant="additions removals"
+          class="navds-form-field__error"
+        />
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="navds-form-field multiwrapper undefined"
+    >
+      <div
+        class="navds-date__wrapper wrapper"
+      >
+        <div
+          class="inputwrapper"
+        >
+          <div
+            class="startInput navds-form-field navds-form-field--medium navds-date__field"
+          >
+            <label
+              class="navds-form-field__label navds-label"
+              for="datepicker-input-r9"
+            >
+              Fra og med
+            </label>
+            <div
+              class="navds-date__field-wrapper"
+            >
+              <input
+                aria-controls="r8"
+                autocomplete="off"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                id="datepicker-input-r9"
+                size="14"
+                value="01.04.2023"
+              />
+              <button
+                class="navds-date__field-button"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-labelledby="title-ra"
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  pointer-events="none"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title
+                    id="title-ra"
+                  >
+                    Åpne datovelger
+                  </title>
+                  <path
+                    clip-rule="evenodd"
+                    d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="datepicker-input-error-r9"
+            />
+          </div>
+          <div
+            class="endInput navds-form-field navds-form-field--medium navds-date__field"
+          >
+            <label
+              class="navds-form-field__label navds-label"
+              for="datepicker-input-rb"
+            >
+              Til og med
+            </label>
+            <div
+              class="navds-date__field-wrapper"
+            >
+              <input
+                aria-controls="r8"
+                autocomplete="off"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                id="datepicker-input-rb"
+                size="14"
+                value="19.04.2023"
+              />
+              <button
+                class="navds-date__field-button"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-labelledby="title-rc"
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  pointer-events="none"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title
+                    id="title-rc"
+                  >
+                    Åpne datovelger
+                  </title>
+                  <path
+                    clip-rule="evenodd"
+                    d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="datepicker-input-error-rb"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <p
+              class="navds-body-short"
+            >
+              = 19 dager
+            </p>
+          </div>
+          <div
+            class="actions"
+          >
+            <button
+              class="navds-button navds-button--secondary navds-button--small"
+            >
+              <span
+                class="navds-button__icon"
+              >
+                <svg
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.75 6c0-.69.56-1.25 1.25-1.25h4c.69 0 1.25.56 1.25 1.25v.25h-6.5V6Zm-1.5.25V6A2.75 2.75 0 0 1 10 3.25h4A2.75 2.75 0 0 1 16.75 6v.25h2.75a.75.75 0 0 1 0 1.5h-.805l-.876 11.384a1.75 1.75 0 0 1-1.745 1.616H7.926a1.75 1.75 0 0 1-1.745-1.616L5.305 7.75H4.5a.75.75 0 0 1 0-1.5h2.75Zm-.44 1.5h10.38l-.867 11.27a.25.25 0 0 1-.249.23H7.926a.25.25 0 0 1-.25-.23L6.81 7.75Zm3.19 2a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm4.75.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                aria-live="polite"
+                class="navds-label navds-label--small"
+              >
+                Fjern
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="navds-date__wrapper wrapper"
+      >
+        <div
+          class="inputwrapper"
+        >
+          <div
+            class="startInput navds-form-field navds-form-field--medium navds-date__field"
+          >
+            <label
+              class="navds-form-field__label navds-sr-only navds-label"
+              for="datepicker-input-rf"
+            >
+              Fra og med
+            </label>
+            <div
+              class="navds-date__field-wrapper"
+            >
+              <input
+                aria-controls="re"
+                autocomplete="off"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                id="datepicker-input-rf"
+                size="14"
+                value="15.05.2023"
+              />
+              <button
+                class="navds-date__field-button"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-labelledby="title-rg"
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  pointer-events="none"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title
+                    id="title-rg"
+                  >
+                    Åpne datovelger
+                  </title>
+                  <path
+                    clip-rule="evenodd"
+                    d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="datepicker-input-error-rf"
+            />
+          </div>
+          <div
+            class="endInput navds-form-field navds-form-field--medium navds-date__field"
+          >
+            <label
+              class="navds-form-field__label navds-sr-only navds-label"
+              for="datepicker-input-rh"
+            >
+              Til og med
+            </label>
+            <div
+              class="navds-date__field-wrapper"
+            >
+              <input
+                aria-controls="re"
+                autocomplete="off"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                id="datepicker-input-rh"
+                size="14"
+                value="20.05.2023"
+              />
+              <button
+                class="navds-date__field-button"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-labelledby="title-ri"
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  pointer-events="none"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title
+                    id="title-ri"
+                  >
+                    Åpne datovelger
+                  </title>
+                  <path
+                    clip-rule="evenodd"
+                    d="M9.75 3a.75.75 0 0 0-1.5 0v1.25H4.5c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-3.75V3a.75.75 0 0 0-1.5 0v1.25h-4.5V3Zm-5 2.75h3.5V7a.75.75 0 0 0 1.5 0V5.75h4.5V7a.75.75 0 0 0 1.5 0V5.75h3.5v3.5H4.75v-3.5Zm0 5v7.5h14.5v-7.5H4.75Zm2 2.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm4.75-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-3.25 2.25a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Zm3.25.75a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-7.25-.75a.75.75 0 0 0 0 1.5h1a.75.75 0 0 0 0-1.5h-1Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              aria-live="polite"
+              aria-relevant="additions removals"
+              class="navds-form-field__error"
+              id="datepicker-input-error-rh"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <p
+              class="navds-body-short"
+            >
+              = 6 dager
+            </p>
+          </div>
+          <div
+            class="actions"
+          >
+            <button
+              class="navds-button navds-button--secondary navds-button--small"
+            >
+              <span
+                class="navds-button__icon"
+              >
+                <svg
+                  fill="none"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.75 6c0-.69.56-1.25 1.25-1.25h4c.69 0 1.25.56 1.25 1.25v.25h-6.5V6Zm-1.5.25V6A2.75 2.75 0 0 1 10 3.25h4A2.75 2.75 0 0 1 16.75 6v.25h2.75a.75.75 0 0 1 0 1.5h-.805l-.876 11.384a1.75 1.75 0 0 1-1.745 1.616H7.926a1.75 1.75 0 0 1-1.745-1.616L5.305 7.75H4.5a.75.75 0 0 1 0-1.5h2.75Zm-.44 1.5h10.38l-.867 11.27a.25.25 0 0 1-.249.23H7.926a.25.25 0 0 1-.25-.23L6.81 7.75Zm3.19 2a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75Zm4.75.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                aria-live="polite"
+                class="navds-label navds-label--small"
+              >
+                Fjern
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <button
+        class="addbutton navds-button navds-button--secondary navds-button--small"
+      >
+        <span
+          class="navds-button__icon"
+        >
+          <svg
+            fill="none"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M12.75 5.5a.75.75 0 0 0-1.5 0v5.75H5.5a.75.75 0 0 0 0 1.5h5.75v5.75a.75.75 0 0 0 1.5 0v-5.75h5.75a.75.75 0 0 0 0-1.5h-5.75V5.5Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
+          aria-live="polite"
+          class="navds-label navds-label--small"
+        >
+          Legg til
+        </span>
+      </button>
+      <div
+        aria-live="polite"
+        aria-relevant="additions removals"
+        class="navds-form-field__error"
+      />
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

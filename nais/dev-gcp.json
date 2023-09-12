@@ -8,9 +8,6 @@
     "https://k9-legeerklaering.intern.dev.nav.no"
   ],
   "env": {
-    "DIPS_API_URL": "https://api.dips.no",
-    "FHIR_CLIENT_ISSUER": "https://launch.smarthealthit.org/v/r4/sim/WzIsIjlkYTdkOGMyLWRhZWYtNDcyMi04MzJlLWRjZjQ5NWQxM2E0ZSwxZmM1MzkxNy02YmMxLTRmODctOTAwOC1jOTFlOTRmMGUxODgsZDYzYWJmNjItMGY4NC00NjQ5LTk0ZDItMDUyZDkzNjNhYzAwIiwiZTQ0M2FjNTgtOGVjZS00Mzg1LThkNTUtNzc1YzFiOGYzYTM3IiwiQVVUTyIsMCwwLDAsIiIsIiIsIiIsIiIsIiIsIiIsIiIsMCwxXQ/fhir",
-    "FHIR_CLIENT_SCOPE": "patient/*.* user/*.* launch/patient launch/encounter openid fhirUser profile offline_access",
-    "FHIR_CLIENT_ID": "whatever"
+    "DIPS_API_URL": "https://api.dips.no/fhir"
   }
 }
