@@ -16,12 +16,12 @@
     "@navikt/ds-react": "^4.4.0",
     "@navikt/ds-tailwind": "^4.4.2",
     "@navikt/ds-tokens": "^4.4.2",
-    "@types/node": "20.5.9",
+    "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "encoding": "^0.1.13",
-    "eslint": "8.48.0",
+    "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
     "fhirclient": "^2.5.2",
     "next": "13.4.19",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",
-    "jest": "^29.6.4",
+    "jest": "^29.7.0",
     "tailwindcss": "^3.3.3",
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2"
