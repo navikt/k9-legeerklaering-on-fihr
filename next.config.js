@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: "standalone",
-    serverRuntimeConfig: {
-        fhirClientIssuer: process.env.FHIR_CLIENT_ISSUER,
-        fhirClientScope: process.env.FHIR_CLIENT_SCOPE,
-        fhirClientId: process.env.FHIR_CLIENT_ID
-    }
+    env: {
+        FHIR_CLIENT_ID: process.env.FHIR_CLIENT_ID,
+        FHIR_SUBSCRIPTION_KEY: process.env.FHIR_SUBSCRIPTION_KEY,
+    },
+    experimental: {
+        typedRoutes: true,
+        serverActions: true,
+    },
 }
 
 module.exports = nextConfig

@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DiagnosekodeSearch works initial empty search returns pages of results 1`] = `
+<table
+  class="navds-table navds-table--medium"
+>
+  <thead
+    class="navds-table__header"
+  >
+    <tr
+      class="navds-table__row navds-table__row--shade-on-hover"
+    >
+      <th
+        class="navds-table__header-cell navds-label diagnosekodeCol"
+        scope="col"
+      >
+        Kode
+      </th>
+      <th
+        class="navds-table__header-cell navds-label"
+        scope="col"
+      >
+        Beskrivelse
+      </th>
+      <th
+        class="navds-table__header-cell navds-label actionCol"
+        scope="col"
+      />
+    </tr>
+  </thead>
+  <tbody
+    class="navds-table__body nonTransparent"
+  >
+    <tr
+      class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
+    >
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        A000
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        Diagnose 1
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        <button
+          aria-label="Velg"
+          class="navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+        >
+          <span
+            class="navds-button__icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
+    >
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        A001
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        Diagnose 2
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        <button
+          aria-label="Velg"
+          class="navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+        >
+          <span
+            class="navds-button__icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </td>
+    </tr>
+    <tr
+      class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
+    >
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        A002
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        Diagnose 3
+      </td>
+      <td
+        class="navds-table__data-cell navds-body-short"
+      >
+        <button
+          aria-label="Velg"
+          class="navds-button navds-button--tertiary navds-button--small navds-button--icon-only"
+        >
+          <span
+            class="navds-button__icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="1em"
+              role="img"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

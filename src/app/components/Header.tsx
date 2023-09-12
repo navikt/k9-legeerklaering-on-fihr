@@ -1,23 +1,23 @@
+import {InternalHeader} from '@navikt/ds-react';
+import React from 'react';
+import Doctor from "@/models/Doctor";
 
-import { InternalHeader } from '@navikt/ds-react';
-import React, { useContext } from 'react';
-import { FHIRContext } from '@/app/context/FHIRContext';
+export interface HeaderProps {
+    doctor: Doctor | undefined;
+}
 
-export default function Header() {
-    const {practitioner} = useContext(FHIRContext);
-
-    const practitionerName = practitioner?.name?.pop();
+export default function Header({doctor}: HeaderProps) {
     return (
         <header>
             <InternalHeader className="flex justify-between">
                 <InternalHeader.Title as="h1">Legeerklæring - pleiepenger sykt barn</InternalHeader.Title>
-                {practitionerName !== undefined && (
+                { doctor !== undefined ?
                     <InternalHeader.User
-                        name={`${practitionerName.prefix ?? ""} ${practitionerName.family}, ${practitionerName.given?.pop()}`}
-                        description={`ID: ${practitioner?.id}`}
+                        name={doctor.name}
+                        description={`ID: ${doctor.hprNumber}`}
                         className="ml-auto"
-                    />
-                )}
+                    /> : null
+                }
             </InternalHeader>
         </header>
     )

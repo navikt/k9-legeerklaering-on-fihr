@@ -1,0 +1,53 @@
+.wrapper {
+    height: unset;
+    width: unset;
+}
+
+.inputwrapper {
+    display: grid;
+    grid-template-areas:
+        "start-input end-input description actions";
+    grid-template-columns: max-content min-content 1fr min-content;
+    gap: var(--a-spacing-2, 8px);
+
+}
+
+.start-input {
+    grid-area: start-input;
+}
+
+.end-input {
+    grid-area: end-input;
+}
+
+.description {
+    grid-area: description;
+    justify-self: stretch;
+    align-self: end;
+
+    /* This aligns the text element within with the start and end inputs. */
+    height: 48px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    color: var(--a-text-subtle);
+}
+
+.actions {
+    grid-area: actions;
+    align-self: end;
+    height: 48px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.multiwrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    row-gap: var(--a-spacing-2);
+
+}
+.addbutton {
+    align-self: start;
+}
