@@ -38,12 +38,18 @@ export default class FhirService {
     }
 
     private async getPractitionerRole(): Promise<IPractitionerRole> {
-        const bundle = await this.client.request<Bundle>({
-            url: "/PractitionerRole/$getCurrentUser",
+        const authorizationHeader: string | null = this.client.getAuthorizationHeader();
+
+        const baseUrl = new URL(window.location.origin);
+        const currentUserUrl = new URL(`/api/fhir/PractitionerRole/getCurrentUser`, baseUrl);
+
+        const response = await fetch(currentUserUrl.toString(), {
             headers: {
-                "dips-subscription-key": await fhirSubscriptionKey(),
+                "fhir-authorization-token": authorizationHeader ?? ""
             }
         });
+
+        const bundle = await response.json() as Bundle;
 
         if (!bundle.entry || bundle.entry.length === 0) {
             throw new Error("No entries found in the bundle.");
