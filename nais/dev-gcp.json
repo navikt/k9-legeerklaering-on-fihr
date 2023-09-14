@@ -7,6 +7,9 @@
   "ingresses": [
     "https://k9-legeerklaering.intern.dev.nav.no"
   ],
+  "externalHosts": [
+    "api.dips.no"
+  ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir"
   }
