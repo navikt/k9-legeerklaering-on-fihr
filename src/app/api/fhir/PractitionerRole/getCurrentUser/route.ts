@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { fhirclient } from 'fhirclient/lib/types';
 import { headers } from 'next/headers';
+import { R4 } from '@ahryman40k/ts-fhir-types';
+import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { validateOrThrow } from '@/app/api/fhir/fhirValidator';
 import Bundle = fhirclient.FHIR.Bundle;
 
-export const GET = async (): Promise<NextResponse> => {
+export const GET = async (): Promise<NextResponse<IPractitionerRole>> => {
     console.log("Fetching current user")
     const headersList = headers()
 
@@ -19,6 +22,14 @@ export const GET = async (): Promise<NextResponse> => {
     });
 
     const bundle: Bundle = await response.json();
-    console.log("bundle", bundle)
-    return NextResponse.json(bundle)
+    if (!bundle.entry || bundle.entry.length === 0) {
+        throw new Error("No entries found in the bundle.");
+    }
+
+    const practitionerRole = validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource as IPractitionerRole));
+    if (!practitionerRole) {
+        throw new Error("Unable to decode the current user.");
+    }
+
+    return NextResponse.json(practitionerRole as IPractitionerRole)
 }
