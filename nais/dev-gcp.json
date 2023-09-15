@@ -5,7 +5,8 @@
   "minReplicas": "2",
   "maxReplicas": "2",
   "ingresses": [
-    "https://k9-legeerklaering.intern.dev.nav.no"
+    "https://k9-legeerklaering.intern.dev.nav.no",
+    "https://k9-legeerklaering.ekstern.dev.nav.no"
   ],
   "externalHosts": [
     "api.dips.no"
