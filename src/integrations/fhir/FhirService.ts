@@ -10,7 +10,7 @@ import {
 } from "@/integrations/fhir/resolvers";
 import Hospital from "@/models/Hospital";
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
-import { validateOrThrow } from '@/app/api/fhir/fhirValidator';
+import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 
 

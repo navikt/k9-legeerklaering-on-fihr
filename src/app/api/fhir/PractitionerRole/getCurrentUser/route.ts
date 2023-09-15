@@ -1,23 +1,19 @@
 import { NextResponse } from 'next/server';
 import { fhirclient } from 'fhirclient/lib/types';
-import { headers } from 'next/headers';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
-import { validateOrThrow } from '@/app/api/fhir/fhirValidator';
+import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
+import { fhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
 import Bundle = fhirclient.FHIR.Bundle;
 
 export const GET = async (): Promise<NextResponse<IPractitionerRole>> => {
     console.log("Fetching current user")
-    const headersList = headers()
-
-    const fhirbaseurl = process.env.FHIR_BASE_URL;
-    const fhirsubscriptionkey = process.env.FHIR_SUBSCRIPTION_KEY;
-    const authorization = headersList.get("fhir-authorization-token");
+    const {fhirbaseurl, fhirsubscriptionkey, authorization} = fhirConfiguration();
 
     const response = await fetch(`${fhirbaseurl}/PractitionerRole/$getCurrentUser`, {
         headers: {
-            "Authorization": authorization ?? "",
-            "dips-subscription-key": fhirsubscriptionkey ?? ""
+            "Authorization": authorization,
+            "dips-subscription-key": fhirsubscriptionkey
         }
     });
 
