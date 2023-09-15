@@ -1,7 +1,5 @@
 import Client from "fhirclient/lib/Client";
 import Doctor from "@/models/Doctor";
-import { Validation } from "io-ts";
-import { PathReporter } from "io-ts/es6/PathReporter";
 import Patient from "@/models/Patient";
 import {
     dateTimeResolver,
@@ -11,8 +9,9 @@ import {
     postalAddressResolver
 } from "@/integrations/fhir/resolvers";
 import Hospital from "@/models/Hospital";
-import { fhirclient } from 'fhirclient/lib/types';
-import { IOrganization, IPatient, IPractitioner, IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { validateOrThrow } from '@/app/api/fhir/fhirValidator';
+import { R4 } from '@ahryman40k/ts-fhir-types';
 
 
 /**
@@ -24,14 +23,6 @@ export default class FhirService {
 
     public constructor(private client: Client) {
         this.practitionerRole = this.getPractitionerRole()
-    }
-
-    private static validateOrThrow<T>(validation: Validation<T>): T {
-        if (validation._tag === "Right") {
-            return validation.right
-        } else {
-            throw new Error(`FHIR data validation error: ${PathReporter.report(validation).join("\n")}`);
-        }
     }
 
     private async getPractitionerRole(): Promise<IPractitionerRole> {
@@ -46,7 +37,7 @@ export default class FhirService {
             }
         });
 
-        return await response.json() as IPractitionerRole;
+        return validateOrThrow(R4.RTTI_PractitionerRole.decode(await response.json()));
     }
 
     public async getDoctor(): Promise<Doctor> {
@@ -54,7 +45,6 @@ export default class FhirService {
 
         const practitionerRole: IPractitionerRole = await this.practitionerRole;
         const practitionerReference = practitionerRole.practitioner?.reference;
-        console.log("practitionerReference", practitionerReference)
 
         const baseUrl = new URL(window.location.origin);
         const practitionerUrl = new URL(`/api/fhir/${practitionerReference}`, baseUrl);
@@ -65,7 +55,7 @@ export default class FhirService {
             }
         });
 
-        const practitioner = await response.json() as IPractitioner;
+        const practitioner = validateOrThrow(R4.RTTI_Practitioner.decode(await response.json()));
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
@@ -90,7 +80,7 @@ export default class FhirService {
             }
         });
 
-        const patient = await response.json() as IPatient;
+        const patient = validateOrThrow(R4.RTTI_Patient.decode(await response.json()));
         const name = officialHumanNameResolver(patient.name)
         const identifier = officialIdentifierResolver(patient.identifier);
         const birthDate = dateTimeResolver(patient.birthDate)
@@ -115,7 +105,6 @@ export default class FhirService {
         }
 
         const organizationRefrence = practitionerRole.organization?.reference;
-        console.log("organizationRefrence", organizationRefrence)
 
         const baseUrl = new URL(window.location.origin);
         const organizationUrl = new URL(`/api/fhir/${organizationRefrence}`, baseUrl);
@@ -126,7 +115,7 @@ export default class FhirService {
             }
         });
 
-        const organization = await response.json() as IOrganization;
+        const organization = validateOrThrow(R4.RTTI_Organization.decode(await response.json()));
         const {name, telecom, address} = organization;
 
         return {

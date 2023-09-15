@@ -20,10 +20,6 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
         }
     });
 
-    const data = await response.json() as IPractitioner;
-    const practitioner = validateOrThrow(R4.RTTI_Practitioner.decode(data));
-    if (!practitioner) {
-        throw new Error("Unable to decode the practitioner");
-    }
+    const practitioner = validateOrThrow(R4.RTTI_Practitioner.decode(await response.json()));
     return NextResponse.json(practitioner)
 }

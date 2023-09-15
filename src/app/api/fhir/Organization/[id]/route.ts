@@ -19,10 +19,6 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
         }
     });
 
-    const data = await response.json() as IOrganization;
-    const organization = validateOrThrow(R4.RTTI_Organization.decode(data));
-    if (!organization) {
-        throw new Error("Unable to decode the organization");
-    }
+    const organization = validateOrThrow(R4.RTTI_Organization.decode(await response.json()));
     return NextResponse.json(organization)
 }

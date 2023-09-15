@@ -26,10 +26,6 @@ export const GET = async (): Promise<NextResponse<IPractitionerRole>> => {
         throw new Error("No entries found in the bundle.");
     }
 
-    const practitionerRole = validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource as IPractitionerRole));
-    if (!practitionerRole) {
-        throw new Error("Unable to decode the current user.");
-    }
-
-    return NextResponse.json(practitionerRole as IPractitionerRole)
+    const practitionerRole = validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource));
+    return NextResponse.json(practitionerRole)
 }
