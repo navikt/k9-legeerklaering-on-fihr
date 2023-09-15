@@ -3,12 +3,15 @@ import { fhirclient } from 'fhirclient/lib/types';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
-import { fhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
+import { headers } from 'next/headers';
+import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
+import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 import Bundle = fhirclient.FHIR.Bundle;
 
-export const GET = async (): Promise<NextResponse<IPractitionerRole>> => {
+export const GET = async (): Promise<NextResponse<IPractitionerRole | Error>> => {
     console.log("Fetching current user")
-    const {fhirbaseurl, fhirsubscriptionkey, authorization} = fhirConfiguration();
+    const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN)!!;
+    const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 
     const response = await fetch(`${fhirbaseurl}/PractitionerRole/$getCurrentUser`, {
         headers: {
