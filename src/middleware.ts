@@ -20,5 +20,5 @@ export const middleware = (request: NextRequest): NextResponse => {
 };
 
 export const config = {
-    matcher: ["/api/:path*"]
+    matcher: ["/api/fhir/:path*"]
 }
