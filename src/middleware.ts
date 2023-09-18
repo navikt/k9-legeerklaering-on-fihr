@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
+import { logger } from '@/utils/logger';
 
 export const FHIR_AUTHORIZATION_TOKEN = "fhir-authorization-token";
 
@@ -33,12 +34,12 @@ const maskedPathname = (nextUrl: NextURL): string => {
 
 const logRequest = (request: NextRequest) => {
     const {method, nextUrl} = request
-    console.log(`--> Request ${method} ${maskedPathname(nextUrl)}`)
+    logger.info(`--> Request ${method} ${maskedPathname(nextUrl)}`)
 };
 
 const logResponse = (nextUrl: NextURL, response: NextResponse) => {
     const {status, statusText} = response
-    console.log(`<-- Response ${status} ${statusText} ${maskedPathname(nextUrl)}`)
+    logger.info(`<-- Response ${status} ${statusText} ${maskedPathname(nextUrl)}`)
 };
 
 export const config = {
