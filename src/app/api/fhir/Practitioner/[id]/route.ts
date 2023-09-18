@@ -8,7 +8,6 @@ import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IPractitioner>> => {
-    console.log("Fetching practitioner")
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN);
     const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 

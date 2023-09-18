@@ -9,7 +9,6 @@ import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 import Bundle = fhirclient.FHIR.Bundle;
 
 export const GET = async (): Promise<NextResponse<IPractitionerRole | Error>> => {
-    console.log("Fetching current user")
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN)!!;
     const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 

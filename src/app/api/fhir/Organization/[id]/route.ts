@@ -7,8 +7,6 @@ import { headers } from 'next/headers';
 import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IOrganization>> => {
-    console.log("Fetching organization")
-
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN);
     const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 

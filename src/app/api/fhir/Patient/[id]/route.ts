@@ -7,7 +7,6 @@ import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
 import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IPatient>> => {
-    console.log("Fetching patient")
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN);
     const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 
