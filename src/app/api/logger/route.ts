@@ -19,11 +19,6 @@ function isValidLoggingLabel(label: unknown): label is LogLevels {
 }
 
 export const POST = (request: NextApiRequest, response: NextApiResponse): void => {
-    if (request.method !== 'POST') {
-        response.status(405).json({ error: 'Method Not Allowed' });
-        return;
-    }
-
     const { level, ts }: pino.LogEvent = request.body;
     const label: unknown = level.label;
     if (!isValidLoggingLabel(label)) {
@@ -38,7 +33,7 @@ export const POST = (request: NextApiRequest, response: NextApiResponse): void =
             x_timestamp: ts,
             x_isFrontend: true,
             x_userAgent: request.headers['user-agent'],
-            x_requestuest_id: request.headers['x-requestuest-id'] ?? 'not-set',
+            x_request_id: request.headers['x-request-id'] ?? 'not-set',
         })
         [label](...messages);
 
