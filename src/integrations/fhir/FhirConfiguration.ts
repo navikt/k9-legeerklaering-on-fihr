@@ -1,4 +1,4 @@
-import { logger } from '@/utils/logger';
+import { logger } from '@navikt/next-logger';
 
 export class FhirConfiguration {
     private _fhirbaseurl: string;

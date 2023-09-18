@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NextURL } from 'next/dist/server/web/next-url';
-import { logger } from '@/utils/logger';
+import { logger } from '@navikt/next-logger';
 
 export const FHIR_AUTHORIZATION_TOKEN = "fhir-authorization-token";
 

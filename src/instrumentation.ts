@@ -1,5 +1,5 @@
 import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
-import { logger } from '@/utils/logger';
+import { logger } from '@navikt/next-logger';
 
 /**
  * This function is called when the Next.js server instance is bootstrapped.

@@ -16,7 +16,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import { logger } from '@/utils/logger';
+import { logger } from '@navikt/next-logger';
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Doctor | undefined;

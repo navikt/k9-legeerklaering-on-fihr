@@ -18,6 +18,7 @@
     "@navikt/ds-react": "^4.4.0",
     "@navikt/ds-tailwind": "^4.4.2",
     "@navikt/ds-tokens": "^4.4.2",
+    "@navikt/next-logger": "^1.19.0",
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",

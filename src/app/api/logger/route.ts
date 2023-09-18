@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import pino, { BaseLogger } from "pino";
-import { logger } from '@/utils/logger';
+import { logger } from '@navikt/next-logger';
+import { NextRequest, NextResponse } from 'next/server';
 
 type LogLevels = Exclude<keyof BaseLogger, 'string' | 'level'>;
 
@@ -18,24 +18,30 @@ function isValidLoggingLabel(label: unknown): label is LogLevels {
     return typeof label === "string" && label in levels;
 }
 
-export const POST = (request: NextApiRequest, response: NextApiResponse): void => {
-    const { level, ts }: pino.LogEvent = request.body;
+export const POST = async (request: NextRequest, response: NextResponse): Promise<NextResponse<unknown>> => {
+    const data = await request.json() as pino.LogEvent;
+    const {level, ts}: pino.LogEvent = data;
     const label: unknown = level.label;
     if (!isValidLoggingLabel(label)) {
-        response.status(400).json({ error: `Invalid label ${label}` });
-        return;
+        return new NextResponse(null, {
+            status: 400,
+            statusText: 'Bad Request',
+        });
     }
 
-    const messages: [objOrMsg: unknown, msgOrArgs?: string] = request.body.messages;
+    const messages = data.messages as [objOrMsg: unknown, msgOrArgs?: string];
 
     logger
         .child({
             x_timestamp: ts,
             x_isFrontend: true,
-            x_userAgent: request.headers['user-agent'],
-            x_request_id: request.headers['x-request-id'] ?? 'not-set',
+            x_userAgent: request.headers.get('user-agent') ?? 'not-set',
+            x_request_id: request.headers.get('x-request-id') ?? 'not-set',
         })
         [label](...messages);
 
-    response.status(200).json({ ok: `ok` });
+    return new NextResponse(null, {
+        status: 200,
+        statusText: 'OK'
+    });
 }

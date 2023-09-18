@@ -11,7 +11,12 @@ import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
 import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
 import type NextPageProps from "@/utils/NextPageProps";
+import { configureLogger } from '@navikt/next-logger';
 
+
+configureLogger({
+    apiPath: '/api/logger',
+})
 
 interface PageState extends EhrInfoLegeerklaeringForm {
     readonly loading: boolean;
