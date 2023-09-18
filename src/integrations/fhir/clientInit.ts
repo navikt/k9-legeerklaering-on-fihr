@@ -28,6 +28,7 @@ export const clientInitInBrowser = async (reAuth: boolean, issuer: string | unde
         scope: "launch patient/*.read openid fhirUser profile",
         redirectUri: "/"
     });
+
     return new FhirService(client)
 }
 
