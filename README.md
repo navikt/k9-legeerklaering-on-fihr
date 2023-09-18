@@ -1,4 +1,4 @@
-# K9 Leegerklæring on FHIR
+# K9 Legeerklæring on FHIR
 
 ## Getting Started
 
@@ -10,6 +10,7 @@
 ### Environment variables
 Create a .env file in the root of the project with the following variables: 
 - `FHIR_API_URL`
+- `FHIR_CLIENT_ID`
 - `FHIR_SUBSCRIPTION_KEY`
 
 The value of `FHIR_SUBSCRIPTION_KEY` can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile)

@@ -33,6 +33,12 @@ spec:
     min: {{ minReplicas }}
     max: {{ maxReplicas }}
     cpuThresholdPercentage: 90
+  accessPolicy:
+    outbound:
+      external:
+      {{#each externalHosts as |host|}}
+        - host: {{host}}
+      {{/each}}
   env:
   {{#each env}}
   - name: {{@key}}

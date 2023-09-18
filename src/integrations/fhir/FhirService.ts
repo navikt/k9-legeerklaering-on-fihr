@@ -1,8 +1,5 @@
 import Client from "fhirclient/lib/Client";
 import Doctor from "@/models/Doctor";
-import { R4 } from '@ahryman40k/ts-fhir-types';
-import { Validation } from "io-ts";
-import { PathReporter } from "io-ts/es6/PathReporter";
 import Patient from "@/models/Patient";
 import {
     dateTimeResolver,
@@ -12,10 +9,9 @@ import {
     postalAddressResolver
 } from "@/integrations/fhir/resolvers";
 import Hospital from "@/models/Hospital";
-import { fhirclient } from 'fhirclient/lib/types';
-import { IOrganization, IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
-import { fhirSubscriptionKey } from '@/utils/environment';
-import Bundle = fhirclient.FHIR.Bundle;
+import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
+import { R4 } from '@ahryman40k/ts-fhir-types';
 
 
 /**
@@ -29,46 +25,37 @@ export default class FhirService {
         this.practitionerRole = this.getPractitionerRole()
     }
 
-    private static validateOrThrow<T>(validation: Validation<T>): T {
-        if (validation._tag === "Right") {
-            return validation.right
-        } else {
-            throw new Error(`FHIR data validation error: ${PathReporter.report(validation).join("\n")}`);
-        }
-    }
-
     private async getPractitionerRole(): Promise<IPractitionerRole> {
-        const bundle = await this.client.request<Bundle>({
-            url: "/PractitionerRole/$getCurrentUser",
+        const authorizationHeader: string | null = this.client.getAuthorizationHeader();
+
+        const baseUrl = new URL(window.location.origin);
+        const currentUserUrl = new URL(`/api/fhir/PractitionerRole/getCurrentUser`, baseUrl);
+
+        const response = await fetch(currentUserUrl.toString(), {
             headers: {
-                "dips-subscription-key": await fhirSubscriptionKey(),
+                "fhir-authorization-token": authorizationHeader ?? ""
             }
         });
 
-        if (!bundle.entry || bundle.entry.length === 0) {
-            throw new Error("No entries found in the bundle.");
-        }
-
-        const practitionerRole = FhirService.validateOrThrow(R4.RTTI_PractitionerRole.decode(bundle.entry[0].resource as IPractitionerRole));
-
-        if (!practitionerRole) {
-            throw new Error("Unable to decode the current user.");
-        }
-
-        return practitionerRole as IPractitionerRole;
+        return validateOrThrow(R4.RTTI_PractitionerRole.decode(await response.json()));
     }
 
     public async getDoctor(): Promise<Doctor> {
+        const authorizationHeader: string | null = this.client.getAuthorizationHeader();
+
         const practitionerRole: IPractitionerRole = await this.practitionerRole;
         const practitionerReference = practitionerRole.practitioner?.reference;
 
-        const user = await this.client.request<fhirclient.CombinedFetchResult<fhirclient.FHIR.Patient | fhirclient.FHIR.Practitioner | fhirclient.FHIR.RelatedPerson> | fhirclient.FHIR.Patient | fhirclient.FHIR.Practitioner | fhirclient.FHIR.RelatedPerson>({
-            url: `/${practitionerReference}`,
+        const baseUrl = new URL(window.location.origin);
+        const practitionerUrl = new URL(`/api/fhir/${practitionerReference}`, baseUrl);
+
+        const response = await fetch(practitionerUrl.toString(), {
             headers: {
-                "dips-subscription-key": await fhirSubscriptionKey(),
+                "fhir-authorization-token": authorizationHeader ?? ""
             }
         });
-        const practitioner = FhirService.validateOrThrow(R4.RTTI_Practitioner.decode(user));
+
+        const practitioner = validateOrThrow(R4.RTTI_Practitioner.decode(await response.json()));
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
@@ -81,12 +68,19 @@ export default class FhirService {
     }
 
     public async getPatient(): Promise<Patient> {
-        const p = await this.client.patient.read({
+        const patientId = this.client.patient.id;
+        const authorizationHeader: string | null = this.client.getAuthorizationHeader();
+
+        const baseUrl = new URL(window.location.origin);
+        const patientUrl = new URL(`/api/fhir/Patient/${patientId}`, baseUrl);
+
+        const response = await fetch(patientUrl.toString(), {
             headers: {
-                "dips-subscription-key": await fhirSubscriptionKey(),
+                "fhir-authorization-token": authorizationHeader ?? ""
             }
         });
-        const patient = FhirService.validateOrThrow(R4.RTTI_Patient.decode(p));
+
+        const patient = validateOrThrow(R4.RTTI_Patient.decode(await response.json()));
         const name = officialHumanNameResolver(patient.name)
         const identifier = officialIdentifierResolver(patient.identifier);
         const birthDate = dateTimeResolver(patient.birthDate)
@@ -103,23 +97,25 @@ export default class FhirService {
     }
 
     public async getHospital(): Promise<Hospital> {
-        const practitionerRole = await this.practitionerRole;
+        const authorizationHeader: string | null = this.client.getAuthorizationHeader();
 
+        const practitionerRole = await this.practitionerRole;
         if (!practitionerRole.organization?.reference) {
             throw new Error("Organization reference is not available");
         }
 
-        const organizationRefrence = practitionerRole.organization.reference;
+        const organizationRefrence = practitionerRole.organization?.reference;
 
-        const orgResponse = await this.client.request<IOrganization>({
-            url: organizationRefrence,
+        const baseUrl = new URL(window.location.origin);
+        const organizationUrl = new URL(`/api/fhir/${organizationRefrence}`, baseUrl);
+
+        const response = await fetch(organizationUrl.toString(), {
             headers: {
-                "dips-subscription-key": await fhirSubscriptionKey(),
+                "fhir-authorization-token": authorizationHeader ?? ""
             }
         });
 
-        const organization = FhirService.validateOrThrow(R4.RTTI_Organization.decode(orgResponse));
-
+        const organization = validateOrThrow(R4.RTTI_Organization.decode(await response.json()));
         const {name, telecom, address} = organization;
 
         return {
