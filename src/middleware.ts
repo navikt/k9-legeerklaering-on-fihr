@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { logRequest, logResponse } from '@/utils/loggerUtils';
+import { logResponse } from '@/utils/loggerUtils';
+
 
 export const FHIR_AUTHORIZATION_TOKEN = "fhir-authorization-token";
 
 export const middleware = (request: NextRequest): NextResponse => {
-    logRequest(request);
-
     const authorization = request.headers.get(FHIR_AUTHORIZATION_TOKEN);
     if (!authorization) {
         const unauthorizedResponse = new NextResponse(
@@ -21,9 +20,7 @@ export const middleware = (request: NextRequest): NextResponse => {
         return unauthorizedResponse
     }
     // TODO: Validere token issuer?
-    const response = NextResponse.next();
-    logResponse(request.nextUrl, response);
-    return response
+    return NextResponse.next()
 };
 
 export const config = {
