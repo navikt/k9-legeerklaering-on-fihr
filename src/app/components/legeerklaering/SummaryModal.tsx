@@ -1,5 +1,5 @@
-import {Accordion, Heading, Ingress, List, Modal} from "@navikt/ds-react";
-import {tekst} from "@/utils/tekster";
+import { Accordion, Heading, Ingress, List, Modal } from "@navikt/ds-react";
+import { tekst } from "@/utils/tekster";
 import React from "react";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 

@@ -138,13 +138,41 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         }
     });
 
+    const downloadBlob = (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'legeerklæring-pleiepenger-sykt-barn.pdf';
+
+        // This is to make the anchor hidden and to append, click, and then immediately remove it
+        document.body.appendChild(a).click();
+
+        // Cleanup tasks
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
+
     const onSubmit = (data: LegeerklaeringData) => {
         setSubmittedData(data)
-        logger.info("Form data", data);
+        logger.info("Submitting form data");
+        fetch('/api/registrer', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        }).then(async response => {
+            if (response.ok) {
+                const responseData = await response.blob()
+                downloadBlob(responseData);
+                logger.info("File downloaded successfully");
+            } else {
+                logger.error(response, "Error submitting form data")
+            }
+        })
     };
 
     const onError: SubmitErrorHandler<LegeerklaeringData> = errors => {
-        logger.warn("form validation errors", errors)
+        logger.warn(errors, "form validation errors")
     }
 
     return (
@@ -191,7 +219,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 <Textarea
                     label={tekst("legeerklaering.legens-vurdering.label")}
                     {...register("legensVurdering", {required: true})}
-                    error={errors.legensVurdering?.message }
+                    error={errors.legensVurdering?.message}
                     minRows={10}
                 />
             </Section>
@@ -204,7 +232,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     control={control}
                     name="hoveddiagnose"
                     render={({field: {onChange, value}}) => (
-                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.hoveddiagnose?.message}  />
+                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                                             error={errors.hoveddiagnose?.message}/>
                     )}
                 />
 
@@ -212,7 +241,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     control={control}
                     name="bidiagnoser"
                     render={({field: {onChange, value}}) => (
-                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.bidiagnoser?.message} />
+                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                                          error={errors.bidiagnoser?.message}/>
                     )}
                 />
             </Section>
@@ -319,7 +349,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             <div className="ml-4 mt-4 mb-16"><Button type="submit">Registrer</Button></div>
 
             {/*(Temporary) summary modal displayed when user submits form*/}
-            <SummaryModal show={submittedData !== null} onClose={() => setSubmittedData(null)} data={submittedData} />
+            <SummaryModal show={submittedData !== null} onClose={() => setSubmittedData(null)} data={submittedData}/>
         </form>
     )
 }

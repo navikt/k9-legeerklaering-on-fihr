@@ -12,8 +12,15 @@ Create a .env file in the root of the project with the following variables:
 - `FHIR_API_URL`
 - `FHIR_CLIENT_ID`
 - `FHIR_SUBSCRIPTION_KEY`
+- `HELSEOPPLYSNINGER_PDF_BASE_URL`
 
 The value of `FHIR_SUBSCRIPTION_KEY` can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile)
+
+For local development, the value of `HELSEOPPLYSNINGER_PDF_BASE_URL` is `http://localhost:8080`. 
+Remember to clone [helseopplysninger-pdfgen](https://github.com/navikt/helseopplysninger-pdfgen) and run:
+```shell
+./run_development.sh
+```
 
 ### Install dependencies
 ```bash

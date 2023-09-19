@@ -35,6 +35,8 @@ spec:
     cpuThresholdPercentage: 90
   accessPolicy:
     outbound:
+      rules:
+        - application: pdfgen
       external:
       {{#each externalHosts as |host|}}
         - host: {{host}}

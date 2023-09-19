@@ -8,6 +8,7 @@
     "https://k9-legeerklaering.intern.nav.no"
   ],
   "env": {
-    "FHIR_BASE_URL": "https://api.dips.no/fhir"
+    "FHIR_BASE_URL": "https://api.dips.no/fhir",
+    "HELSEOPPLYSNINGER_PDF_BASE_URL": "http://pdfgen"
   }
 }
