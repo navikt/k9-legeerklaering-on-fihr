@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NextURL } from 'next/dist/server/web/next-url';
-import { logger } from '@navikt/next-logger';
+import { logRequest, logResponse } from '@/utils/loggerUtils';
 
 export const FHIR_AUTHORIZATION_TOKEN = "fhir-authorization-token";
 
@@ -25,21 +24,6 @@ export const middleware = (request: NextRequest): NextResponse => {
     const response = NextResponse.next();
     logResponse(request.nextUrl, response);
     return response
-};
-
-const maskedPathname = (nextUrl: NextURL): string => {
-    // Replace the IDs in the pathname for Patient and Practitioner;
-    return nextUrl.pathname.replace(/(\/api\/fhir\/(Patient|Practitioner)\/)[^/]+/, '$1<masked>');
-};
-
-const logRequest = (request: NextRequest) => {
-    const {method, nextUrl} = request
-    logger.info(`--> Request ${method} ${maskedPathname(nextUrl)}`)
-};
-
-const logResponse = (nextUrl: NextURL, response: NextResponse) => {
-    const {status, statusText} = response
-    logger.info(`<-- Response ${status} ${statusText} ${maskedPathname(nextUrl)}`)
 };
 
 export const config = {
