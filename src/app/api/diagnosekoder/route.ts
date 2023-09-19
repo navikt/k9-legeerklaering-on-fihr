@@ -1,6 +1,7 @@
-import {NextRequest, NextResponse} from "next/server";
-import {searchParametersFromUrl} from "@/app/api/diagnosekoder/DiagnosekodeSearchParameters";
-import {DiagnosekodeSearcher, ICD10} from '@navikt/diagnosekoder';
+import { NextRequest, NextResponse } from "next/server";
+import { searchParametersFromUrl } from "@/app/api/diagnosekoder/DiagnosekodeSearchParameters";
+import { DiagnosekodeSearcher, ICD10 } from '@navikt/diagnosekoder';
+import { logRequest, logResponse } from '@/utils/loggerUtils';
 
 /**
  * We want to chache these responses for a long time (3 hours), since the data should only change once a year.
@@ -19,7 +20,10 @@ const searcher = new DiagnosekodeSearcher(ICD10, 100);
  * has entered a search query.
  */
 export const GET = (request: NextRequest): NextResponse => {
+    logRequest(request);
     const {searchText, pageNumber} = searchParametersFromUrl(request.nextUrl);
     const searchResult = searcher.search(searchText, pageNumber);
-    return addCacheHeader(NextResponse.json(searchResult))
+    const response = NextResponse.json(searchResult);
+    logResponse(request.nextUrl, response)
+    return addCacheHeader(response)
 }

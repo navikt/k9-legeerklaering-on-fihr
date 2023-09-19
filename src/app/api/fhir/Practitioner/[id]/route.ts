@@ -5,9 +5,11 @@ import { R4 } from '@ahryman40k/ts-fhir-types';
 import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
 import { headers } from 'next/headers';
 import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
+import { logRequest, logResponse } from '@/utils/loggerUtils';
 
 
-export const GET = async (_: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IPractitioner>> => {
+export const GET = async (request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IPractitioner>> => {
+    logRequest(request)
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN);
     const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
 
@@ -19,5 +21,7 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
     });
 
     const practitioner = validateOrThrow(R4.RTTI_Practitioner.decode(await response.json()));
-    return NextResponse.json(practitioner)
+    const nextResponse = NextResponse.json(practitioner);
+    logResponse(request.nextUrl, nextResponse)
+    return nextResponse
 }

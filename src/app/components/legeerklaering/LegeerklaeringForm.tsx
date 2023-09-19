@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Button, DatePicker, Modal, ReadMore, Textarea, TextField, useDatepicker} from '@navikt/ds-react';
-import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Button, DatePicker, Modal, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
+import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
-import {tekst} from '@/utils/tekster';
+import { tekst } from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
@@ -10,12 +10,13 @@ import Doctor from "@/models/Doctor";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
-import {ObjectSchema} from "yup";
-import {type Diagnosekode} from "@navikt/diagnosekoder";
-import {yupResolver} from "@hookform/resolvers/yup";
+import { ObjectSchema } from "yup";
+import { type Diagnosekode } from "@navikt/diagnosekoder";
+import { yupResolver } from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
+import { logger } from '@navikt/next-logger';
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Doctor | undefined;
@@ -139,11 +140,11 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
 
     const onSubmit = (data: LegeerklaeringData) => {
         setSubmittedData(data)
-        console.log("Form data", data);
+        logger.info("Form data", data);
     };
 
     const onError: SubmitErrorHandler<LegeerklaeringData> = errors => {
-        console.warn("form validation errors", errors)
+        logger.warn("form validation errors", errors)
     }
 
     return (
