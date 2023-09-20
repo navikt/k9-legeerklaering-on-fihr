@@ -33,6 +33,9 @@ spec:
     min: {{ minReplicas }}
     max: {{ maxReplicas }}
     cpuThresholdPercentage: 90
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     outbound:
       external:

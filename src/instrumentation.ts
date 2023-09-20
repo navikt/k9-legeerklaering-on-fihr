@@ -7,4 +7,5 @@ import { logger } from '@navikt/next-logger';
 export const register = async () => {
     logger.info("Validating FhirConfiguration");
     new FhirConfiguration() // This will throw if the configuration is invalid
+    //new AzureClient() // This will throw if the configuration is invalid
 };
