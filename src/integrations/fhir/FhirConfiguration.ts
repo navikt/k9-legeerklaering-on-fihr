@@ -1,31 +1,46 @@
 import { logger } from '@navikt/next-logger';
 
 export class FhirConfiguration {
-    private _fhirbaseurl: string;
-    private _fhirsubscriptionkey: string;
+    private _fhirBaseUrl: string;
+    private _fhirClientId: string;
+    private _fhirSubscriptionKey: string;
 
-    get fhirbaseurl(): string {
-        return this._fhirbaseurl;
+    get fhirBaseUrl(): string {
+        return this._fhirBaseUrl;
     }
 
-    get fhirsubscriptionkey(): string {
-        return this._fhirsubscriptionkey;
+    get fhirClientId(): string {
+        return this._fhirClientId;
+    }
+
+    get fhirSubscriptionKey(): string {
+        return this._fhirSubscriptionKey;
     }
 
     constructor() {
-        const {FHIR_BASE_URL, FHIR_SUBSCRIPTION_KEY} = process.env;
+        const {FHIR_BASE_URL, FHIR_CLIENT_ID, FHIR_SUBSCRIPTION_KEY} = process.env;
         if (!FHIR_BASE_URL) {
-            const error = new Error("FHIR_BASE_URL is not defined.");
-            logger.error(error);
-            throw error;
+            const fhirbaseurlMissing = new Error("FHIR_BASE_URL is not defined.");
+            logger.error(fhirbaseurlMissing);
+            throw fhirbaseurlMissing;
         }
-        this._fhirbaseurl = FHIR_BASE_URL;
+        this._fhirBaseUrl = FHIR_BASE_URL;
+        logger.info(`FHIR_BASE_URL --> ${this._fhirBaseUrl}`);
+
+        if (!FHIR_CLIENT_ID) {
+            const fhirClientIdMissing = new Error("FHIR_CLIENT_ID is not defined.");
+            logger.error(fhirClientIdMissing);
+            throw fhirClientIdMissing;
+        }
+        this._fhirClientId = FHIR_CLIENT_ID;
+        logger.info(`FHIR_CLIENT_ID --> ${this._fhirClientId}`);
 
         if (!FHIR_SUBSCRIPTION_KEY) {
-            const error1 = new Error("FHIR_SUBSCRIPTION_KEY is not defined.");
-            logger.error(error1);
-            throw error1;
+            const fhirsubscriptionkeyMissing = new Error("FHIR_SUBSCRIPTION_KEY is not defined.");
+            logger.error(fhirsubscriptionkeyMissing);
+            throw fhirsubscriptionkeyMissing;
         }
-        this._fhirsubscriptionkey = FHIR_SUBSCRIPTION_KEY;
+        this._fhirSubscriptionKey = FHIR_SUBSCRIPTION_KEY;
+        logger.info("FHIR_SUBSCRIPTION_KEY --> ***************");
     }
 }

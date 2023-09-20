@@ -9,6 +9,7 @@
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",
+    "FHIR_CLIENT_ID": "NAV_legeerklaering",
     "HELSEOPPLYSNINGER_PDF_BASE_URL": "http://pdfgen"
   }
 }
