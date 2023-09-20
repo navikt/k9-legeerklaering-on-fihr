@@ -11,12 +11,12 @@ import { logRequest, logResponse } from '@/utils/loggerUtils';
 export const GET = async (request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<IPractitioner>> => {
     logRequest(request)
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN);
-    const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
+    const {fhirBaseUrl, fhirSubscriptionKey} = new FhirConfiguration();
 
-    const response = await fetch(`${fhirbaseurl}/Practitioner/${params.id}`, {
+    const response = await fetch(`${fhirBaseUrl}/Practitioner/${params.id}`, {
         headers: {
             "Authorization": authorization!!,
-            "dips-subscription-key": fhirsubscriptionkey
+            "dips-subscription-key": fhirSubscriptionKey
         }
     });
 

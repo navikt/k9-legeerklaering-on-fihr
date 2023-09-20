@@ -12,12 +12,12 @@ import Bundle = fhirclient.FHIR.Bundle;
 export const GET = async (request: NextRequest): Promise<NextResponse<IPractitionerRole | Error>> => {
     logRequest(request)
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN)!!;
-    const {fhirbaseurl, fhirsubscriptionkey} = new FhirConfiguration();
+    const {fhirBaseUrl, fhirSubscriptionKey} = new FhirConfiguration();
 
-    const response = await fetch(`${fhirbaseurl}/PractitionerRole/$getCurrentUser`, {
+    const response = await fetch(`${fhirBaseUrl}/PractitionerRole/$getCurrentUser`, {
         headers: {
             "Authorization": authorization,
-            "dips-subscription-key": fhirsubscriptionkey
+            "dips-subscription-key": fhirSubscriptionKey
         }
     });
 
