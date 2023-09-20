@@ -33,8 +33,6 @@ jobs:
       contents: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      FHIR_API_CLIENT_ID: ${{ secrets.FHIR_API_CLIENT_ID }}
-      FHIR_SUBSCRIPTION_KEY: ${{ secrets.FHIR_SUBSCRIPTION_KEY }}
     outputs:
       TAG: ${{ steps.docker-tag.outputs.TAG }}
     steps:
