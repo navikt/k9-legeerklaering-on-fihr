@@ -5,7 +5,7 @@
   "minReplicas": "2",
   "maxReplicas": "4",
   "ingresses": [
-    "https://k9-legeerklaering.intern.nav.no"
+    "https://k9-legeerklaering.ekstern.nav.no"
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",
