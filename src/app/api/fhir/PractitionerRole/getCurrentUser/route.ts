@@ -4,20 +4,20 @@ import { R4 } from '@ahryman40k/ts-fhir-types';
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { headers } from 'next/headers';
-import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
 import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 import { logRequest, logResponse } from '@/utils/loggerUtils';
+import { getServerEnv } from '@/utils/env';
 import Bundle = fhirclient.FHIR.Bundle;
 
 export const GET = async (request: NextRequest): Promise<NextResponse<IPractitionerRole | Error>> => {
     logRequest(request)
     const authorization = headers().get(FHIR_AUTHORIZATION_TOKEN)!!;
-    const {fhirBaseUrl, fhirSubscriptionKey} = new FhirConfiguration();
+    const {FHIR_BASE_URL, FHIR_SUBSCRIPTION_KEY} = getServerEnv();
 
-    const response = await fetch(`${fhirBaseUrl}/PractitionerRole/$getCurrentUser`, {
+    const response = await fetch(`${FHIR_BASE_URL}/PractitionerRole/$getCurrentUser`, {
         headers: {
             "Authorization": authorization,
-            "dips-subscription-key": fhirSubscriptionKey
+            "dips-subscription-key": FHIR_SUBSCRIPTION_KEY
         }
     });
 

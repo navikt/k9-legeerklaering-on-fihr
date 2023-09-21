@@ -1,7 +1,7 @@
 'use server'
 
-import { FhirConfiguration } from '@/integrations/fhir/FhirConfiguration';
+import { getServerEnv } from '@/utils/env';
 
 export const fhirClientId = async (): Promise<string> => {
-    return new FhirConfiguration().fhirClientId
+    return getServerEnv().FHIR_CLIENT_ID;
 }

@@ -38,6 +38,8 @@ spec:
       enabled: true
   accessPolicy:
     outbound:
+      rules:
+        - application: server-helse
       external:
       {{#each externalHosts as |host|}}
         - host: {{host}}
