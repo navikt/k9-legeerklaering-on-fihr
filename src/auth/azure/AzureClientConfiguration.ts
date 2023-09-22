@@ -26,7 +26,7 @@ export default class AzureClientConfiguration {
         logger.info("Getting server token...");
         const handle = await client.deviceAuthorization({scope: process.env.HELSEOPPLYSNINGER_SERVER_SCOPE});
         const tokenSet = await handle.poll();
-        logger.info(tokenSet, "Server token retrieved");
+        logger.info("Server token retrieved");
         return tokenSet;
     };
 }
