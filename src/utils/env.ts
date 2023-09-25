@@ -1,16 +1,16 @@
-import { z, ZodError } from 'zod';
 import { logger } from '@navikt/next-logger';
+import * as yup from "yup";
 
-export type ServerEnv = z.infer<typeof serverEnvSchema>
-export const serverEnvSchema = z.object({
+export type ServerEnv = yup.InferType<typeof serverEnvSchema>
+export const serverEnvSchema = yup.object().shape({
     // FHIR
-    FHIR_CLIENT_ID: z.string(),
-    FHIR_SUBSCRIPTION_KEY: z.string(),
-    FHIR_BASE_URL: z.string(),
+    FHIR_CLIENT_ID: yup.string().required(),
+    FHIR_SUBSCRIPTION_KEY: yup.string().required(),
+    FHIR_BASE_URL: yup.string().required(),
     // Helseopplysninger Server
-    HELSEOPPLYSNINGER_SERVER_BASE_URL: z.string(),
-    HELSEOPPLYSNINGER_SERVER_SCOPE: z.string(),
-})
+    HELSEOPPLYSNINGER_SERVER_BASE_URL: yup.string().required(),
+    HELSEOPPLYSNINGER_SERVER_SCOPE: yup.string().required()
+});
 
 const getRawServerConfig = (): Partial<unknown> =>
     ({
@@ -26,17 +26,15 @@ const getRawServerConfig = (): Partial<unknown> =>
  */
 export function getServerEnv(): ServerEnv {
     try {
-        return { ...serverEnvSchema.parse(getRawServerConfig())}
+        return {...serverEnvSchema.validateSync(getRawServerConfig())}
     } catch (e) {
-        if (e instanceof ZodError) {
+        if (e instanceof yup.ValidationError) {
             const error = new Error(
                 `The following envs are missing: ${
-                    e.errors
-                        .filter((it) => it.message === 'Required')
-                        .map((it) => it.path.join('.'))
-                        .join(', ') || 'None are missing, but zod is not happy. Look at cause'
-                }`,
-                { cause: e },
+                    e.errors.join(', ') || 'None are missing, but yup is not happy.'
+                }`, {
+                    cause: e
+                }
             );
             logger.error(error, 'Error while parsing server envs')
             throw error
