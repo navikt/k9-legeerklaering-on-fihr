@@ -33,11 +33,11 @@ describe('fhir dateTimePeriodResolver', () => {
     const validTestcases: TestCase[] = [
         {
             input: inputIPeriod("2023-04-01T12:23:00+02:00", "2023-05-12"),
-            expected: {start: new Date("2023-04-01T12:23:00+02:00"), end: new Date("2023-05-12")}
+            expected: {fom: new Date("2023-04-01T12:23:00+02:00"), tom: new Date("2023-05-12")}
         },
         {
             input: inputIPeriod("2023-04-01T12:23:00+02:00", undefined),
-            expected: {start: new Date("2023-04-01T12:23:00+02:00")}
+            expected: {fom: new Date("2023-04-01T12:23:00+02:00")}
         },
     ]
     test(`valid inputs should resolve to expected period`, () => {
@@ -56,8 +56,8 @@ describe('fhir isDateWithinPeriod', () => {
         expect(isDateWithinPeriod(before, period)).toBe(false)
         expect(isDateWithinPeriod(within, period)).toBe(true)
         expect(isDateWithinPeriod(after, period)).toBe(false)
-        expect(isDateWithinPeriod(period.start!, period)).toBe(true)
-        expect(isDateWithinPeriod(period.end!, period)).toBe(true)
+        expect(isDateWithinPeriod(period.fom!, period)).toBe(true)
+        expect(isDateWithinPeriod(period.tom!, period)).toBe(true)
     })
     test('without end should work', () => {
         const period = datePeriod(new Date("2021-04-02"), undefined)
@@ -65,13 +65,13 @@ describe('fhir isDateWithinPeriod', () => {
         const within = new Date("2021-04-03")
         expect(isDateWithinPeriod(before, period)).toBe(false)
         expect(isDateWithinPeriod(within, period)).toBe(true)
-        expect(isDateWithinPeriod(period.start!, period)).toBe(true)
+        expect(isDateWithinPeriod(period.fom!, period)).toBe(true)
     })
     test('with undefined start always results in undefined', () => {
         const period = datePeriod(undefined, new Date())
         const before = new Date("2021-04-01")
         expect(isDateWithinPeriod(before, period)).toBeUndefined()
-        expect(isDateWithinPeriod(period.end!, period)).toBeUndefined()
+        expect(isDateWithinPeriod(period.tom!, period)).toBeUndefined()
     })
 })
 
@@ -88,10 +88,10 @@ describe('fhir postalAddressResolver', () => {
         }
     ]
     const expect1: Address = {
-        line1: input1[0].line[0],
-        line2: undefined,
-        postalCode: input1[0].postalCode,
-        city: input1[0].city
+        gateadresse: input1[0].line[0],
+        gateadresse2: undefined,
+        postkode: input1[0].postalCode,
+        by: input1[0].city
     }
     test('with one address without any filtering info, return it', () => {
         expect(postalAddressResolver(input1)).toEqual(expect1)

@@ -38,7 +38,7 @@ export const dateTimePeriodResolver = (period?: IPeriod): DatePeriod | undefined
     }
     const start = dateTimeResolver(period.start)
     const end = dateTimeResolver(period.end)
-    return { start, end }
+    return { fom: start, tom: end }
 }
 
 /**
@@ -52,11 +52,11 @@ export const dateTimePeriodResolver = (period?: IPeriod): DatePeriod | undefined
  * https://hl7.org/fhir/R4/datatypes.html#Period
  */
 export const isDateWithinPeriod = (date: Date, period: DatePeriod | undefined): boolean | undefined => {
-    if(period === undefined || period.start === undefined) {
+    if(period === undefined || period.fom === undefined) {
         return undefined
     }
-    return date.getTime() >= period.start.getTime() &&
-        (period.end === undefined || date.getTime() <= period.end?.getTime())
+    return date.getTime() >= period.fom.getTime() &&
+        (period.tom === undefined || date.getTime() <= period.tom?.getTime())
 }
 
 
@@ -113,10 +113,10 @@ export const postalAddressResolver = (addresses: IAddress[] | undefined): Addres
     const chosenAddress = postalAddresses[0] ?? currentAddresses[0] ?? notOld[0];
     if (chosenAddress !== undefined) {
         return {
-            line1: chosenAddress.line?.[0],
-            line2: chosenAddress.line?.[1],
-            postalCode: chosenAddress.postalCode,
-            city: chosenAddress.city,
+            gateadresse: chosenAddress.line?.[0],
+            gateadresse2: chosenAddress.line?.[1],
+            postkode: chosenAddress.postalCode,
+            by: chosenAddress.city,
         }
     } else {
         return undefined;

@@ -1,6 +1,6 @@
 export default interface Address {
-    readonly line1?: string;
-    readonly line2?: string;
-    readonly postalCode?: string;
-    readonly city?: string;
+    readonly gateadresse?: string;
+    readonly gateadresse2?: string;
+    readonly postkode?: string;
+    readonly by?: string;
 }

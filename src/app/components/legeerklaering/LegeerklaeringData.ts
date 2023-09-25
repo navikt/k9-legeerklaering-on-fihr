@@ -5,11 +5,11 @@ import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
 
 export default interface LegeerklaeringData {
-    barn: Patient;
-    legensVurdering: string;
+    pasient: Patient;
+    vurdering: string;
     hoveddiagnose?: Diagnosekode;
     bidiagnoser: Diagnosekode[];
-    tilsynPerioder: DatePeriod[];
+    tilsynsPerioder: DatePeriod[];
     innleggelsesPerioder: DatePeriod[];
     lege: Doctor;
     sykehus: Hospital;

@@ -17,7 +17,7 @@ describe("MultiDatePeriodInput", () => {
 
     test("renders empty row value and accepts input", async () => {
         const value: DatePeriod[] = [{}]
-        const expectedValue1: DatePeriod = {start: new Date("2023-3-12"), end: new Date("2023-3-14")};
+        const expectedValue1: DatePeriod = {fom: new Date("2023-3-12"), tom: new Date("2023-3-14")};
         const onChange = jest.fn()
         const rendered =
             render(<MultiDatePeriodInput value={value} onChange={onChange} />)
@@ -28,11 +28,11 @@ describe("MultiDatePeriodInput", () => {
         // Input start date
         const startInput = rendered.getByLabelText("Fra og med")
         if(startInput === null) throw "startInput not found";
-        await userEvent.type(startInput, expectedValue1.start?.toLocaleDateString('no-NO') ?? "");
+        await userEvent.type(startInput, expectedValue1.fom?.toLocaleDateString('no-NO') ?? "");
         // Input end date
         const endInput = rendered.getByLabelText("Til og med")
         if(endInput === null) throw "endInput not found";
-        await userEvent.type(endInput, expectedValue1.end?.toLocaleDateString('no-NO') ?? "")
+        await userEvent.type(endInput, expectedValue1.tom?.toLocaleDateString('no-NO') ?? "")
 
         expect(onChange).toHaveBeenCalledWith([expectedValue1])
     })
@@ -42,12 +42,12 @@ describe("MultiDatePeriodInput", () => {
 
     test("renders filled row values and accepts edits to it", async () => {
         const value: DatePeriod[] = [
-            {start: new Date("2023-4-1"), end: new Date("2023-4-19")},
-            {start: new Date("2023-5-15"), end: new Date("2023-5-20")},
+            {fom: new Date("2023-4-1"), tom: new Date("2023-4-19")},
+            {fom: new Date("2023-5-15"), tom: new Date("2023-5-20")},
         ]
         const newEnd1 = new Date("2023-4-14")
-        const expectedChange1 = [{start: value[0].start, end: undefined}, value[1]]
-        const expectedChange2 = [{start: value[0].start, end: newEnd1}, value[1]]
+        const expectedChange1 = [{start: value[0].fom, end: undefined}, value[1]]
+        const expectedChange2 = [{start: value[0].fom, end: newEnd1}, value[1]]
         const onChange = jest.fn();
         const rendered =
             render(<MultiDatePeriodInput value={value} onChange={onChange} />)
@@ -57,10 +57,10 @@ describe("MultiDatePeriodInput", () => {
         const [endInput1, endInput2] = rendered.queryAllByLabelText("Til og med");
         const [startInput1, startInput2] = rendered.queryAllByLabelText("Fra og med");
         // Check that values are rendered correctly
-        expect(startInput1).toHaveValue(dateValueFormatter(value[0]?.start))
-        expect(startInput2).toHaveValue(dateValueFormatter(value[1]?.start))
-        expect(endInput1).toHaveValue(dateValueFormatter(value[0]?.end));
-        expect(endInput2).toHaveValue(dateValueFormatter(value[1]?.end))
+        expect(startInput1).toHaveValue(dateValueFormatter(value[0]?.fom))
+        expect(startInput2).toHaveValue(dateValueFormatter(value[1]?.fom))
+        expect(endInput1).toHaveValue(dateValueFormatter(value[0]?.tom));
+        expect(endInput2).toHaveValue(dateValueFormatter(value[1]?.tom))
         expect(rendered).toMatchSnapshot()
 
         // Change existing value
@@ -73,8 +73,8 @@ describe("MultiDatePeriodInput", () => {
 
     test("accepts deleting rows", async () => {
         const value: DatePeriod[] = [
-            {start: new Date("2023-4-1"), end: new Date("2023-4-19")},
-            {start: new Date("2023-5-15"), end: new Date("2023-5-20")},
+            {fom: new Date("2023-4-1"), tom: new Date("2023-4-19")},
+            {fom: new Date("2023-5-15"), tom: new Date("2023-5-20")},
         ]
         const expected1 = [{...value[1]}]
         const onChange = jest.fn();

@@ -59,8 +59,8 @@ export default class FhirService {
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
-                hprNumber: practitioner.id, // This is probably wrong. Is probably a separate identifier for norwegian HPR number
-                name,
+                hpr: practitioner.id, // This is probably wrong. Is probably a separate identifier for norwegian HPR number
+                navn: name,
             };
         } else {
             throw new Error(`Practitioner returned from EHR system missing id and/or name (${practitioner.id} - ${name})`)
@@ -87,9 +87,9 @@ export default class FhirService {
 
         if (identifier !== undefined && name !== undefined) {
             return {
-                name,
-                identifier,
-                birthDate,
+                navn: name,
+                fnr: identifier,
+                fødselsdato: birthDate,
             }
         } else {
             throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${name})`);
@@ -119,9 +119,9 @@ export default class FhirService {
         const {name, telecom, address} = organization;
 
         return {
-            name,
-            phoneNumber: phoneContactResolver(telecom),
-            address: postalAddressResolver(address),
+            navn: name,
+            tlf: phoneContactResolver(telecom),
+            adresse: postalAddressResolver(address),
         };
     }
 }

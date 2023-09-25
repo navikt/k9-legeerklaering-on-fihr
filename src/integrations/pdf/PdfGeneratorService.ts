@@ -1,5 +1,5 @@
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
-import { logger } from '@navikt/next-logger';
+import {logger} from '@navikt/next-logger';
 
 export default class PdfGeneratorService {
     private baseUrl: string;
@@ -21,47 +21,46 @@ export default class PdfGeneratorService {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                pasient: {
-                    fornavn: data.barn.name,
-                    personnummer: data.barn.identifier,
-                    pårørende: [],
-                    legeerklæring: {
-                        vurdering: data.legensVurdering,
-                        hoveddiagnose: {
-                            diagnoseterm: data.hoveddiagnose?.text,
-                            diagnosekode: data.hoveddiagnose?.code,
+                legeerklæring: {
+                    pasient: {
+                        navn: {
+                            fornavn: data.pasient.navn.fornavn,
+                            fornavn: data.pasient.navn.etternavn,
                         },
-                        bidiagnoser: data.bidiagnoser.map(bidiagnose => ({
-                            diagnoseterm: bidiagnose.text,
-                            diagnosekode: bidiagnose.code,
-                        })),
-                        innleggelser: {
-                            perioder: data.innleggelsesPerioder.map(innleggelse => ({
-                                fom: innleggelse.start,
-                                tom: innleggelse.end,
-                            }))
+                        fnr: data.pasient.fnr,
+                        fødselsdato: data.pasient.fødselsdato,
+                    },
+                    vurdering: data.vurdering,
+                    hoveddiagnose: data.hoveddiagnose,
+                    bidiagnoser: data.bidiagnoser.map(bidiagnose => ({
+                        term: bidiagnose.text,
+                        kode: bidiagnose.code,
+                    })),
+                    tilsynsPerioder: data.tilsynsPerioder.map(tilsyn => ({
+                        fom: tilsyn.fom,
+                        tom: tilsyn.tom,
+                    })),
+                    innleggelsesPerioder: data.innleggelsesPerioder.map(innleggelse => ({
+                        fom: innleggelse.fom,
+                        tom: innleggelse.tom,
+                    })),
+                    lege: {
+                        navn: {
+                            fornavn: data.lege.navn.fornavn,
+                            etternavn: data.lege.navn.etternavn,
                         },
-                        tilsyn: {
-                            perioder: data.tilsynPerioder.map(tilsyn => ({
-                                fom: tilsyn.start,
-                                tom: tilsyn.end,
-                            }))
+                        hpr: data.lege.hpr,
+                    },
+                    sykehus: {
+                        navn: data.sykehus.navn,
+                        tlf: data.sykehus.tlf,
+                        adresse: {
+                            gateadresse: data.sykehus.adresse.gateadresse,
+                            gateadresse2: data.sykehus.adresse.gateadresse2,
+                            postkode: data.sykehus.adresse.postkode,
+                            by: data.sykehus.adresse.by,
                         }
                     }
-                },
-                helsepersonell: {
-                    fornavn: data.lege.name,
-                    hpr: data.lege.hprNumber,
-                    adresseInfo: {
-                        navn: data.sykehus.name,
-                        teleonnummer: data.sykehus.phoneNumber,
-                        adresse: {
-                            gateadresse: data.sykehus.address?.line1,
-                            postkode: data.sykehus.address?.postalCode,
-                            by: data.sykehus.address?.city,
-                        }
-                    },
-                    signatur: null,
                 }
             })
         })

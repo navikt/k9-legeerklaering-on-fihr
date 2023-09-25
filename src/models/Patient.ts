@@ -1,5 +1,7 @@
+import Navn from "@/models/Navn";
+
 export default interface Patient {
-    readonly name: string;
-    readonly identifier: string;
-    readonly birthDate?: Date;
+    readonly navn: Navn;
+    readonly fnr: string;
+    readonly fødselsdato?: Date;
 }

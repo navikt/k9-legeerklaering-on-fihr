@@ -21,7 +21,7 @@ export interface DatePeriodInputProps {
 
 export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel = false, startInputRef}: DatePeriodInputProps) => {
     const {datepickerProps, fromInputProps, toInputProps, selectedRange} = useRangeDatepicker({
-        defaultSelected: value && {from: value?.start, to: value?.end},
+        defaultSelected: value && {from: value?.fom, to: value?.tom},
         onRangeChange: (range) => {
             // Only emit change when new value is different from old
             const newValue = range !== undefined ? datePeriod(range.from, range.to) : undefined;
@@ -98,7 +98,7 @@ export default function MultiDatePeriodInput({value, onChange, className, error,
         onChange(newValue)
     }
     // If some value is incomplete, we disable the add button
-    const hasIncompleteValue = value.some(dp => dp.start === undefined || dp.end === undefined)
+    const hasIncompleteValue = value.some(dp => dp.fom === undefined || dp.tom === undefined)
 
     const handleAdd = () => {
         onChange([...value, {}]);

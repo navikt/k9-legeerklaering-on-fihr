@@ -1,4 +1,6 @@
+import Navn from "@/models/Navn";
+
 export default interface Doctor {
-    readonly hprNumber: string;
-    readonly name: string;
+    readonly hpr: string;
+    readonly navn: Navn;
 }
