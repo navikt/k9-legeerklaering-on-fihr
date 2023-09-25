@@ -1,0 +1,10 @@
+services:
+  k9-legeerklaering-on-fhir:
+    build: .
+    ports:
+      - 3000:8080
+  azure:
+    image: ghcr.io/navikt/mock-oauth2-server:2.0.0
+    ports:
+      - 8080:8080
+    hostname: host.docker.internal

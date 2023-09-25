@@ -12,6 +12,8 @@
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",
-    "FHIR_CLIENT_ID": "NAV_legeerklaering"
+    "FHIR_CLIENT_ID": "NAV_legeerklaering",
+    "HELSEOPPLYSNINGER_SERVER_BASE_URL": "http://server-helse",
+    "HELSEOPPLYSNINGER_SERVER_SCOPE": "dev-gcp:helseopplysninger:server-helse"
   }
 }

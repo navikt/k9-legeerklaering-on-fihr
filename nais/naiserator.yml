@@ -33,8 +33,13 @@ spec:
     min: {{ minReplicas }}
     max: {{ maxReplicas }}
     cpuThresholdPercentage: 90
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     outbound:
+      rules:
+        - application: server-helse
       external:
       {{#each externalHosts as |host|}}
         - host: {{host}}
