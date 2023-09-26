@@ -46,8 +46,8 @@ describe("MultiDatePeriodInput", () => {
             {fom: new Date("2023-5-15"), tom: new Date("2023-5-20")},
         ]
         const newEnd1 = new Date("2023-4-14")
-        const expectedChange1 = [{start: value[0].fom, end: undefined}, value[1]]
-        const expectedChange2 = [{start: value[0].fom, end: newEnd1}, value[1]]
+        const expectedChange1 = [{fom: value[0].fom, tom: undefined}, value[1]]
+        const expectedChange2 = [{fom: value[0].fom, tom: newEnd1}, value[1]]
         const onChange = jest.fn();
         const rendered =
             render(<MultiDatePeriodInput value={value} onChange={onChange} />)
