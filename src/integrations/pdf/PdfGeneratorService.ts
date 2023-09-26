@@ -25,7 +25,7 @@ export default class PdfGeneratorService {
                     pasient: {
                         navn: {
                             fornavn: data.pasient.navn.fornavn,
-                            fornavn: data.pasient.navn.etternavn,
+                            etternavn: data.pasient.navn.etternavn,
                         },
                         fnr: data.pasient.fnr,
                         fødselsdato: data.pasient.fødselsdato,
@@ -55,10 +55,10 @@ export default class PdfGeneratorService {
                         navn: data.sykehus.navn,
                         tlf: data.sykehus.tlf,
                         adresse: {
-                            gateadresse: data.sykehus.adresse.gateadresse,
-                            gateadresse2: data.sykehus.adresse.gateadresse2,
-                            postkode: data.sykehus.adresse.postkode,
-                            by: data.sykehus.adresse.by,
+                            gateadresse: data.sykehus.adresse?.gateadresse,
+                            gateadresse2: data.sykehus.adresse?.gateadresse2,
+                            postkode: data.sykehus.adresse?.postkode,
+                            by: data.sykehus.adresse?.by,
                         }
                     }
                 }

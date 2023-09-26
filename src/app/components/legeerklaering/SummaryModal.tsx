@@ -23,10 +23,10 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Header>{tekst("legeerklaering.om-barnet.tittel")}</Accordion.Header>
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                        <Ingress spacing>{data.pasient.navn}</Ingress>
+                        <Ingress spacing>{data.pasient.navn.fornavn} {data.pasient.navn.etternavn}</Ingress>
 
                         <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-barnet.ident.label")}</Heading>
+                                 size="xsmall">{tekst("legeerklaering.om-barnet.fnr.label")}</Heading>
                         <Ingress spacing>{data.pasient.fnr}</Ingress>
 
                         <Heading level="5"
@@ -36,9 +36,9 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                 </Accordion.Item>
 
                 <Accordion.Item defaultOpen>
-                    <Accordion.Header>{tekst('legeerklaering.legens-vurdering.tittel')}</Accordion.Header>
+                    <Accordion.Header>{tekst('legeerklaering.vurdering.tittel')}</Accordion.Header>
                     <Accordion.Content>
-                        <Heading level="5" size="xsmall">{tekst("legeerklaering.legens-vurdering.label")}</Heading>
+                        <Heading level="5" size="xsmall">{tekst("legeerklaering.vurdering.label")}</Heading>
                         <Ingress spacing>{data.vurdering}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
@@ -96,10 +96,10 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Header>{tekst("legeerklaering.om-legen.tittel")}</Accordion.Header>
                     <Accordion.Content>
                         <Heading level="5" size="xsmall">{tekst("legeerklaering.felles.navn.label")}</Heading>
-                        <Ingress spacing>{data.lege.navn}</Ingress>
+                        <Ingress spacing>{data.lege.navn.fornavn} {data.lege.navn.etternavn}</Ingress>
 
                         <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-legen.hpr-nummer.label")}</Heading>
+                                 size="xsmall">{tekst("legeerklaering.om-legen.hpr.label")}</Heading>
                         <Ingress spacing>{data.lege.hpr}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>
@@ -121,11 +121,11 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                         <Ingress spacing>{data.sykehus.adresse?.gateadresse2}</Ingress>
 
                         <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-sykehuset.postnummer.label")}</Heading>
+                                 size="xsmall">{tekst("legeerklaering.om-sykehuset.postkode.label")}</Heading>
                         <Ingress spacing>{data.sykehus.adresse?.postkode}</Ingress>
 
                         <Heading level="5"
-                                 size="xsmall">{tekst("legeerklaering.om-sykehuset.poststed.label")}</Heading>
+                                 size="xsmall">{tekst("legeerklaering.om-sykehuset.by.label")}</Heading>
                         <Ingress spacing>{data.sykehus.adresse?.by}</Ingress>
                     </Accordion.Content>
                 </Accordion.Item>

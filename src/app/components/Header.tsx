@@ -13,7 +13,7 @@ export default function Header({doctor}: HeaderProps) {
                 <InternalHeader.Title as="h1">Legeerklæring - pleiepenger sykt barn</InternalHeader.Title>
                 { doctor !== undefined ?
                     <InternalHeader.User
-                        name={doctor.navn}
+                        name={`${doctor.navn.etternavn}, ${doctor.navn.fornavn}`}
                         description={`ID: ${doctor.hpr}`}
                         className="ml-auto"
                     /> : null

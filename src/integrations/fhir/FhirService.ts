@@ -60,7 +60,10 @@ export default class FhirService {
         if (practitioner.id !== undefined && name !== undefined) {
             return {
                 hpr: practitioner.id, // This is probably wrong. Is probably a separate identifier for norwegian HPR number
-                navn: name,
+                navn: {
+                    fornavn: "lege",
+                    etternavn: "legesen"
+                }
             };
         } else {
             throw new Error(`Practitioner returned from EHR system missing id and/or name (${practitioner.id} - ${name})`)
@@ -81,18 +84,21 @@ export default class FhirService {
         });
 
         const patient = validateOrThrow(R4.RTTI_Patient.decode(await response.json()));
-        const name = officialHumanNameResolver(patient.name)
+        const patientName = officialHumanNameResolver(patient.name)
         const identifier = officialIdentifierResolver(patient.identifier);
         const birthDate = dateTimeResolver(patient.birthDate)
 
-        if (identifier !== undefined && name !== undefined) {
+        if (identifier !== undefined && patientName !== undefined) {
             return {
-                navn: name,
+                navn: {
+                    fornavn: "pasient",
+                    etternavn: "pasientsen"
+                },
                 fnr: identifier,
                 fødselsdato: birthDate,
             }
         } else {
-            throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${name})`);
+            throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${patientName})`);
         }
     }
 

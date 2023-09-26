@@ -60,19 +60,17 @@ export const isDateWithinPeriod = (date: Date, period: DatePeriod | undefined): 
 }
 
 
-export const officialHumanNameResolver = (names: IHumanName[] | undefined): string | undefined => {
+export const officialHumanNameResolver = (names: IHumanName[] | undefined): IHumanName | undefined => {
     if (names === undefined) {
         return undefined
     }
     // Try resolving to one name. Select the first official name among current names if there is one, otherwise
-    // select firt official among all given names, or just use the first one in
+    // select first official among all given names, or just use the first one in
     // the array if no official name is found.
     const currentNames = names.filter(n => isDateWithinPeriod(new Date(), dateTimePeriodResolver(n.period)));
-    const name1 =
-        currentNames.find(n => n.use === HumanNameUseKind._official) ??
+    return currentNames.find(n => n.use === HumanNameUseKind._official) ??
         names.find(n => n.use === HumanNameUseKind._official) ??
         names?.[0];
-    return  `${name1?.prefix ?? ""} ${name1?.family ?? ""}, ${name1?.given?.join(" ") ?? ""}`
 }
 /**
  * Try resolving one identifier from the current identifiers in given array, or including all given if not found among current ones.

@@ -9,7 +9,7 @@
 
 ### Environment variables
 Create a .env file in the root of the project with the following variables: 
-- `FHIR_API_URL`
+- `FHIR_BASE_URL`
 - `FHIR_CLIENT_ID`
 - `FHIR_SUBSCRIPTION_KEY`
 - `HELSEOPPLYSNINGER_PDF_BASE_URL`

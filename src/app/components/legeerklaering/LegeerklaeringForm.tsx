@@ -30,52 +30,61 @@ const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
 })
 
 const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
-    start: yup.date().required("Fra dato er påkrevd"),
-    end: yup.date().required("Til dato er påkrevd"),
+    fom: yup.date().required("Fra dato er påkrevd"),
+    tom: yup.date().required("Til dato er påkrevd"),
 }).test({
     name: 'datePeriodStartBeforeEnd',
     skipAbsent: true,
     message: `Periode start må være før slutt`,
     test: (period) =>
-        period.start === undefined ||
-        period.end === undefined ||
-        period.start.getTime() <= period.end.getTime()
+        period.fom === undefined ||
+        period.tom === undefined ||
+        period.fom.getTime() <= period.tom.getTime()
 })
 
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
-    barn: yup.object({
-        name: yup.string().trim()
-            .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
-            .min(3, ({min}) => `Minimum ${min} tegn må skrives inn`)
-            .max(150, ({max}) => `Maks ${max} tegn tillatt`),
-        identifier: yup.string().trim()
-            .required(tekst("legeerklaering.om-barnet.ident.paakrevd"))
+    pasient: yup.object({
+        navn: yup.object({
+            fornavn: yup.string().trim()
+              .required(tekst("legeerklaering.om-barnet.navn.fornavn.paakrevd"))
+              .min(3, ({min}) => `Minimum ${min} tegn må skrives inn`)
+              .max(150, ({max}) => `Maks ${max} tegn tillatt`),
+            etternavn: yup.string().trim()
+                .required(tekst("legeerklaering.om-barnet.navn.etternavn.paakrevd"))
+                .min(3, ({min}) => `Minimum ${min} tegn må skrives inn`)
+                .max(150, ({max}) => `Maks ${max} tegn tillatt`),
+        }),
+        fnr: yup.string().trim()
+            .required(tekst("legeerklaering.om-barnet.fnr.paakrevd"))
             .min(11, ({min}) => `Må vere minimum ${min} tegn`)
             .max(40, ({max, value}) => `Maks ${max} tegn tillatt (${value.length})`),
-        birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
+        fødselsdato: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
     }),
     lege: yup.object({
-        hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
-        name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd"))
+        hpr: yup.string().required(tekst("legeerklaering.om-legen.hpr.paakrevd")),
+        navn: yup.object({
+          fornavn: yup.string().required(tekst("legeerklaering.om-legen.navn.fornavn.paakrevd")),
+          etternavn: yup.string().required(tekst("legeerklaering.om-legen.navn.etternavn.paakrevd"))
+        }).required()
     }),
     sykehus: yup.object({
-        name: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.navn.paakrevd")),
-        phoneNumber: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.tlf.paakrevd")),
-        address: yup.object({
-            line1: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.gateadresse.paakrevd")),
-            line2: yup.string().trim().optional(),
-            postalCode: yup.string()
-                .required(tekst("legeerklaering.om-sykehuset.postnummer.paakrevd"))
+        navn: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.navn.paakrevd")),
+        tlf: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.tlf.paakrevd")),
+        adresse: yup.object({
+            gateadresse: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.gateadresse.paakrevd")),
+            gateadresse2: yup.string().trim().optional(),
+            postkode: yup.string()
+                .required(tekst("legeerklaering.om-sykehuset.postkode.paakrevd"))
                 .min(4, ({min}) => `Må være minimum ${min} siffer`)
                 .max(5, ({max}) => `Kan være maks ${max} siffer`)
                 .matches(/^[0-9]{4,5}$/, oops => `Bare tall tillat ${oops.label}`),
-            city: yup.string().required(tekst("legeerklaering.om-sykehuset.poststed.paakrevd")),
+            by: yup.string().required(tekst("legeerklaering.om-sykehuset.by.paakrevd")),
         }).required()
     }),
     hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
-    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.paakrevd")),
-    tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
+    vurdering: yup.string().trim().required(tekst("legeerklaering.vurdering.paakrevd")),
+    tilsynsPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
     innleggelsesPerioder: yup.array().of(datePeriodValidation).required()
 })
 
@@ -134,7 +143,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
     } = useDatepicker({
         defaultSelected: ehrInfo.patient?.fødselsdato,
         onDateChange: (dato) => {
-            setValue('barn.birthDate', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
+            setValue('pasient.fødselsdato', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
     });
 
@@ -182,17 +191,24 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 helpText={tekst("legeerklaering.om-barnet.hjelpetekst")}
             >
                 <TextField
-                    label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={defaultValues?.pasient?.navn}
-                    {...register("barn.name", {required: true})}
+                    label={tekst("legeerklaering.felles.navn.fornavn.label")}
+                    defaultValue={defaultValues?.pasient?.navn?.fornavn}
+                    {...register("pasient.navn.fornavn", {required: true})}
+                    error={errors.pasient?.navn?.message}
+                    className="w-1/2 mb-4"
+                />
+                <TextField
+                    label={tekst("legeerklaering.felles.navn.etternavn.label")}
+                    defaultValue={defaultValues?.pasient?.navn?.etternavn}
+                    {...register("pasient.navn.etternavn", {required: true})}
                     error={errors.pasient?.navn?.message}
                     className="w-1/2 mb-4"
                 />
                 <div className="mb-4">
                     <TextField
-                        label={tekst("legeerklaering.om-barnet.ident.label")}
+                        label={tekst("legeerklaering.om-barnet.fnr.label")}
                         defaultValue={defaultValues?.pasient?.fnr}
-                        {...register("barn.identifier", {required: true})}
+                        {...register("pasient.fnr", {required: true})}
                         error={errors.pasient?.fnr?.message}
                         className="w-1/2 mb-4"
                     />
@@ -207,18 +223,18 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             </Section>
 
             <Section
-                title={tekst("legeerklaering.legens-vurdering.tittel")}
-                helpText={tekst("legeerklaering.legens-vurdering.hjelpetekst")}
+                title={tekst("legeerklaering.vurdering.tittel")}
+                helpText={tekst("legeerklaering.vurdering.hjelpetekst")}
             >
                 <ReadMore
                     size='small'
-                    header={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
+                    header={tekst("legeerklaering.vurdering.les-mer.tittel")}
                     className="mb-8">
-                    {tekst("legeerklaering.legens-vurdering.les-mer.tekst")}
+                    {tekst("legeerklaering.vurdering.les-mer.tekst")}
                 </ReadMore>
                 <Textarea
-                    label={tekst("legeerklaering.legens-vurdering.label")}
-                    {...register("legensVurdering", {required: true})}
+                    label={tekst("legeerklaering.vurdering.label")}
+                    {...register("vurdering", {required: true})}
                     error={errors.vurdering?.message}
                     minRows={10}
                 />
@@ -253,13 +269,13 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             >
                 <Controller
                     control={control}
-                    name="tilsynPerioder"
+                    name="tilsynsPerioder"
                     render={({field: {onChange, value}}) => (
                         <MultiDatePeriodInput
                             value={value}
                             onChange={onChange}
                             error={errors.tilsynsPerioder?.message}
-                            valueErrors={errors.tilsynsPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)} // maps validation errors to the correct input row in MultiDatePeriodInput
+                            valueErrors={errors.tilsynsPerioder?.map?.(e => e?.fom?.message || e?.tom?.message || e?.message)} // maps validation errors to the correct input row in MultiDatePeriodInput
                         />
                     )}
                 />
@@ -274,7 +290,7 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                             value={value}
                             onChange={onChange}
                             error={errors.innleggelsesPerioder?.message}
-                            valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}
+                            valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.fom?.message || e?.tom?.message || e?.message)}
                         />
                     )}
                 />
@@ -282,16 +298,23 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
 
             <Section title={tekst("legeerklaering.om-legen.tittel")}>
                 <TextField
-                    label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={defaultValues?.lege?.navn}
-                    {...register("lege.name", {required: true})}
+                    label={tekst("legeerklaering.felles.navn.fornavn.label")}
+                    defaultValue={defaultValues?.lege?.navn?.fornavn}
+                    {...register("lege.navn.fornavn", {required: true})}
                     error={errors.lege?.navn?.message}
                     className="mb-4 w-1/2"
                 />
                 <TextField
-                    label={tekst("legeerklaering.om-legen.hpr-nummer.label")}
+                    label={tekst("legeerklaering.felles.navn.etternavn.label")}
+                    defaultValue={defaultValues?.lege?.navn?.fornavn}
+                    {...register("lege.navn.etternavn", {required: true})}
+                    error={errors.lege?.navn?.message}
+                    className="mb-4 w-1/2"
+                />
+                <TextField
+                    label={tekst("legeerklaering.om-legen.hpr.label")}
                     defaultValue={defaultValues?.lege?.hpr}
-                    {...register("lege.hprNumber", {required: true})}
+                    {...register("lege.hpr", {required: true})}
                     error={errors.lege?.hpr?.message}
                     className="w-1/2"
                 />
@@ -301,46 +324,46 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 <div className="flex space-x-4 mb-4">
                     <TextField
                         label={tekst("legeerklaering.felles.navn.label")}
-                        {...register("sykehus.name", {required: true})}
+                        {...register("sykehus.navn", {required: true})}
                         error={errors.sykehus?.navn?.message}
                         className="w-3/4"
                     />
                     <TextField
                         label={tekst("legeerklaering.om-sykehuset.tlf.label")}
                         type="tel"
-                        {...register("sykehus.phoneNumber", {required: true})}
+                        {...register("sykehus.tlf", {required: true})}
                         error={errors.sykehus?.tlf?.message}
                         className="w-1/4"
                     /></div>
                 <TextField
                     label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
-                    defaultValue={defaultValues?.sykehus?.adresse?.line1}
-                    {...register("sykehus.address.line1", {required: true})}
-                    error={errors.sykehus?.adresse?.line1?.message}
+                    defaultValue={defaultValues?.sykehus?.adresse?.gateadresse}
+                    {...register("sykehus.adresse.gateadresse", {required: true})}
+                    error={errors.sykehus?.adresse?.gateadresse?.message}
                     className="mb-4 w-3/4"
                 />
                 <TextField
                     label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
                     hideLabel={true}
-                    defaultValue={defaultValues?.sykehus?.adresse?.line2}
-                    {...register("sykehus.address.line2")}
-                    error={errors.sykehus?.adresse?.line2?.message}
+                    defaultValue={defaultValues?.sykehus?.adresse?.gateadresse2}
+                    {...register("sykehus.adresse.gateadresse2")}
+                    error={errors.sykehus?.adresse?.gateadresse2?.message}
                     className="mb-4 w-3/4"
                 />
                 <div className="flex mb-4 space-x-4">
                     <TextField
-                        label={tekst("legeerklaering.om-sykehuset.postnummer.label")}
-                        defaultValue={defaultValues?.sykehus?.adresse?.postalCode}
+                        label={tekst("legeerklaering.om-sykehuset.postkode.label")}
+                        defaultValue={defaultValues?.sykehus?.adresse?.postkode}
                         type="number"
-                        {...register("sykehus.address.postalCode", {required: true})}
-                        error={errors.sykehus?.adresse?.postalCode?.message}
+                        {...register("sykehus.adresse.postkode", {required: true})}
+                        error={errors.sykehus?.adresse?.postkode?.message}
                         className="w-1/4"
                     />
                     <TextField
-                        label={tekst("legeerklaering.om-sykehuset.poststed.label")}
-                        defaultValue={defaultValues?.sykehus?.adresse?.city}
-                        {...register("sykehus.address.city", {required: true})}
-                        error={errors.sykehus?.adresse?.city?.message}
+                        label={tekst("legeerklaering.om-sykehuset.by.label")}
+                        defaultValue={defaultValues?.sykehus?.adresse?.by}
+                        {...register("sykehus.adresse.by", {required: true})}
+                        error={errors.sykehus?.adresse?.by?.message}
                         className="w-3/4"
                     />
                 </div>
