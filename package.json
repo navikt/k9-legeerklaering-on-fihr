@@ -33,7 +33,7 @@
     "next": "13.5.3",
     "next-logger": "^3.0.2",
     "pino": "^8.15.3",
-    "pino-pretty": "^10.2.0",
+    "pino-pretty": "^10.2.2",
     "postcss": "8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
