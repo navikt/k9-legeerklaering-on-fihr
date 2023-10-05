@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Hente kode
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.0
       - name: Sette opp Node
         uses: actions/setup-node@v3
         with:
