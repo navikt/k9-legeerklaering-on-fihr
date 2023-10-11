@@ -7,14 +7,21 @@ import {
     ContactPointUseKind,
     HumanNameUseKind,
     IAddress,
+    IBundle,
     IContactPoint,
     IdentifierUseKind,
     IHumanName,
     IIdentifier,
-    IPeriod
+    IPeriod,
+    IPractitioner,
+    IPractitionerRole,
+    IResourceList
 } from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod from "@/models/DatePeriod";
 import Address from "@/models/Address";
+import { R4 } from "@ahryman40k/ts-fhir-types";
+import { HprNumber } from "@/models/HprNumber";
+import { PartialPractitioner } from "@/models/Practitioner";
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -65,14 +72,15 @@ export const officialHumanNameResolver = (names: IHumanName[] | undefined): stri
         return undefined
     }
     // Try resolving to one name. Select the first official name among current names if there is one, otherwise
-    // select firt official among all given names, or just use the first one in
+    // select first official among all given names, or just use the first one in
     // the array if no official name is found.
     const currentNames = names.filter(n => isDateWithinPeriod(new Date(), dateTimePeriodResolver(n.period)));
     const name1 =
         currentNames.find(n => n.use === HumanNameUseKind._official) ??
         names.find(n => n.use === HumanNameUseKind._official) ??
         names?.[0];
-    return  `${name1?.prefix ?? ""} ${name1?.family ?? ""}, ${name1?.given?.join(" ") ?? ""}`
+    const nameStr = `${name1?.prefix ?? ""} ${name1?.family ?? ""}, ${name1?.given?.join(" ") ?? ""}`.trim()
+    return nameStr.length > 0 ? nameStr : undefined
 }
 /**
  * Try resolving one identifier from the current identifiers in given array, or including all given if not found among current ones.
@@ -140,4 +148,105 @@ export const phoneContactResolver = (telecoms: IContactPoint[] | undefined): str
             onlyPhonesNotOld[0]
 
     return chosenPhone?.value
+}
+
+/**
+ * Extract the resource list from a bundle
+ * @param bundle
+ */
+export const bundleResourceList = (bundle: IBundle): IResourceList[] =>
+    bundle.entry !== undefined ?
+        bundle.entry.flatMap(e => e.resource !== undefined ? [e.resource] : []) :
+        []
+
+
+/**
+ * Return first resource of type IPractitionerRole from given resourcelisting.
+ * @param resourcelisting
+ */
+export const iPractitionerRoleFromListing = (resourcelisting: IResourceList[]): IPractitionerRole | undefined => {
+    for(const resource of resourcelisting) {
+        if(R4.RTTI_PractitionerRole.is(resource)) {
+            return resource
+        }
+    }
+    return undefined
+}
+
+export const iPractitionerFromListing = (resourcelisting: IResourceList[]): IPractitioner | undefined => {
+    for(const resource of resourcelisting) {
+        if(R4.RTTI_Practitioner.is(resource)) {
+            return resource
+        }
+    }
+    return undefined
+}
+
+/**
+ * Return first identifier of type "hpr nummer" from given list of identifiers.
+ * "hpr number" is an official norwegian healthcare persons id-number. This has the OID "urn:oid:2.16.578.1.12.4.1.4.4".
+ * https://www.ehelse.no/teknisk-dokumentasjon/oid-identifikatorserier-i-helse-og-omsorgstjenesten#Nasjonale%20identifikatorserier%20for%20personer
+ */
+export const hprNumberFromIdentifiers = (identifiers: IIdentifier[]): HprNumber | undefined => {
+    for(const identifier of identifiers) {
+        if(
+            identifier.system === "urn:oid:2.16.578.1.12.4.1.4.4" &&
+            identifier.use === IdentifierUseKind._official &&
+            identifier.value !== undefined &&
+            identifier.value.length > 0
+        ) {
+            return identifier.value
+        }
+    }
+    return undefined;
+}
+
+export const organizationNumberFromIdentifier = (identifier: IIdentifier | undefined): string | undefined => {
+    if(
+        identifier !== undefined &&
+        identifier.system === "urn:oid:2.16.578.1.12.4.1.4.101" &&
+        identifier.use === IdentifierUseKind._official &&
+        identifier.value !== undefined &&
+        identifier.value.length > 0
+    ) {
+        return identifier.value
+    }
+    return undefined
+}
+
+export const organizationNumberFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
+    for(const identifier of identifiers) {
+        const orgNum = organizationNumberFromIdentifier(identifier)
+        if (orgNum !== undefined) {
+            return orgNum
+        }
+    }
+    return undefined
+}
+
+// According to https://www.hl7.org/fhir/R4/practitioner-definitions.html#Practitioner.active, and
+// https://www.hl7.org/fhir/R4/practitionerrole-definitions.html#PractitionerRole.active, the
+// Practitioner and PractitionerRole "is generally assumed to be active if no value is provided for the active element":
+export const trueIfUndefined = (active: boolean | undefined): boolean => active === undefined ? true: active
+
+export const resolvePractitionerFromIPractitionerRole = (practitionerRole: IPractitionerRole): PartialPractitioner => {
+    const identifierValue = practitionerRole.practitioner?.identifier?.value
+    const practitioner = iPractitionerFromListing(practitionerRole.contained || [])
+    return {
+        epjId: identifierValue,
+        hprNumber: hprNumberFromIdentifiers(practitionerRole.identifier || []),
+        name: officialHumanNameResolver(practitioner?.name),
+        activeSystemUser: trueIfUndefined(practitionerRole.active)
+    }
+}
+
+export const resolvePractitionerFromIPractitioner = (iPractitioner: IPractitioner): PartialPractitioner => {
+    return {
+        epjId: iPractitioner.id,
+        hprNumber: hprNumberFromIdentifiers(iPractitioner.identifier || []),
+        name: officialHumanNameResolver(iPractitioner.name),
+        // According to https://www.hl7.org/fhir/R4/practitioner-definitions.html#Practitioner.active, the
+        // practitioner "is generally assumed to be active if no value is provided for the active element":
+        activeSystemUser: trueIfUndefined(iPractitioner.active),
+    }
 }

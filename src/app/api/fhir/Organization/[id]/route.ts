@@ -3,7 +3,7 @@ import { IOrganization } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { headers } from 'next/headers';
-import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
+import { FHIR_AUTHORIZATION_TOKEN } from '@/utils/constants';
 import { logRequest, logResponse } from '@/utils/loggerUtils';
 import { getServerEnv } from '@/utils/env';
 

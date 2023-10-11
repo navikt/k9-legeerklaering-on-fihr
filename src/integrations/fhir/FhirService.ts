@@ -1,24 +1,28 @@
 import Client from "fhirclient/lib/Client";
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import {
     dateTimeResolver,
     officialHumanNameResolver,
     officialIdentifierResolver,
+    organizationNumberFromIdentifiers,
     phoneContactResolver,
-    postalAddressResolver
+    postalAddressResolver,
+    trueIfUndefined
 } from "@/integrations/fhir/resolvers";
 import Hospital from "@/models/Hospital";
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
+import { FhirApi } from "@/integrations/fhir/FhirApi";
+import InitData from "@/models/InitData";
 
 
 /**
  * Wraps the imported FHIR client so that we can do our adaptions of what it provides, and provide our own argument
  * and return types to match our needs.
  */
-export default class FhirService {
+export default class FhirService implements FhirApi {
     private practitionerRole: Promise<IPractitionerRole>;
 
     public constructor(private client: Client) {
@@ -40,7 +44,7 @@ export default class FhirService {
         return validateOrThrow(R4.RTTI_PractitionerRole.decode(await response.json()));
     }
 
-    public async getDoctor(): Promise<Doctor> {
+    async getDoctor(): Promise<Practitioner> {
         const authorizationHeader: string | null = this.client.getAuthorizationHeader();
 
         const practitionerRole: IPractitionerRole = await this.practitionerRole;
@@ -59,15 +63,17 @@ export default class FhirService {
         const name = officialHumanNameResolver(practitioner.name)
         if (practitioner.id !== undefined && name !== undefined) {
             return {
+                epjId: practitioner.id,
                 hprNumber: practitioner.id, // This is probably wrong. Is probably a separate identifier for norwegian HPR number
                 name,
+                activeSystemUser: trueIfUndefined(practitioner.active),
             };
         } else {
             throw new Error(`Practitioner returned from EHR system missing id and/or name (${practitioner.id} - ${name})`)
         }
     }
 
-    public async getPatient(): Promise<Patient> {
+    async getPatient(): Promise<Patient> {
         const patientId = this.client.patient.id;
         const authorizationHeader: string | null = this.client.getAuthorizationHeader();
 
@@ -104,10 +110,10 @@ export default class FhirService {
             throw new Error("Organization reference is not available");
         }
 
-        const organizationRefrence = practitionerRole.organization?.reference;
+        const organizationReference = practitionerRole.organization?.reference;
 
         const baseUrl = new URL(window.location.origin);
-        const organizationUrl = new URL(`/api/fhir/${organizationRefrence}`, baseUrl);
+        const organizationUrl = new URL(`/api/fhir/${organizationReference}`, baseUrl);
 
         const response = await fetch(organizationUrl.toString(), {
             headers: {
@@ -116,12 +122,26 @@ export default class FhirService {
         });
 
         const organization = validateOrThrow(R4.RTTI_Organization.decode(await response.json()));
-        const {name, telecom, address} = organization;
-
+        const organizationNumber = organizationNumberFromIdentifiers(organization.identifier || [])
+        const {id, name, telecom, address} = organization;
+        if (id === undefined || name === undefined) {
+            throw new Error(`organization (hospital) with reference ${organizationReference} is missing required props (id and/or name)`)
+        }
         return {
+            epjId: id,
+            organizationNumber,
             name,
             phoneNumber: phoneContactResolver(telecom),
             address: postalAddressResolver(address),
         };
+    }
+
+    public async getInitState(): Promise<InitData> {
+        const [patient, practitioner, hospital] = await Promise.all([this.getPatient(), this.getDoctor(), this.getHospital()])
+        return {
+            patient,
+            practitioner,
+            hospital,
+        }
     }
 }

@@ -6,7 +6,7 @@ import { tekst } from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
@@ -19,7 +19,7 @@ import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeri
 import { logger } from '@navikt/next-logger';
 
 export interface EhrInfoLegeerklaeringForm {
-    readonly doctor: Doctor | undefined;
+    readonly doctor: Practitioner | undefined;
     readonly patient: Patient | undefined;
     readonly hospital: Hospital | undefined;
 }
@@ -55,10 +55,14 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
         birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
     }),
     lege: yup.object({
+        epjId: yup.string().required("legens epj systemid er påkrevd"),
         hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
-        name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd"))
+        name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd")),
+        activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd")
     }),
     sykehus: yup.object({
+        epjId: yup.string().optional(),
+        organizationNumber: yup.string().optional(),
         name: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.navn.paakrevd")),
         phoneNumber: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.tlf.paakrevd")),
         address: yup.object({
