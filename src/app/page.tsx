@@ -38,12 +38,8 @@ export default function Home({searchParams}: NextPageProps) {
                 const issuer = searchParams["iss"] as string | undefined;
                 const reAuth = issuer !== undefined;
                 const launch = searchParams["launch"] as string | undefined;
-                const fhirService = await clientInitInBrowser(reAuth, issuer, launch)
-                const [doctor, patient, hospital] = await Promise.all([
-                    fhirService.getDoctor(),
-                    fhirService.getPatient(),
-                    fhirService.getHospital()
-                ]);
+                const fhirClient = await clientInitInBrowser(reAuth, issuer, launch)
+                const {patient, practitioner: doctor, hospital} = await fhirClient.getInitState()
 
                 setState(state => ({
                     loading: state.loading,
@@ -64,7 +60,6 @@ export default function Home({searchParams}: NextPageProps) {
             }
         }
         fetchFun()
-        return;
     }, [searchParams])
 
     return (

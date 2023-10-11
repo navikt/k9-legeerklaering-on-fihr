@@ -1,9 +1,9 @@
 import {InternalHeader} from '@navikt/ds-react';
 import React from 'react';
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 
 export interface HeaderProps {
-    doctor: Doctor | undefined;
+    doctor: Practitioner | undefined;
 }
 
 export default function Header({doctor}: HeaderProps) {

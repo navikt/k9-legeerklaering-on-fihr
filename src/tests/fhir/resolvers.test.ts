@@ -1,13 +1,22 @@
 import {
     dateTimePeriodResolver,
     dateTimeResolver,
+    hprNumberFromIdentifiers,
     isDateWithinPeriod,
+    organizationNumberFromIdentifier,
     phoneContactResolver,
     postalAddressResolver
 } from "@/integrations/fhir/resolvers";
-import {ContactPointSystemKind, IContactPoint, IPeriod} from "@ahryman40k/ts-fhir-types/lib/R4";
-import DatePeriod, {datePeriod} from "@/models/DatePeriod";
+import {
+    ContactPointSystemKind,
+    IContactPoint,
+    IdentifierUseKind,
+    IIdentifier,
+    IPeriod
+} from "@ahryman40k/ts-fhir-types/lib/R4";
+import DatePeriod, { datePeriod } from "@/models/DatePeriod";
 import Address from "@/models/Address";
+import { HprNumber } from "@/models/HprNumber";
 
 describe(`fhir dateTime resolver`, () => {
     const validTestcases = {
@@ -112,3 +121,72 @@ describe('fhir phoneContactResolver', () => {
     })
     // XXX Add more testcases as real world data is found
 })
+
+describe('fhir hprNumberFromIdentifiers', () => {
+    test('a identifiers array with empty hpr number, but others populated', () => {
+        const identifiers: IIdentifier[] = [
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51",
+                "value": "ASC"
+            },
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51.1",
+                "value": "1000755"
+            },
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:2.16.578.1.12.4.1.4.4",
+                "value": ""
+            }
+        ]
+        expect(hprNumberFromIdentifiers(identifiers)).toBeUndefined()
+    })
+    test('a identifiers array with no hpr number element, but others populated', () => {
+        const identifiers: IIdentifier[] = [
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51",
+                "value": "ASC"
+            },
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51.1",
+                "value": "1000755"
+            }
+        ]
+        expect(hprNumberFromIdentifiers(identifiers)).toBeUndefined()
+    })
+    test('a identifiers array with hpr number element and others', () => {
+        const hprNumber = "001234567" satisfies HprNumber
+        const identifiers: IIdentifier[] = [
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51",
+                "value": "ASC"
+            },
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:1.3.6.1.4.1.9038.51.1",
+                "value": "1000755"
+            },
+            {
+                "use": IdentifierUseKind._official,
+                "system": "urn:oid:2.16.578.1.12.4.1.4.4",
+                "value": hprNumber
+            }
+        ]
+        expect(hprNumberFromIdentifiers(identifiers)).toEqual(hprNumber)
+    })
+    test('resolving organization number from IIdentifier', () => {
+        const orgNum = "970948139"
+        const id: IIdentifier = {
+            "use": IdentifierUseKind._official,
+            "system": "urn:oid:2.16.578.1.12.4.1.4.101",
+            "value": orgNum
+        }
+        expect(organizationNumberFromIdentifier(id)).toEqual(orgNum)
+    })
+
+});

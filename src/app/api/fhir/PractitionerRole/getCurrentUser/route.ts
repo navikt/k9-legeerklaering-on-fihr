@@ -3,9 +3,9 @@ import { R4 } from '@ahryman40k/ts-fhir-types';
 import { IPractitionerRole } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { headers } from 'next/headers';
-import { FHIR_AUTHORIZATION_TOKEN } from '@/middleware';
 import { logRequest, logResponse } from '@/utils/loggerUtils';
 import { getServerEnv } from '@/utils/env';
+import { FHIR_AUTHORIZATION_TOKEN } from "@/utils/constants";
 
 const isPractitionerRoleOrThrow = (resource?: R4.IResourceList): R4.IPractitionerRole => {
     if(R4.RTTI_PractitionerRole.is(resource)) {
