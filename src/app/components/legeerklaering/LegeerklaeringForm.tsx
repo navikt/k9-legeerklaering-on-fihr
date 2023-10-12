@@ -55,13 +55,13 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
         birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
     }),
     lege: yup.object({
-        epjId: yup.string().required("legens epj systemid er påkrevd"),
+        ehrId: yup.string().required("legens epj systemid er påkrevd"),
         hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
         name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd")),
         activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd")
     }),
     sykehus: yup.object({
-        epjId: yup.string().optional(),
+        ehrId: yup.string().optional(),
         organizationNumber: yup.string().optional(),
         name: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.navn.paakrevd")),
         phoneNumber: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.tlf.paakrevd")),

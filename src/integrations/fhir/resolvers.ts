@@ -233,7 +233,7 @@ export const resolvePractitionerFromIPractitionerRole = (practitionerRole: IPrac
     const identifierValue = practitionerRole.practitioner?.identifier?.value
     const practitioner = iPractitionerFromListing(practitionerRole.contained || [])
     return {
-        epjId: identifierValue,
+        ehrId: identifierValue,
         hprNumber: hprNumberFromIdentifiers(practitionerRole.identifier || []),
         name: officialHumanNameResolver(practitioner?.name),
         activeSystemUser: trueIfUndefined(practitionerRole.active)
@@ -242,7 +242,7 @@ export const resolvePractitionerFromIPractitionerRole = (practitionerRole: IPrac
 
 export const resolvePractitionerFromIPractitioner = (iPractitioner: IPractitioner): PartialPractitioner => {
     return {
-        epjId: iPractitioner.id,
+        ehrId: iPractitioner.id,
         hprNumber: hprNumberFromIdentifiers(iPractitioner.identifier || []),
         name: officialHumanNameResolver(iPractitioner.name),
         // According to https://www.hl7.org/fhir/R4/practitioner-definitions.html#Practitioner.active, the

@@ -40,7 +40,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         const address = postalAddressResolver(org.address)
         const phoneNumber = phoneContactResolver(org.telecom)
         return {
-            epjId: id,
+            ehrId: id,
             organizationNumber,
             name,
             phoneNumber,
@@ -63,12 +63,12 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         const practitionerFromRole = resolvePractitionerFromIPractitionerRole(iPractitionerRole)
         // If the practitioner info resolved from practitioner role is complete, return it
         if(
-            practitionerFromRole.epjId !== undefined &&
+            practitionerFromRole.ehrId !== undefined &&
             practitionerFromRole.hprNumber !== undefined &&
             practitionerFromRole.name !== undefined
         ) {
             return {
-                epjId: practitionerFromRole.epjId,
+                ehrId: practitionerFromRole.ehrId,
                 hprNumber: practitionerFromRole.hprNumber,
                 name: practitionerFromRole.name,
                 activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true: practitionerFromRole.activeSystemUser,
@@ -86,12 +86,12 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ...practitioner,
         }
         if(
-            mergedPractitioner.epjId !== undefined &&
+            mergedPractitioner.ehrId !== undefined &&
             mergedPractitioner.hprNumber !== undefined &&
             mergedPractitioner.name !== undefined
         ) {
             return {
-                epjId: mergedPractitioner.epjId,
+                ehrId: mergedPractitioner.ehrId,
                 hprNumber: mergedPractitioner.hprNumber,
                 name: mergedPractitioner.name,
                 activeSystemUser: mergedPractitioner.activeSystemUser,
