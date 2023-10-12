@@ -12,13 +12,15 @@ import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapp
  * storage. If the auth token is not found in local storage, or is expired it will give a "not authorized" error. The
  * user must then reauthenticate by opening the window again from the EHR system to get a new launch url.
  *
- * @param reAuth set to true when launching a new context in a existing window/tab, to force a re-authentication
- * @param issuer
- * @param launch
+ * @param isLaunch set to true when launching a new context in a existing window/tab, to force a re-authentication
+ * @param isSimulationLaunch set to true when initializing client based on launch parameters from the dev/test simulation page.
  */
-export const clientInitInBrowser = async (reAuth: boolean): Promise<FhirApi> => {
-    if (reAuth) {
+export const clientInitInBrowser = async (isLaunch: boolean, isSimulationLaunch: boolean = false): Promise<FhirApi> => {
+    if (isLaunch) {
         sessionStorage.clear();
+        if(isSimulationLaunch) {
+            sessionStorage.setItem(ProxiedFhirClientWrapper.isSimulationStorageKey, "true")
+        }
     }
 
     const clientId: string = await fhirClientId();

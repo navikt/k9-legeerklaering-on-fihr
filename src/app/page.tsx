@@ -3,15 +3,17 @@
 import { Heading } from '@navikt/ds-react';
 import "@navikt/ds-css";
 import Header from '@/app/components/Header';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
-import { clientInitInBrowser } from "@/integrations/fhir/clientInit";
 import AboutExpansionCard from "@/app/components/legeerklaering/AboutExpansionCard";
 import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
 import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
 import type NextPageProps from "@/utils/NextPageProps";
 import { configureLogger } from '@navikt/next-logger';
+import useFhirApi from "@/app/hooks/useFhirApi";
+import ensureError from "@/utils/ensureError";
+import SimulationIndicator from "@/app/components/simulation/SimulationIndicator";
 
 
 configureLogger({
@@ -31,34 +33,31 @@ export default function Home({searchParams}: NextPageProps) {
         patient: undefined,
         hospital: undefined,
     })
-    useEffect(() => {
-        const fetchFun = async () => {
-            try {
-                // If url has query argument "iss" set, this is a new launch from EHR system, so force a reauthorization.
-                const reAuth = searchParams["iss"] !== undefined;
-                const fhirClient = await clientInitInBrowser(reAuth)
-                const {patient, practitioner: doctor, hospital} = await fhirClient.getInitState()
+    const onError = useCallback((error: Error) => setState(state => ({...state, error})), [setState])
 
-                setState(state => ({
-                    loading: state.loading,
-                    doctor,
-                    patient,
-                    hospital,
-                    error: null,
-                }))
-            } catch (e) {
-                if (e instanceof Error) {
-                    const error: Error = e;
-                    setState(state => ({...state, error}));
-                } else {
-                    setState(state => ({...state, error: new Error(`${e}`)}))
+    const {fhirApi} = useFhirApi(searchParams["launch"] !== undefined, onError, searchParams["simulation"] === "true")
+    useEffect(() => {
+        if(fhirApi !== null) {
+            const fetchFun = async () => {
+                try {
+                    const {patient, practitioner: doctor, hospital} = await fhirApi.getInitState()
+
+                    setState(state => ({
+                        loading: state.loading,
+                        doctor,
+                        patient,
+                        hospital,
+                        error: null,
+                    }))
+                } catch (e) {
+                    onError(ensureError(e))
+                } finally {
+                    setState(state => ({...state, loading: false}))
                 }
-            } finally {
-                setState(state => ({...state, loading: false}))
             }
+            fetchFun()
         }
-        fetchFun()
-    }, [searchParams])
+    }, [fhirApi, onError])
 
     return (
         <div>
@@ -75,6 +74,7 @@ export default function Home({searchParams}: NextPageProps) {
                 }
                 <ContactInfoSection/>
             </div>
+            <SimulationIndicator api={fhirApi} />
         </div>
     )
 }
