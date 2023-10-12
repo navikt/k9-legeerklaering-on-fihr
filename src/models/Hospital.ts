@@ -1,7 +1,7 @@
 import Address from "@/models/Address";
 
 export default interface Hospital {
-    readonly epjId?: string;
+    readonly ehrId?: string;
     readonly organizationNumber?: string;
     readonly name: string;
     readonly phoneNumber?: string;
