@@ -35,10 +35,8 @@ export default function Home({searchParams}: NextPageProps) {
         const fetchFun = async () => {
             try {
                 // If url has query argument "iss" set, this is a new launch from EHR system, so force a reauthorization.
-                const issuer = searchParams["iss"] as string | undefined;
-                const reAuth = issuer !== undefined;
-                const launch = searchParams["launch"] as string | undefined;
-                const fhirClient = await clientInitInBrowser(reAuth, issuer, launch)
+                const reAuth = searchParams["iss"] !== undefined;
+                const fhirClient = await clientInitInBrowser(reAuth)
                 const {patient, practitioner: doctor, hospital} = await fhirClient.getInitState()
 
                 setState(state => ({
