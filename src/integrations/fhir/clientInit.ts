@@ -16,7 +16,7 @@ import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapp
  * @param issuer
  * @param launch
  */
-export const clientInitInBrowser = async (reAuth: boolean, issuer: string | undefined, launch: string | undefined): Promise<FhirApi> => {
+export const clientInitInBrowser = async (reAuth: boolean): Promise<FhirApi> => {
     if (reAuth) {
         sessionStorage.clear();
     }
