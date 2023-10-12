@@ -3,7 +3,7 @@ import { oauth2 } from 'fhirclient';
 import { fhirClientId } from '@/utils/environment';
 import Client from 'fhirclient/lib/Client';
 import { FhirApi } from "@/integrations/fhir/FhirApi";
-import FhirService from "@/integrations/fhir/FhirService";
+import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapper";
 
 /**
  * Initializes the smart client. If the URL is a "launch url" coming from the EHR system, that is used, and the resulting
@@ -35,8 +35,7 @@ export const clientInitInBrowser = async (reAuth: boolean, issuer: string | unde
 
     }
 
-    // return new ProxiedFhirClientWrapper(client)
-    return new FhirService(client)
+    return new ProxiedFhirClientWrapper(client)
 }
 
 export const clientCopyWithProxyUrl = (client: Client, proxyUrl: URL): Client =>  {
