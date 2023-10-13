@@ -7,5 +7,5 @@ export const fhirClientId = async (): Promise<string> => {
 }
 
 export const isSimulationAllowed = (): boolean => {
-    return getServerEnv().SIMULATION_ALLOWED
+    return process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" || process.env.SIMULATION_ALLOWED === "true"
 }
