@@ -1,5 +1,9 @@
-import { getServerEnv } from "@/utils/env";
 import { isSimulationAllowed } from "@/utils/environment";
+
+// Force the page to be dynamically rendered (not static pregenation during build)
+// This is neccessary so that the isSimulationAllowed() function can read the SIMULATION_ALLOWED env variable at runtime
+// instead of at build time.
+export const dynamic = 'force-dynamic';
 
 const SimulationNotAllowed = () => {
     return (
