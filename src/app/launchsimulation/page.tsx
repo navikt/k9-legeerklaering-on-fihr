@@ -7,21 +7,20 @@ export const dynamic = 'force-dynamic';
 
 const SimulationNotAllowed = () => {
     return (
-        <div className="mx-auto mt-2 max-w-4xl p-4">
-            <h1>Simulation not allowed</h1>
+        <>
+            <h2>Not allowed</h2>
             <p>This deployment does not allow simulation of backends. This page is only meant to be used during development/testing.</p>
             <p>
                 <a href="/">Back to start page.</a>
             </p>
-        </div>
+        </>
     )
 }
 
 export default function Launchsimulation() {
-    const simulationIsAllowed: boolean = isSimulationAllowed()
-    return simulationIsAllowed ? (
-        <div className="mx-auto mt-2 max-w-4xl p-4">
-            <h1>Launch simulation</h1>
+    const allowed = isSimulationAllowed()
+    return allowed ? (
+        <>
             <p>Her kan du simulere åpning av legeerklæringsskjema fra EHR systemet (Dips).</p>
             <p>Velg pasient.</p>
             <ol className="mt-4">
@@ -41,6 +40,6 @@ export default function Launchsimulation() {
                     </a>
                 </li>
             </ol>
-        </div>
+        </>
     ): SimulationNotAllowed()
 }
