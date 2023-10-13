@@ -10,7 +10,6 @@ export const serverEnvSchema = yup.object().shape({
     // Helseopplysninger Server
     HELSEOPPLYSNINGER_SERVER_BASE_URL: yup.string().required(),
     HELSEOPPLYSNINGER_SERVER_SCOPE: yup.string().required(),
-    SIMULATION_ALLOWED: yup.boolean().required()
 });
 
 const getRawServerConfig = () =>
@@ -20,7 +19,6 @@ const getRawServerConfig = () =>
         FHIR_BASE_URL: process.env.FHIR_BASE_URL,
         HELSEOPPLYSNINGER_SERVER_BASE_URL: process.env.HELSEOPPLYSNINGER_SERVER_BASE_URL,
         HELSEOPPLYSNINGER_SERVER_SCOPE: process.env.HELSEOPPLYSNINGER_SERVER_SCOPE,
-        SIMULATION_ALLOWED: process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" || process.env.SIMULATION_ALLOWED === "true",
     }) satisfies Partial<ServerEnv>
 
 /**
