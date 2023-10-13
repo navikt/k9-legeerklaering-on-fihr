@@ -6,6 +6,7 @@ import { isSimulationAllowed } from "@/utils/environment";
 
 export interface FhirApiHook {
     readonly fhirApi: FhirApi | null;
+    readonly initError: Error | null;
 }
 
 let _presetFhirApi: FhirApi | null = null;
@@ -18,23 +19,27 @@ export const presetFhirApi = (api: FhirApi | null) => {
     }
 }
 
-const useFhirApi = (isLaunch: boolean, onInitError: (e: Error) => void, isSimulationLaunch: boolean = false): FhirApiHook => {
+const useFhirApi = (isLaunch: boolean, isSimulationLaunch: boolean = false): FhirApiHook => {
     const [state, setState] = useState<FhirApiHook>({
         fhirApi: _presetFhirApi,
+        initError: null,
     })
     useEffect(() => {
         if(state.fhirApi === null || isLaunch) {
             const doInit = async () => {
                 try {
                     const fhirApi = await clientInitInBrowser(isLaunch, isSimulationLaunch)
-                    setState({fhirApi})
+                    setState({fhirApi, initError: null})
                 } catch (e) {
-                    onInitError(ensureError(e))
+                    setState({
+                        fhirApi: null,
+                        initError: ensureError(e)
+                    })
                 }
             }
             doInit()
         }
-    }, [state, isLaunch, onInitError, isSimulationLaunch])
+    }, [state, isLaunch, isSimulationLaunch])
     return state
 }
 
