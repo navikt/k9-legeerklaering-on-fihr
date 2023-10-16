@@ -39,7 +39,6 @@ export const useAsyncInit = <T extends {}>(initor: () => Promise<T>): AsyncInit<
                     setState({initError: ensureError(e)})
                 }
             }
-            console.debug("useAsyncInit start initing")
             doInit()
         }
     }, [state, setState, initor])
