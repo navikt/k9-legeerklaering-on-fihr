@@ -9,43 +9,15 @@ import SimulationIndicator from "@/app/components/simulation/SimulationIndicator
 import React, { useCallback, useEffect, useState } from "react";
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import ensureError from "@/utils/ensureError";
-
-export interface LegeerklaeringPageApi extends FhirApi {
-    readonly initError?: never;
-    readonly initing?: never;
-}
-
-export interface LegeerklaeringPageApiInitError {
-    readonly initError: Error;
-    readonly initing?: never;
-}
-
-export interface LegeerklaeringPageApiLoading {
-    readonly initing: boolean;
-    readonly initError?: never;
-}
-
-export type MaybeLegeerklaeringPageApi = LegeerklaeringPageApi | LegeerklaeringPageApiInitError | LegeerklaeringPageApiLoading;
+import {AsyncInit, isInited, isInitError, isIniting} from "@/app/hooks/useAsyncInit";
 
 export interface LegeerklaeringPageProps {
-    readonly api: MaybeLegeerklaeringPageApi
+    readonly api: AsyncInit<FhirApi>;
 }
 
 interface PageState extends EhrInfoLegeerklaeringForm {
     readonly loading: boolean;
     readonly error: Error | null;
-}
-
-const isApi = (api: MaybeLegeerklaeringPageApi): api is LegeerklaeringPageApi => {
-    return !api.initError && !api.initing
-}
-
-const isApiInitError = (api: MaybeLegeerklaeringPageApi): api is LegeerklaeringPageApiInitError => {
-    return api.initError !== undefined
-}
-
-const isApiIniting = (api: MaybeLegeerklaeringPageApi): api is LegeerklaeringPageApiLoading => {
-    return api.initing === true
 }
 
 const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
@@ -59,7 +31,7 @@ const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
     const onError = useCallback((error: Error) => setState(state => ({...state, error})), [setState])
 
     useEffect(() => {
-        if(isApi(api)) {
+        if(isInited(api)) {
             const fetchFun = async () => {
                 try {
                     const {patient, practitioner: doctor, hospital} = await api.getInitState()
@@ -78,7 +50,7 @@ const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
                 }
             }
             fetchFun()
-        } else if(isApiInitError(api)) {
+        } else if(isInitError(api)) {
             onError(api.initError)
         }
     }, [api, onError])
@@ -93,11 +65,11 @@ const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
                     state.error ?
                         <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/> :
                         state.loading ?
-                            <LoadingIndicator txt={isApiIniting(api) ? "Kobler til systemtjenester" : undefined} /> :
+                            <LoadingIndicator txt={isIniting(api) ? "Kobler til systemtjenester" : undefined} /> :
                             <>
                                 <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital}/>
                                 {
-                                    isApi(api) ?
+                                    isInited(api) ?
                                         <SimulationIndicator api={api} /> :
                                         null
                                 }

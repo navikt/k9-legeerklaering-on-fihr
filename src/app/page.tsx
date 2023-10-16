@@ -4,25 +4,19 @@ import "@navikt/ds-css";
 import React, {useCallback, useState} from 'react';
 import type NextPageProps from "@/utils/NextPageProps";
 import {configureLogger} from '@navikt/next-logger';
-import useFhirApi from "@/app/hooks/useFhirApi";
 import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
+import {clientInitInBrowser} from "@/integrations/fhir/clientInit";
+import {useAsyncInit} from "@/app/hooks/useAsyncInit";
 
 
 configureLogger({
     apiPath: '/api/logger',
 })
 
-interface PageState {
-    readonly error: Error | null;
-}
-
 export default function Home({searchParams}: NextPageProps) {
-    const [{error}, setState] = useState<PageState>({
-        error: null,
-    })
-    const onError = useCallback((error: Error) => setState(state => ({...state, error})), [setState])
-
-    const {fhirApi, initError} = useFhirApi(searchParams["launch"] !== undefined, searchParams["simulation"] === "true")
-    const api = fhirApi !== null ? fhirApi : error !== null ? {initError: error} : {initing: true}
-    return <LegeerklaeringPage api={api} />
+    const isLaunch = searchParams["launch"] !== undefined
+    const isSimulation = searchParams["simulation"] === "true"
+    const clientFactory = useCallback(() => clientInitInBrowser(isLaunch, isSimulation), [isLaunch, isSimulation])
+    const fhirApi = useAsyncInit(clientFactory)
+    return <LegeerklaeringPage api={fhirApi} />
 }
