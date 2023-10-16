@@ -23,21 +23,11 @@ import InitData from "@/models/InitData";
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
-    public static readonly isSimulationStorageKey = "fhirClientIsSimulationLaunch"
-
     private client: Client;
 
     public constructor(client: Client) {
         const proxyUrl = new URL("/api/fhir/proxy/", new URL(window.location.origin));
         this.client = clientCopyWithProxyUrl(client, proxyUrl)
-    }
-
-    public get apiName(): string {
-        return this.client.state.serverUrl
-    }
-
-    public get isSimulation(): boolean {
-        return sessionStorage.getItem(ProxiedFhirClientWrapper.isSimulationStorageKey) === "true"
     }
 
     public async getHospital(organizationReference: string): Promise<Hospital> {
