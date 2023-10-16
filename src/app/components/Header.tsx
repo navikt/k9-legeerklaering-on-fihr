@@ -14,7 +14,7 @@ export default function Header({doctor}: HeaderProps) {
                 { doctor !== undefined ?
                     <InternalHeader.User
                         name={doctor.name}
-                        description={`ID: ${doctor.hprNumber}`}
+                        description={`HPR: ${doctor.hprNumber}`}
                         className="ml-auto"
                     /> : null
                 }
