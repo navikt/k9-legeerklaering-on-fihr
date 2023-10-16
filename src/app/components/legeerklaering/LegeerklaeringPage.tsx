@@ -1,3 +1,5 @@
+'use client';
+
 import Header from "@/app/components/Header";
 import { Heading } from "@navikt/ds-react";
 import AboutExpansionCard from "@/app/components/legeerklaering/AboutExpansionCard";
@@ -9,10 +11,11 @@ import SimulationIndicator from "@/app/components/simulation/SimulationIndicator
 import React, { useCallback, useEffect, useState } from "react";
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import ensureError from "@/utils/ensureError";
-import {AsyncInit, isInited, isInitError, isIniting} from "@/app/hooks/useAsyncInit";
+import { AsyncInit, isInited, isInitError, isIniting } from "@/app/hooks/useAsyncInit";
 
 export interface LegeerklaeringPageProps {
     readonly api: AsyncInit<FhirApi>;
+    readonly simulationName?: string;
 }
 
 interface PageState extends EhrInfoLegeerklaeringForm {
@@ -20,7 +23,8 @@ interface PageState extends EhrInfoLegeerklaeringForm {
     readonly error: Error | null;
 }
 
-const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
+
+const LegeerklaeringPage = ({api, simulationName}: LegeerklaeringPageProps) => {
     const [state, setState] = useState<PageState>({
         loading: true,
         error: null,
@@ -68,11 +72,7 @@ const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
                             <LoadingIndicator txt={isIniting(api) ? "Kobler til systemtjenester" : undefined} /> :
                             <>
                                 <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital}/>
-                                {
-                                    isInited(api) ?
-                                        <SimulationIndicator api={api} /> :
-                                        null
-                                }
+                                <SimulationIndicator simulationName={simulationName} /> :
                             </>
 
                 }
