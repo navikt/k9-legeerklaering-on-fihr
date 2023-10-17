@@ -15,9 +15,9 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
             open={show}
             onClose={onClose}
             aria-labelledby="SummaryModalHeading"
+            header={{heading: "Oppsummering", closeButton: true}}
         >
-        <Modal.Content>
-            <Heading spacing level="1" size="large" id="SummaryModalHeading">Oppsummering</Heading>
+        <Modal.Body>
             <Accordion>
                 <Accordion.Item defaultOpen>
                     <Accordion.Header>{tekst("legeerklaering.om-barnet.tittel")}</Accordion.Header>
@@ -130,7 +130,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
-        </Modal.Content>
+        </Modal.Body>
         </Modal>
     ) : null;
 }
