@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, DatePicker, Modal, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
+import React, { useState } from 'react';
+import { Button, DatePicker, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
@@ -103,6 +103,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             lege: {
                 hprNumber: ehrInfo.doctor?.hprNumber,
                 name: ehrInfo.doctor?.name,
+                activeSystemUser: ehrInfo.doctor?.activeSystemUser || false,
+                ehrId: ehrInfo.doctor?.ehrId,
             },
             sykehus: {
                 name: ehrInfo.hospital?.name,
@@ -127,10 +129,6 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             }]
         }
     })
-
-    useEffect(() => {
-        Modal.setAppElement(document.body);
-    }, []);
 
     const {
         datepickerProps: barnFoedselDatepickerProps,
