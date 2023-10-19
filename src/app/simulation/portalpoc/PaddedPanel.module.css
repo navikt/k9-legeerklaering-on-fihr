@@ -1,0 +1,4 @@
+
+.paddedParas p {
+    padding-bottom: var(--a-spacing-4);
+}
