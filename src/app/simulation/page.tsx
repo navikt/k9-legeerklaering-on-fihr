@@ -45,6 +45,13 @@ const Page = () => {
                 <a href="simulation/fake1">Fake Kid1</a>
             </li>
         </ul>
+
+        <h2 className="pt-4">Nytt GUI forslag, lokalt simulerte api <small>(Krever ikke noe api tilgang)</small></h2>
+        <ul className="bulletlist my-4">
+            <li>
+                <a href="simulation/portalpoc">Fake Kid1</a>
+            </li>
+        </ul>
     </div>
 }
 
