@@ -5,6 +5,8 @@ import React from "react";
 import { BodyShort, Heading } from "@navikt/ds-react";
 import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
 import PaddedPanel from "@/app/simulation/portalpoc/PaddedPanel";
+import NavNextLinkPanel from "@/app/components/NavNextLinkPanel";
+import NavNextLink from "@/app/components/NavNextLink";
 
 const Page = () => {
     return (
@@ -41,9 +43,12 @@ const Page = () => {
                     om du er autorisert til å gjøre dette, og hvilket sykehus du representerer.
                 </BodyShort>
                 <BodyShort>
-                    Kontroller derfor at kontekst informasjonen under er korrekt for din bruker. Hvis noe er feil bør du
-                    rette dette i journalsystemet, og trykke oppfrisk knappen, eller lukke/gjenåpne dette vinduet før du
+                    Kontroller derfor at kontekst informasjonen på startsiden er korrekt for din bruker. Hvis noe er feil bør du
+                    rette dette i journalsystemet, og trykke oppfrisk knappen, eller lukke/gjenåpne vinduet før du
                     fortsetter.
+                </BodyShort>
+                <BodyShort>
+                    <NavNextLink href="/simulation/portalpoc">Tilbake til startsiden</NavNextLink>
                 </BodyShort>
             </PaddedPanel>
         </CenterColumn>
