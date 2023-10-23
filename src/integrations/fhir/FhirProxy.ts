@@ -58,7 +58,13 @@ export class FhirProxy {
     // Make a copy of the incoming request, adjusting the url to match the actual fhir server we're proxying
     createForwardRequest(incomingReq: Request): Request {
         const newUrl = this.rewriteIncomingUrl(new URL(incomingReq.url))
-        const newHeaders = incomingReq.headers
+        const newHeaders = new Headers(incomingReq.headers) // Make a copy so that we don't mutate incoming (while iterating it)
+        // Strip out any x-forwarded-* headers, they caused server error in fhir server.
+        for(const key of incomingReq.headers.keys()) {
+            if(key.startsWith("x-forwarded-")) {
+                newHeaders.delete(key)
+            }
+        }
         newHeaders.set("host", newUrl.host)
         newHeaders.set(this.fhirSubscriptionKeyHeaderName, this.fhirSubscriptionKey)
         return new Request(
