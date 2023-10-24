@@ -9,7 +9,7 @@ const PatientListing = ({patient}: PatientListingProps) => {
     const lines: LabeledLine[] = [
         {label: "Navn:", value: patient?.name},
         {label: "Fødselsdato:", value: patient?.birthDate?.toLocaleDateString()},
-        {label: "Fødselsnummer/D-nummer:", value: patient?.identifier},
+        {label: "Fødselsnummer/D-nummer:", value: patient?.fnr},
     ]
     return <LabeledLines lines={lines} />
 }
