@@ -25,6 +25,13 @@ export interface EhrInfoLegeerklaeringForm {
     readonly hospital: Hospital | undefined;
 }
 
+function undefinedIfNull<T>(something: T | undefined | null): T | undefined {
+    if(something === null) {
+        return undefined
+    }
+    return something
+}
+
 const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
     code: yup.string().required().min(4).max(10),
     text: yup.string().required()
@@ -55,12 +62,13 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
             .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
             .min(3, ({min}) => `Minimum ${min} tegn må skrives inn`)
             .max(150, ({max}) => `Maks ${max} tegn tillatt`),
-        identifier: yup.string().trim()
+        fnr: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.ident.paakrevd"))
             .min(11, ({min}) => `Må vere minimum ${min} tegn`)
             .max(40, ({max, value}) => `Maks ${max} tegn tillatt (${value.length})`),
+        ehrId: yup.string().required("ehrId må eksistere"),
         birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd")),
-        caretakers: yup.array().of(caretakerValidation).required()
+        caretakers: yup.array().of(caretakerValidation).default([])
     }),
     lege: yup.object({
         ehrId: yup.string().required("legens epj systemid er påkrevd"),
@@ -105,7 +113,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         defaultValues: {
             barn: {
                 name: ehrInfo.patient?.name,
-                identifier: ehrInfo.patient?.identifier,
+                ehrId: ehrInfo.patient?.ehrId,
+                fnr: ehrInfo.patient?.fnr,
                 birthDate: ehrInfo.patient?.birthDate,
             },
             lege: {
@@ -173,9 +182,9 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 <div className="mb-4">
                     <TextField
                         label={tekst("legeerklaering.om-barnet.ident.label")}
-                        defaultValue={defaultValues?.barn?.identifier}
-                        {...register("barn.identifier", {required: true})}
-                        error={errors.barn?.identifier?.message}
+                        defaultValue={undefinedIfNull(defaultValues?.barn?.fnr)}
+                        {...register("barn.fnr", {required: false})}
+                        error={errors.barn?.fnr?.message}
                         className="w-1/2 mb-4"
                     />
                     <DatePicker{...barnFoedselDatepickerProps}>

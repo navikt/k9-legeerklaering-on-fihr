@@ -2,7 +2,7 @@ import Practitioner, { PartialPractitioner } from "@/models/Practitioner";
 import { R4 } from "@ahryman40k/ts-fhir-types";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import {
-    dateTimeResolver,
+    dateTimeResolver, dnrFromIdentifiers, fnrFromIdentifiers,
     iPractitionerRoleFromListing, iResourceListFromArray, isRelatedPerson,
     officialHumanNameResolver,
     officialIdentifierResolver,
@@ -129,19 +129,21 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
     public async getPatient(): Promise<Patient> {
         const patient = validateOrThrow(R4.RTTI_Patient.decode(await this.client.patient.read()));
         const name = officialHumanNameResolver(patient.name)
-        const identifier = officialIdentifierResolver(patient.identifier); // TODO <- Change to fnrFromIdentifiers and dnrFromIdentifiers
+        const ehrId = patient.id
+        const fnr = patient.identifier instanceof Array && (fnrFromIdentifiers(patient.identifier) || dnrFromIdentifiers(patient.identifier)) || null
         const birthDate = dateTimeResolver(patient.birthDate)
         const caretakers = await this.getRelatedPersons(patient.id!!);
 
-        if (identifier !== undefined && name !== undefined) {
+        if (ehrId !== undefined && name !== undefined) {
             return {
                 name,
-                identifier,
+                ehrId,
+                fnr,
                 birthDate,
                 caretakers,
             }
         } else {
-            throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${name})`);
+            throw new Error(`Patient returned from EHR system missing id and/or name (id: ${ehrId})`);
         }
     }
 
