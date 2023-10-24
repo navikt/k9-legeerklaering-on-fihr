@@ -1,5 +1,5 @@
 import { Validation } from 'io-ts';
-import { PathReporter } from 'io-ts/es6/PathReporter';
+import { PathReporter } from 'io-ts/PathReporter';
 
 export const validateOrThrow = <T>(validation: Validation<T>): T => {
     if (validation._tag === "Right") {

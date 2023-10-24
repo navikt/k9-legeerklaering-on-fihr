@@ -17,6 +17,7 @@ import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringDa
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
 import { logger } from '@navikt/next-logger';
+import RelatedPerson from "@/models/RelatedPerson";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -42,6 +43,12 @@ const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
         period.start.getTime() <= period.end.getTime()
 })
 
+const caretakerValidation: ObjectSchema<RelatedPerson> = yup.object({
+    name: yup.string().required(`Omsorgsperson navn påkrevd`),
+    ehrId: yup.string().required(`Omsorgsperson ehrId påkrevd`),
+    fnr: yup.string().nullable().required()
+})
+
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     barn: yup.object({
         name: yup.string().trim()
@@ -52,7 +59,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
             .required(tekst("legeerklaering.om-barnet.ident.paakrevd"))
             .min(11, ({min}) => `Må vere minimum ${min} tegn`)
             .max(40, ({max, value}) => `Maks ${max} tegn tillatt (${value.length})`),
-        birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
+        birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd")),
+        caretakers: yup.array().of(caretakerValidation).required()
     }),
     lege: yup.object({
         ehrId: yup.string().required("legens epj systemid er påkrevd"),

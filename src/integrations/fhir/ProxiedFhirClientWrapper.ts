@@ -2,16 +2,15 @@ import Practitioner, { PartialPractitioner } from "@/models/Practitioner";
 import { R4 } from "@ahryman40k/ts-fhir-types";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import {
-    bundleResourceList,
     dateTimeResolver,
-    iPractitionerRoleFromListing,
+    iPractitionerRoleFromListing, iResourceListFromArray, isRelatedPerson,
     officialHumanNameResolver,
     officialIdentifierResolver,
     organizationNumberFromIdentifiers,
     phoneContactResolver,
     postalAddressResolver,
     resolvePractitionerFromIPractitioner,
-    resolvePractitionerFromIPractitionerRole
+    resolvePractitionerFromIPractitionerRole, resolveRelatedPersonFromIRelatedPerson
 } from "@/integrations/fhir/resolvers";
 import Patient from "@/models/Patient";
 import Client from "fhirclient/lib/Client";
@@ -20,6 +19,7 @@ import { FhirApi } from "@/integrations/fhir/FhirApi";
 import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
+import RelatedPerson from "@/models/RelatedPerson";
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
@@ -49,14 +49,17 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
     }
 
     public async getPractitioner(): Promise<Practitioner & {readonly organizationReference: string | undefined}> {
-        // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerBundle" like we do below instead.
-        // This bundle seems to contain the Practitioner info we in the smart api demo would get back from client.user.read.
-        // I suspect this is a non-standard API call. Will perhaps need to make this more dynamic to adapt to other EPJ systems.
+        // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerRole" like we do below instead.
+        // This seems to contain the Practitioner info we in the smart api demo would get back from client.user.read.
+        // I suspect this is a non-standard API call. Will perhaps need to make this more dynamic to adapt to other EHR systems.
         // E.g. perhaps first check if client.user.id is set, and try using the standard client.user.read call if so. If the standard
         // way is not available, go on to try this method. A potential problem with just using client.user.read, though, is that maybe
         // the info about what organization (hospital) the practitioner is working for might not be available then.
-        const iPractitionerRoleBundle = validateOrThrow(R4.RTTI_Bundle.decode(await this.client.request<R4.IBundle>("PractitionerRole/$getCurrentUser")))
-        const iPractitionerRole = iPractitionerRoleFromListing(bundleResourceList(iPractitionerRoleBundle))
+        //
+        // We use the flat option to directly get a ResourceList back instead of a Bundle wrapper object. Believe this is generally
+        // a good option to use, based on explanation at https://docs.smarthealthit.org/client-js/client.html
+        const resourceList = iResourceListFromArray(await this.client.request<unknown[]>("PractitionerRole/$getCurrentUser", {flat: true}))
+        const iPractitionerRole = iPractitionerRoleFromListing(resourceList)
         if (iPractitionerRole === undefined) {
             throw new Error("No PractitionerRole found in the $getCurrentUser bundle")
         }
@@ -102,17 +105,40 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         }
     }
 
+    /**
+     * Get the patients related persons, e.g. the parents of a child patient.
+     * @param patientEhrId
+     * @private
+     */
+    private async getRelatedPersons(patientEhrId: string): Promise<RelatedPerson[]> {
+        // Using flat: true in request options to get an array response instead of maybe a bundle (https://docs.smarthealthit.org/client-js/client.html)
+        const listing = iResourceListFromArray(await this.client.request<unknown[]>(`RelatedPerson?patient=${patientEhrId}`, {flat: true}))
+        const relatedPersons: RelatedPerson[] = listing
+            .flatMap(r => {
+                if (R4.RTTI_RelatedPerson.is(r)) {
+                    const rp = resolveRelatedPersonFromIRelatedPerson(r)
+                    if(isRelatedPerson(rp)) {
+                        return [rp]
+                    }
+                }
+                return []
+            })
+        return relatedPersons
+    }
+
     public async getPatient(): Promise<Patient> {
         const patient = validateOrThrow(R4.RTTI_Patient.decode(await this.client.patient.read()));
         const name = officialHumanNameResolver(patient.name)
-        const identifier = officialIdentifierResolver(patient.identifier);
+        const identifier = officialIdentifierResolver(patient.identifier); // TODO <- Change to fnrFromIdentifiers and dnrFromIdentifiers
         const birthDate = dateTimeResolver(patient.birthDate)
+        const caretakers = await this.getRelatedPersons(patient.id!!);
 
         if (identifier !== undefined && name !== undefined) {
             return {
                 name,
                 identifier,
                 birthDate,
+                caretakers,
             }
         } else {
             throw new Error(`Patient returned from EHR system missing identifier and/or name (name: ${name})`);
@@ -132,7 +158,6 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
 
     public async ping(): Promise<boolean> {
         const resp = await this.client.request("metadata")
-        console.debug("metadata reply ok")
         return true
     }
 }

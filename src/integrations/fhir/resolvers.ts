@@ -14,7 +14,7 @@ import {
     IIdentifier,
     IPeriod,
     IPractitioner,
-    IPractitionerRole,
+    IPractitionerRole, IRelatedPerson,
     IResourceList
 } from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod from "@/models/DatePeriod";
@@ -22,6 +22,8 @@ import Address from "@/models/Address";
 import { R4 } from "@ahryman40k/ts-fhir-types";
 import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
+import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
+import RelatedPerson from "@/models/RelatedPerson";
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -151,7 +153,8 @@ export const phoneContactResolver = (telecoms: IContactPoint[] | undefined): str
 }
 
 /**
- * Extract the resource list from a bundle
+ * Extract the resource list from a bundle.
+ * XXX This might not be needed anymore, when using the "flat: true" request option.
  * @param bundle
  */
 export const bundleResourceList = (bundle: IBundle): IResourceList[] =>
@@ -159,6 +162,12 @@ export const bundleResourceList = (bundle: IBundle): IResourceList[] =>
         bundle.entry.flatMap(e => e.resource !== undefined ? [e.resource] : []) :
         []
 
+/**
+ * Validate that response is a resource list array.
+ * Use this when processing requests made with option "flat: true", before validating/extracting the actual desired resource from returned list
+ * @param resp
+ */
+export const iResourceListFromArray = (resp: unknown[]): IResourceList[] => resp.map(r => validateOrThrow(R4.RTTI_ResourceList.decode(r)))
 
 /**
  * Return first resource of type IPractitionerRole from given resourcelisting.
@@ -201,10 +210,16 @@ export const hprNumberFromIdentifiers = (identifiers: IIdentifier[]): HprNumber 
     return undefined;
 }
 
-export const organizationNumberFromIdentifier = (identifier: IIdentifier | undefined): string | undefined => {
+type oid = `urn:oid:${string}`
+
+export const fnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.1`
+export const dnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.2`
+export const orgnrOid: oid = "urn:oid:2.16.578.1.12.4.1.4.101"
+
+const oidFromIdentifier = (identifier: IIdentifier | undefined, oid: oid): string | undefined => {
     if(
         identifier !== undefined &&
-        identifier.system === "urn:oid:2.16.578.1.12.4.1.4.101" &&
+        identifier.system === oid &&
         identifier.use === IdentifierUseKind._official &&
         identifier.value !== undefined &&
         identifier.value.length > 0
@@ -213,6 +228,8 @@ export const organizationNumberFromIdentifier = (identifier: IIdentifier | undef
     }
     return undefined
 }
+
+export const organizationNumberFromIdentifier = (identifier: IIdentifier | undefined): string | undefined => oidFromIdentifier(identifier, orgnrOid)
 
 export const organizationNumberFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
     for(const identifier of identifiers) {
@@ -250,3 +267,41 @@ export const resolvePractitionerFromIPractitioner = (iPractitioner: IPractitione
         activeSystemUser: trueIfUndefined(iPractitioner.active),
     }
 }
+
+export const fnrFromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, fnrOid)
+
+export const dnrFromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, dnrOid)
+
+export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
+    for(const identifier of identifiers) {
+        const fnr = fnrFromIdentifier(identifier)
+        if(fnr !== undefined) {
+            return fnr
+        }
+    }
+    return undefined
+}
+
+export const dnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
+    for(const identifier of identifiers) {
+        const dnr = dnrFromIdentifier(identifier)
+        if(dnr !== undefined) {
+            return dnr
+        }
+    }
+    return undefined
+}
+
+export const resolveRelatedPersonFromIRelatedPerson = (iRelatedPerson: IRelatedPerson): Partial<RelatedPerson> => {
+    const identifiers = iRelatedPerson.identifier || []
+    return {
+        ehrId: iRelatedPerson.id,
+        name: officialHumanNameResolver(iRelatedPerson.name),
+        fnr: fnrFromIdentifiers(identifiers) || dnrFromIdentifiers(identifiers) || null,
+    }
+}
+
+export const isRelatedPerson = (prp: Partial<RelatedPerson>): prp is RelatedPerson =>
+    prp.ehrId !== undefined && prp.ehrId.length > 0 &&
+    prp.name !== undefined && prp.name.length > 0 &&
+    typeof prp.fnr === "string" || prp.fnr === null

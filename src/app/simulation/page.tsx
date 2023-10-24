@@ -26,6 +26,17 @@ const Page = () => {
                     Gul Penn
                 </a>
             </li>
+            <li>
+                <a href="/?iss=https://api.dips.no/fhir&launch=cdp2015831&simulation=opendips-Monika">
+                    Monika (har omsorgsperson)
+                </a>
+            </li>
+            <li>
+                <a href="/?iss=https://api.dips.no/fhir&launch=cdp2012929&simulation=opendips-D-nr-Test0264">
+                    Test0264 (har D-nummer)
+                </a>
+            </li>
+
         </ul>
 
         <h2 className="pt-4">Lokalt simulerte api <small>(Krever ikke noe api tilgang)</small></h2>
