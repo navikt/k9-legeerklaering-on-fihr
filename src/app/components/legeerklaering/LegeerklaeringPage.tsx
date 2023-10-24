@@ -72,7 +72,7 @@ const LegeerklaeringPage = ({api, simulationName}: LegeerklaeringPageProps) => {
                             <LoadingIndicator txt={isIniting(api) ? "Kobler til systemtjenester" : undefined} /> :
                             <>
                                 <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital}/>
-                                <SimulationIndicator simulationName={simulationName} /> :
+                                <SimulationIndicator simulationName={simulationName} />
                             </>
 
                 }

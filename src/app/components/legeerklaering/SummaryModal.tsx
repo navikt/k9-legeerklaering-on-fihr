@@ -27,7 +27,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-barnet.ident.label")}</Heading>
-                        <Ingress spacing>{data.barn.identifier}</Ingress>
+                        <Ingress spacing>{data.barn.fnr}</Ingress>
 
                         <Heading level="5"
                                  size="xsmall">{tekst("legeerklaering.om-barnet.foedselsdato.label")}</Heading>

@@ -12,7 +12,8 @@ class Fake1FhirApi implements FhirApi {
             patient: {
                 name: "Fake Kid1",
                 birthDate: new Date("2019-03-16"),
-                identifier: "fakepatient-1",
+                ehrId: "fakepatient-1",
+                fnr: "41040523416",
                 caretakers: []
             },
             practitioner: {
