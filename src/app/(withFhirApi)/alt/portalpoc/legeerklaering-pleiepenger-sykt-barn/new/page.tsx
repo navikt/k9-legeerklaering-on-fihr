@@ -1,10 +1,9 @@
 'use client'
-import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
-import InitDataDependentRender from "@/app/simulation/portalpoc/InitDataDependentRender";
-import React, { useContext, useState } from "react";
-import { BaseApiContext } from "@/app/simulation/portalpoc/BaseApi";
-import SimulationIndicator from "@/app/components/simulation/SimulationIndicator";
-import PaddedPanel from "@/app/simulation/portalpoc/PaddedPanel";
+import CenterColumn from "../../CenterColumn";
+import InitDataDependentRender from "../../InitDataDependentRender";
+import React, { useContext} from "react";
+import { BaseApiContext } from "../../BaseApi";
+import PaddedPanel from "../../PaddedPanel";
 import {
     Box,
     Button,
@@ -220,8 +219,6 @@ const Page = () => {
             </form>
             </>
         }} />
-
-        <SimulationIndicator simulationName="portalpoc" />
     </CenterColumn>
 }
 

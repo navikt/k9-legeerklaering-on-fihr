@@ -7,9 +7,9 @@ import { ArrowsCirclepathIcon, CaretDownIcon, ChevronRightDoubleIcon, PersonCirc
 import { useSelectedLayoutSegments } from "next/navigation";
 import NextLink from "next/link";
 import validateRoute from "@/utils/validateRoute";
-import { pagename } from "@/app/simulation/portalpoc/pagenames";
-import UserListing from "@/app/simulation/portalpoc/UserListing";
-import type { BaseApi } from "@/app/simulation/portalpoc/BaseApi";
+import { pagename } from "./pagenames";
+import UserListing from "./UserListing";
+import type { BaseApi } from "./BaseApi";
 
 export interface UserProps {
     readonly user: Practitioner | undefined;
@@ -59,7 +59,7 @@ const ReloadBtn = ({loading, refreshInitData}: ReloadBtnProps) => {
 }
 
 // The url of this layout
-const baseUrl = validateRoute("/simulation/portalpoc")
+const baseUrl = validateRoute("/alt/portalpoc")
 
 const TopNavigation = () => {
     const segments = useSelectedLayoutSegments()

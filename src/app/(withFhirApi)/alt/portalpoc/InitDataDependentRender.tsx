@@ -1,4 +1,4 @@
-import { BaseApi } from "@/app/simulation/portalpoc/BaseApi";
+import { BaseApi } from "./BaseApi";
 import LoadingIndicator, { loadingTxt } from "@/app/components/legeerklaering/LoadingIndicator";
 import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import { ReactNode } from "react";

@@ -1,5 +1,5 @@
 'use client'
-import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
+import CenterColumn from "../../CenterColumn";
 import { Heading } from "@navikt/ds-react";
 
 const Page = () => {

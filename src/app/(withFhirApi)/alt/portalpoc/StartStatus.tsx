@@ -1,9 +1,9 @@
-import { BaseApi } from "@/app/simulation/portalpoc/BaseApi";
-import UserListing from "@/app/simulation/portalpoc/UserListing";
+import { BaseApi } from "./BaseApi";
+import UserListing from "./UserListing";
 import { Box, Button, Heading, HStack, VStack } from "@navikt/ds-react";
-import HospitalListing from "@/app/simulation/portalpoc/HospitalListing";
+import HospitalListing from "./HospitalListing";
 import { ArrowsCirclepathIcon, HospitalIcon, PersonCircleIcon } from "@navikt/aksel-icons";
-import InitDataDependentRender from "@/app/simulation/portalpoc/InitDataDependentRender";
+import InitDataDependentRender from "./InitDataDependentRender";
 
 const StartStatus = (baseApi: BaseApi) => {
         return (

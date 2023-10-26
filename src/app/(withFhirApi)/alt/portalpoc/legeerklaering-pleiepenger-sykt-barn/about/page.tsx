@@ -3,8 +3,8 @@
 import React from "react";
 
 import { BodyShort, Heading } from "@navikt/ds-react";
-import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
-import PaddedPanel from "@/app/simulation/portalpoc/PaddedPanel";
+import CenterColumn from "../../CenterColumn";
+import PaddedPanel from "../../PaddedPanel";
 import NavNextLink from "@/app/components/NavNextLink";
 import { ExternalLinkIcon } from "@navikt/aksel-icons";
 
@@ -36,7 +36,7 @@ const Page = () => {
                     </NavNextLink>
                 </BodyShort>
                 <BodyShort>
-                    Du kan også lese mer <NavNextLink href="/simulation/portalpoc/about">generell info om løsningen her</NavNextLink>
+                    Du kan også lese mer <NavNextLink href="/alt/portalpoc/about">generell info om løsningen her</NavNextLink>
                 </BodyShort>
             </PaddedPanel>
         </CenterColumn>

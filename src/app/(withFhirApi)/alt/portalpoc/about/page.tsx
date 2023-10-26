@@ -3,9 +3,8 @@
 import React from "react";
 
 import { BodyShort, Heading } from "@navikt/ds-react";
-import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
-import PaddedPanel from "@/app/simulation/portalpoc/PaddedPanel";
-import NavNextLinkPanel from "@/app/components/NavNextLinkPanel";
+import CenterColumn from "../CenterColumn";
+import PaddedPanel from "../PaddedPanel";
 import NavNextLink from "@/app/components/NavNextLink";
 
 const Page = () => {
@@ -48,7 +47,7 @@ const Page = () => {
                     fortsetter.
                 </BodyShort>
                 <BodyShort>
-                    <NavNextLink href="/simulation/portalpoc">Tilbake til startsiden</NavNextLink>
+                    <NavNextLink href="/alt/portalpoc">Tilbake til startsiden</NavNextLink>
                 </BodyShort>
             </PaddedPanel>
         </CenterColumn>

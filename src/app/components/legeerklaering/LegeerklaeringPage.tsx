@@ -7,7 +7,6 @@ import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
 import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from "@/app/components/legeerklaering/LegeerklaeringForm";
 import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
-import SimulationIndicator from "@/app/components/simulation/SimulationIndicator";
 import React, { useCallback, useEffect, useState } from "react";
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import ensureError from "@/utils/ensureError";
@@ -15,7 +14,6 @@ import { AsyncInit, isInited, isInitError, isIniting } from "@/app/hooks/useAsyn
 
 export interface LegeerklaeringPageProps {
     readonly api: AsyncInit<FhirApi>;
-    readonly simulationName?: string;
 }
 
 interface PageState extends EhrInfoLegeerklaeringForm {
@@ -24,7 +22,7 @@ interface PageState extends EhrInfoLegeerklaeringForm {
 }
 
 
-const LegeerklaeringPage = ({api, simulationName}: LegeerklaeringPageProps) => {
+const LegeerklaeringPage = ({api}: LegeerklaeringPageProps) => {
     const [state, setState] = useState<PageState>({
         loading: true,
         error: null,
@@ -70,10 +68,7 @@ const LegeerklaeringPage = ({api, simulationName}: LegeerklaeringPageProps) => {
                         <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/> :
                         state.loading ?
                             <LoadingIndicator txt={isIniting(api) ? "Kobler til systemtjenester" : undefined} /> :
-                            <>
-                                <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital}/>
-                                <SimulationIndicator simulationName={simulationName} />
-                            </>
+                            <LegeerklaeringForm doctor={state.doctor} patient={state.patient} hospital={state.hospital}/>
 
                 }
                 <ContactInfoSection/>
