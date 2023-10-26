@@ -1,8 +1,8 @@
 import LabeledLines, { LabeledLine } from "@/app/components/label-listing/LabeledLines";
 import { CheckmarkCircleIcon, ExclamationmarkTriangleIcon } from "@navikt/aksel-icons";
-import css from "@/app/simulation/portalpoc/TopBar.module.css";
+import css from "./TopBar.module.css";
 import React from "react";
-import { UserProps } from "@/app/simulation/portalpoc/TopBar";
+import { UserProps } from "./TopBar";
 
 const UserListing = ({user}: UserProps) => {
     const lines: LabeledLine[] = [

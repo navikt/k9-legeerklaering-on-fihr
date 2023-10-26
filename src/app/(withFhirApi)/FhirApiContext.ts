@@ -6,6 +6,6 @@ const valueNotSetError = {
     initError: new Error(`ApiContext was used without setting a new api instance value`)
 }
 
-const ApiContext = createContext<AsyncInit<FhirApi>>(valueNotSetError);
+const FhirApiContext = createContext<AsyncInit<FhirApi>>(valueNotSetError);
 
-export default ApiContext;
+export default FhirApiContext;

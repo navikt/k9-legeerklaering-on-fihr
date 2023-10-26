@@ -1,7 +1,7 @@
 import {Loader} from "@navikt/ds-react";
 
 import css from './legeerklaering.module.css'
-import { BaseApi } from "@/app/simulation/portalpoc/BaseApi";
+import { BaseApi } from "@/app/(withFhirApi)/alt/portalpoc/BaseApi";
 
 export interface LoadingIndicatorProps {
     readonly txt?: string;

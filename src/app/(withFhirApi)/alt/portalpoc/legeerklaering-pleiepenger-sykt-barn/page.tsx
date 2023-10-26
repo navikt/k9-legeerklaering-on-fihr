@@ -1,13 +1,13 @@
 'use client'
-import CenterColumn from "@/app/simulation/portalpoc/CenterColumn";
+import CenterColumn from "../CenterColumn";
 import { BodyShort, Box, Heading, HStack, Table, VStack } from "@navikt/ds-react";
 import React, { useContext } from "react";
-import { BaseApiContext } from "@/app/simulation/portalpoc/BaseApi";
+import { BaseApiContext } from "../BaseApi";
 import { ArrowRightIcon, PersonIcon } from "@navikt/aksel-icons";
-import PatientListing from "@/app/simulation/portalpoc/PatientListing";
+import PatientListing from "../PatientListing";
 import NavNextLink from "@/app/components/NavNextLink";
-import PaddedPanel from "@/app/simulation/portalpoc/PaddedPanel";
-import InitDataDependentRender from "@/app/simulation/portalpoc/InitDataDependentRender";
+import PaddedPanel from "../PaddedPanel";
+import InitDataDependentRender from "../InitDataDependentRender";
 import NavNextLinkButton from "@/app/components/NavNextLinkButton";
 
 interface Statement {
@@ -54,7 +54,7 @@ const Page = () => {
                     Disse kan da sendes elektronisk direkte til NAV fra journalsystemet.
                 </BodyShort>
                 <BodyShort>
-                    <NavNextLink href="/simulation/portalpoc/legeerklaering-pleiepenger-sykt-barn/about">
+                    <NavNextLink href="/alt/portalpoc/legeerklaering-pleiepenger-sykt-barn/about">
                         Les mer om dette på denne siden
                     </NavNextLink>
                 </BodyShort>
@@ -95,7 +95,7 @@ const Page = () => {
                                                             careTakers.map(name => <div key={name}>{name}</div>)
                                                         }
                                                     </Table.DataCell>
-                                                    <Table.DataCell><NavNextLink href={`/simulation/portalpoc/legeerklaering-pleiepenger-sykt-barn/show`}> <ArrowRightIcon title="Gå til" /></NavNextLink></Table.DataCell>
+                                                    <Table.DataCell><NavNextLink href={`/alt/portalpoc/legeerklaering-pleiepenger-sykt-barn/show`}> <ArrowRightIcon title="Gå til" /></NavNextLink></Table.DataCell>
                                                 </Table.Row>
                                             )
                                         })
@@ -128,7 +128,7 @@ const Page = () => {
                                                             careTakers.map(name => <div key={name}>{name}</div>)
                                                         }
                                                     </Table.DataCell>
-                                                    <Table.DataCell><NavNextLink href={`/simulation/portalpoc/legeerklaering-pleiepenger-sykt-barn/show`}> <ArrowRightIcon title="Gå til" /></NavNextLink></Table.DataCell>
+                                                    <Table.DataCell><NavNextLink href={`/alt/portalpoc/legeerklaering-pleiepenger-sykt-barn/show`}> <ArrowRightIcon title="Gå til" /></NavNextLink></Table.DataCell>
                                                 </Table.Row>
                                             )
                                         })
@@ -137,7 +137,7 @@ const Page = () => {
                             </Table>
                         </Box>
                         <Box padding="0">
-                            <NavNextLinkButton href="/simulation/portalpoc/legeerklaering-pleiepenger-sykt-barn/new">
+                            <NavNextLinkButton href="/alt/portalpoc/legeerklaering-pleiepenger-sykt-barn/new">
                                 Opprett ny legeerklæring
                             </NavNextLinkButton>
                         </Box>

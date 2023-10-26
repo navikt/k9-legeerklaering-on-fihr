@@ -1,9 +1,6 @@
-'use client';
-
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import InitData from "@/models/InitData";
 import delay from "@/utils/delay";
-import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
 
 class Fake1FhirApi implements FhirApi {
     async getInitState(): Promise<InitData> {
@@ -13,8 +10,11 @@ class Fake1FhirApi implements FhirApi {
                 name: "Fake Kid1",
                 birthDate: new Date("2019-03-16"),
                 ehrId: "fakepatient-1",
-                fnr: "41040523416",
-                caretakers: []
+                fnr: "55101088734",
+                caretakers: [
+                    {ehrId: "ct001", name: "Fake mother1", fnr: "99223344500"},
+                    {ehrId: "ct002", name: "Fake father1", fnr: "89723246505"},
+                ]
             },
             practitioner: {
                 name: "Fake doctor1",
@@ -37,10 +37,7 @@ class Fake1FhirApi implements FhirApi {
     }
 }
 
-const Page = () => {
-    const api: FhirApi = new Fake1FhirApi()
-
-    return <LegeerklaeringPage api={api} simulationName="fake1" />
+export const initFakeApi1 = async (): Promise<FhirApi> => {
+    await delay(1000)
+    return new Fake1FhirApi()
 }
-
-export default Page;
