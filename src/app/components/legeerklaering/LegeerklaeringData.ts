@@ -1,6 +1,6 @@
 import Patient from "@/models/Patient";
 import DatePeriod from "@/models/DatePeriod";
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
 
@@ -11,6 +11,6 @@ export default interface LegeerklaeringData {
     bidiagnoser: Diagnosekode[];
     tilsynPerioder: DatePeriod[];
     innleggelsesPerioder: DatePeriod[];
-    lege: Doctor;
+    lege: Practitioner;
     sykehus: Hospital;
 }

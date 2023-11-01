@@ -8,3 +8,11 @@ body {
     /* Remove if we later make the form component itself be the scroll container */
     overflow-y: scroll;
 }
+
+h2 {
+    font-size: 1.5rem;
+}
+
+ul.bulletlist {
+    list-style: inside;
+}

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Button, DatePicker, Modal, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
+import React, { useState } from 'react';
+import { Button, DatePicker, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
@@ -17,11 +17,19 @@ import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringDa
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
 import { logger } from '@navikt/next-logger';
+import RelatedPerson from "@/models/RelatedPerson";
 
 export interface EhrInfoLegeerklaeringForm {
-    readonly doctor: Doctor | undefined;
+    readonly doctor: Practitioner | undefined;
     readonly patient: Patient | undefined;
     readonly hospital: Hospital | undefined;
+}
+
+function undefinedIfNull<T>(something: T | undefined | null): T | undefined {
+    if(something === null) {
+        return undefined
+    }
+    return something
 }
 
 const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
@@ -42,23 +50,35 @@ const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
         period.start.getTime() <= period.end.getTime()
 })
 
+const caretakerValidation: ObjectSchema<RelatedPerson> = yup.object({
+    name: yup.string().required(`Omsorgsperson navn påkrevd`),
+    ehrId: yup.string().required(`Omsorgsperson ehrId påkrevd`),
+    fnr: yup.string().nullable().required()
+})
+
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     barn: yup.object({
         name: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
             .min(3, ({min}) => `Minimum ${min} tegn må skrives inn`)
             .max(150, ({max}) => `Maks ${max} tegn tillatt`),
-        identifier: yup.string().trim()
+        fnr: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.ident.paakrevd"))
             .min(11, ({min}) => `Må vere minimum ${min} tegn`)
             .max(40, ({max, value}) => `Maks ${max} tegn tillatt (${value.length})`),
-        birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd"))
+        ehrId: yup.string().required("ehrId må eksistere"),
+        birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd")),
+        caretakers: yup.array().of(caretakerValidation).default([])
     }),
     lege: yup.object({
+        ehrId: yup.string().required("legens epj systemid er påkrevd"),
         hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
-        name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd"))
+        name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd")),
+        activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd")
     }),
     sykehus: yup.object({
+        ehrId: yup.string().optional(),
+        organizationNumber: yup.string().optional(),
         name: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.navn.paakrevd")),
         phoneNumber: yup.string().trim().required(tekst("legeerklaering.om-sykehuset.tlf.paakrevd")),
         address: yup.object({
@@ -93,12 +113,15 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         defaultValues: {
             barn: {
                 name: ehrInfo.patient?.name,
-                identifier: ehrInfo.patient?.identifier,
+                ehrId: ehrInfo.patient?.ehrId,
+                fnr: ehrInfo.patient?.fnr,
                 birthDate: ehrInfo.patient?.birthDate,
             },
             lege: {
                 hprNumber: ehrInfo.doctor?.hprNumber,
                 name: ehrInfo.doctor?.name,
+                activeSystemUser: ehrInfo.doctor?.activeSystemUser || false,
+                ehrId: ehrInfo.doctor?.ehrId,
             },
             sykehus: {
                 name: ehrInfo.hospital?.name,
@@ -123,10 +146,6 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
             }]
         }
     })
-
-    useEffect(() => {
-        Modal.setAppElement(document.body);
-    }, []);
 
     const {
         datepickerProps: barnFoedselDatepickerProps,
@@ -163,9 +182,9 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 <div className="mb-4">
                     <TextField
                         label={tekst("legeerklaering.om-barnet.ident.label")}
-                        defaultValue={defaultValues?.barn?.identifier}
-                        {...register("barn.identifier", {required: true})}
-                        error={errors.barn?.identifier?.message}
+                        defaultValue={undefinedIfNull(defaultValues?.barn?.fnr)}
+                        {...register("barn.fnr", {required: false})}
+                        error={errors.barn?.fnr?.message}
                         className="w-1/2 mb-4"
                     />
                     <DatePicker{...barnFoedselDatepickerProps}>
