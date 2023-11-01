@@ -1,11 +1,12 @@
 import { NextRequest } from "next/server";
-import { logger } from "@navikt/next-logger";
 import { FhirProxy } from "@/integrations/fhir/FhirProxy";
+import { logRequest, logResponse } from "@/utils/loggerUtils";
 
 const proxyHandler = async (request: NextRequest): Promise<Response> => {
+    logRequest(request)
     const proxy = FhirProxy.initDipsProxy();
     const resp = await proxy.forwardRequest(request)
-    logger.info(`fhir proxyed request ${resp.url}, got a ${resp.status} response.`)
+    logResponse(request.nextUrl, resp)
     return resp
 }
 
