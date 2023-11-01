@@ -1,9 +1,9 @@
 import {InternalHeader} from '@navikt/ds-react';
 import React from 'react';
-import Doctor from "@/models/Doctor";
+import Practitioner from "@/models/Practitioner";
 
 export interface HeaderProps {
-    doctor: Doctor | undefined;
+    doctor: Practitioner | undefined;
 }
 
 export default function Header({doctor}: HeaderProps) {
@@ -14,7 +14,7 @@ export default function Header({doctor}: HeaderProps) {
                 { doctor !== undefined ?
                     <InternalHeader.User
                         name={doctor.name}
-                        description={`ID: ${doctor.hprNumber}`}
+                        description={`HPR: ${doctor.hprNumber}`}
                         className="ml-auto"
                     /> : null
                 }

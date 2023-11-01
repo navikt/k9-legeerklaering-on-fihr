@@ -35,17 +35,17 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
       class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
     >
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         A000
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         Diagnose 1
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <button
           aria-label="Velg"
@@ -79,17 +79,17 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
       class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
     >
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         A001
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         Diagnose 2
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <button
           aria-label="Velg"
@@ -123,17 +123,17 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
       class="navds-table__row diagnosekoderow navds-table__row--shade-on-hover"
     >
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         A002
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         Diagnose 3
       </td>
       <td
-        class="navds-table__data-cell navds-body-short"
+        class="navds-table__data-cell navds-body-short navds-body-short--medium"
       >
         <button
           aria-label="Velg"

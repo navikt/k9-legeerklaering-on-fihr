@@ -1,6 +1,5 @@
-import DiagnosekodeSearch, {OnSelectedDiagnose} from "@/app/components/diagnosekoder/DiagnosekodeSearch";
-import {Heading, Modal} from "@navikt/ds-react";
-import {useEffect} from "react";
+import DiagnosekodeSearch, { OnSelectedDiagnose } from "@/app/components/diagnosekoder/DiagnosekodeSearch";
+import { Heading, Modal } from "@navikt/ds-react";
 
 import diagnosekoderCss from './diagnosekoder.module.css';
 
@@ -10,15 +9,12 @@ export interface DiagnosekodeSearchModalProps extends OnSelectedDiagnose {
 }
 
 const DiagnosekodeSearchModal = (props: DiagnosekodeSearchModalProps) => {
-    useEffect(() => {
-        Modal.setAppElement(document.body);
-    });
     return (
         <Modal open={props.open} onClose={props.onClose} aria-labelledby="diagnosekode-modal-heading" >
-            <Modal.Content className={diagnosekoderCss.modal}>
+            <Modal.Body className={diagnosekoderCss.modal}>
                 <Heading size="medium" id="diagnosekode-modal-heading" className={diagnosekoderCss.heading}>Velg diagnosekode</Heading>
                 <DiagnosekodeSearch onSelectedDiagnose={props.onSelectedDiagnose} />
-            </Modal.Content>
+            </Modal.Body>
         </Modal>
     )
 }

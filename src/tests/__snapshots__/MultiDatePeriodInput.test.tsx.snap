@@ -27,11 +27,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 class="navds-date__field-wrapper"
               >
                 <input
-                  aria-controls="r8"
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                   id="datepicker-input-r9"
-                  size="14"
+                  size="10"
                   value="01.04.2023"
                 />
                 <button
@@ -84,11 +83,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 class="navds-date__field-wrapper"
               >
                 <input
-                  aria-controls="r8"
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                   id="datepicker-input-rb"
-                  size="14"
+                  size="10"
                   value="19.04.2023"
                 />
                 <button
@@ -132,7 +130,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="description"
             >
               <p
-                class="navds-body-short"
+                class="navds-body-short navds-body-short--medium"
               >
                 = 19 dager
               </p>
@@ -164,7 +162,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   </svg>
                 </span>
                 <span
-                  aria-live="polite"
                   class="navds-label navds-label--small"
                 >
                   Fjern
@@ -192,11 +189,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 class="navds-date__field-wrapper"
               >
                 <input
-                  aria-controls="re"
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                   id="datepicker-input-rf"
-                  size="14"
+                  size="10"
                   value="15.05.2023"
                 />
                 <button
@@ -249,11 +245,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 class="navds-date__field-wrapper"
               >
                 <input
-                  aria-controls="re"
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                   id="datepicker-input-rh"
-                  size="14"
+                  size="10"
                   value="20.05.2023"
                 />
                 <button
@@ -297,7 +292,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="description"
             >
               <p
-                class="navds-body-short"
+                class="navds-body-short navds-body-short--medium"
               >
                 = 6 dager
               </p>
@@ -329,7 +324,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   </svg>
                 </span>
                 <span
-                  aria-live="polite"
                   class="navds-label navds-label--small"
                 >
                   Fjern
@@ -362,7 +356,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             </svg>
           </span>
           <span
-            aria-live="polite"
             class="navds-label navds-label--small"
           >
             Legg til
@@ -399,11 +392,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="navds-date__field-wrapper"
             >
               <input
-                aria-controls="r8"
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                 id="datepicker-input-r9"
-                size="14"
+                size="10"
                 value="01.04.2023"
               />
               <button
@@ -456,11 +448,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="navds-date__field-wrapper"
             >
               <input
-                aria-controls="r8"
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                 id="datepicker-input-rb"
-                size="14"
+                size="10"
                 value="19.04.2023"
               />
               <button
@@ -504,7 +495,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="description"
           >
             <p
-              class="navds-body-short"
+              class="navds-body-short navds-body-short--medium"
             >
               = 19 dager
             </p>
@@ -536,7 +527,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 </svg>
               </span>
               <span
-                aria-live="polite"
                 class="navds-label navds-label--small"
               >
                 Fjern
@@ -564,11 +554,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="navds-date__field-wrapper"
             >
               <input
-                aria-controls="re"
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                 id="datepicker-input-rf"
-                size="14"
+                size="10"
                 value="15.05.2023"
               />
               <button
@@ -621,11 +610,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="navds-date__field-wrapper"
             >
               <input
-                aria-controls="re"
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
                 id="datepicker-input-rh"
-                size="14"
+                size="10"
                 value="20.05.2023"
               />
               <button
@@ -669,7 +657,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="description"
           >
             <p
-              class="navds-body-short"
+              class="navds-body-short navds-body-short--medium"
             >
               = 6 dager
             </p>
@@ -701,7 +689,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 </svg>
               </span>
               <span
-                aria-live="polite"
                 class="navds-label navds-label--small"
               >
                 Fjern
@@ -734,7 +721,6 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           </svg>
         </span>
         <span
-          aria-live="polite"
           class="navds-label navds-label--small"
         >
           Legg til
