@@ -199,7 +199,7 @@ export const iPractitionerFromListing = (resourcelisting: IResourceList[]): IPra
 export const hprNumberFromIdentifiers = (identifiers: IIdentifier[]): HprNumber | undefined => {
     for(const identifier of identifiers) {
         if(
-            identifier.system === "urn:oid:2.16.578.1.12.4.1.4.4" &&
+            identifier.system === hprOid &&
             identifier.use === IdentifierUseKind._official &&
             identifier.value !== undefined &&
             identifier.value.length > 0
@@ -212,6 +212,7 @@ export const hprNumberFromIdentifiers = (identifiers: IIdentifier[]): HprNumber 
 
 type oid = `urn:oid:${string}`
 
+export const hprOid: oid = "urn:oid:2.16.578.1.12.4.1.4.4"
 export const fnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.1`
 export const dnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.2`
 export const orgnrOid: oid = "urn:oid:2.16.578.1.12.4.1.4.101"
