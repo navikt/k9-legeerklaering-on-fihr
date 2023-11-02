@@ -5,12 +5,10 @@ import AzureClientConfiguration from '@/auth/azure/AzureClientConfiguration';
 
 export default class HelseopplysningerService {
     private baseUrl: string;
-    private azureClient: AzureClientConfiguration
 
     constructor() {
         const {HELSEOPPLYSNINGER_SERVER_BASE_URL} = getServerEnv();
         this.baseUrl = HELSEOPPLYSNINGER_SERVER_BASE_URL;
-        this.azureClient = new AzureClientConfiguration();
     }
 
     public async generatePdf(data: LegeerklaeringData): Promise<Response> {
@@ -26,42 +24,42 @@ export default class HelseopplysningerService {
                 legeerklæring: {
                     pasient: {
                         navn: {
-                            fornavn: data.pasient.navn.fornavn,
-                            etternavn: data.pasient.navn.etternavn,
+                            fornavn: data.barn.name,
+                            etternavn: data.barn.name,
                         },
-                        id: data.pasient.fnr,
-                        fødselsdato: data.pasient.fødselsdato,
+                        id: data.barn.fnr,
+                        fødselsdato: data.barn.birthDate,
                     },
-                    vurdering: data.vurdering,
+                    vurdering: data.legensVurdering,
                     hoveddiagnose: data.hoveddiagnose,
                     bidiagnoser: data.bidiagnoser.map(bidiagnose => ({
                         term: bidiagnose.text,
                         kode: bidiagnose.code,
                     })),
-                    tilsynsPerioder: data.tilsynsPerioder.map(tilsyn => ({
-                        fom: tilsyn.fom,
-                        tom: tilsyn.tom,
+                    tilsynsPerioder: data.tilsynPerioder.map(tilsyn => ({
+                        fom: tilsyn.start,
+                        tom: tilsyn.end,
                     })),
                     innleggelsesPerioder: data.innleggelsesPerioder.map(innleggelse => ({
-                        fom: innleggelse.fom,
-                        tom: innleggelse.tom,
+                        fom: innleggelse.start,
+                        tom: innleggelse.end,
                     }))
                 },
                 lege: {
                     navn: {
-                        fornavn: data.lege.navn.fornavn,
-                        etternavn: data.lege.navn.etternavn,
+                        fornavn: data.lege.name,
+                        etternavn: data.lege.name,
                     },
-                    hpr: data.lege.hpr,
+                    hpr: data.lege.hprNumber,
                 },
                 sykehus: {
-                    navn: data.sykehus.navn,
-                    telefonnummer: data.sykehus.tlf,
+                    navn: data.sykehus.name,
+                    telefonnummer: data.sykehus.phoneNumber,
                     adresse: {
-                        gateadresse: data.sykehus.adresse?.gateadresse,
-                        gateadresse2: data.sykehus.adresse?.gateadresse2,
-                        postkode: data.sykehus.adresse?.postkode,
-                        by: data.sykehus.adresse?.by,
+                        gateadresse: data.sykehus.address?.line1,
+                        gateadresse2: data.sykehus.address?.line2,
+                        postkode: data.sykehus.address?.postalCode,
+                        by: data.sykehus.address?.city,
                     }
                 }
             })

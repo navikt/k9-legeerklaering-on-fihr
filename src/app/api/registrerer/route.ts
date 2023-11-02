@@ -8,5 +8,5 @@ export const POST = async (request: NextRequest): Promise<Response> => {
     logRequest(request);
     const data = await request.json() as LegeerklaeringData;
     logger.info("Registrerer legeerklæring...");
-    return new HelseopplysningerService.generatePdf(data);
+    return new HelseopplysningerService().generatePdf(data);
 }
