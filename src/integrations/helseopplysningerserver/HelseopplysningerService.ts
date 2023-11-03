@@ -13,8 +13,8 @@ export default class HelseopplysningerService {
 
     public async generatePdf(data: LegeerklaeringData): Promise<Response> {
         logger.info("Genererer PDF...");
-        const tokenSet = await AzureClientConfiguration.getServerHelseToken();
         try {
+            const tokenSet = await AzureClientConfiguration.getServerHelseToken();
             const pdfResponse = await fetch(`${this.baseUrl}/dev/pdf`, {
                 method: "POST",
                 headers: {
