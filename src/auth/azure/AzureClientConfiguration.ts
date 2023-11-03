@@ -25,16 +25,13 @@ export default class AzureClientConfiguration {
     static getServerHelseToken = async (): Promise<TokenSet> => {
         const client = await AzureClientConfiguration.getClient();
         logger.info("Getting server token...");
-        const handle = await client.deviceAuthorization({
+        return await client.deviceAuthorization({
             scope: getServerEnv().HELSEOPPLYSNINGER_SERVER_SCOPE,
-        });
-
-        return handle.poll().then((tokenSet) => {
-            logger.info("Server token retrieved");
-            return tokenSet;
+        }).then((handle) => {
+            return handle.poll()
         }).catch((error) => {
-            logger.error(error, "Error retrieving server token");
-            throw new Error("Error retrieving server token");
-        });
+            logger.error(error, "Error getting server token");
+            throw new Error("Error getting server token");
+        })
     };
 }

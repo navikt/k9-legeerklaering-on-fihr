@@ -1,6 +1,7 @@
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 import { logger } from '@navikt/next-logger';
 import { getServerEnv } from '@/utils/env';
+import AzureClientConfiguration from '@/auth/azure/AzureClientConfiguration';
 
 export default class HelseopplysningerService {
     private baseUrl: string;
@@ -12,13 +13,13 @@ export default class HelseopplysningerService {
 
     public async generatePdf(data: LegeerklaeringData): Promise<Response> {
         logger.info("Genererer PDF...");
-        //const tokenSet = await AzureClientConfiguration.getServerHelseToken();
+        const tokenSet = await AzureClientConfiguration.getServerHelseToken();
         try {
             const pdfResponse = await fetch(`${this.baseUrl}/dev/pdf`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    //"Authorization": `Bearer ${tokenSet.access_token}`
+                    "Authorization": `Bearer ${tokenSet.access_token}`
                 },
                 body: JSON.stringify({
                     legeerklæring: {
