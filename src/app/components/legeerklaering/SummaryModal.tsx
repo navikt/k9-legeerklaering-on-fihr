@@ -2,6 +2,7 @@ import { Accordion, Button, Heading, Ingress, List, Modal } from "@navikt/ds-rea
 import { tekst } from "@/utils/tekster";
 import React from "react";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
+import { logger } from '@navikt/next-logger';
 
 export interface SummaryModalProps {
     readonly show: boolean;
@@ -11,12 +12,38 @@ export interface SummaryModalProps {
 
 const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
 
+    const downloadBlob = (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'legeerklæring-pleiepenger-sykt-barn.pdf';
+
+        // This is to make the anchor hidden and to append, click, and then immediately remove it
+        document.body.appendChild(a).click();
+
+        // Cleanup tasks
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
+
+
     const registrerer = () => {
         console.log("Registrerer");
         fetch(`${window.location.origin}/api/registrerer`, {
             method: 'POST',
             body: JSON.stringify(data)
-        })
+        }).then(async response => {
+            if (response.ok) {
+                const responseData = await response.blob()
+                downloadBlob(responseData);
+                logger.info("File downloaded successfully");
+            } else {
+                logger.error(response, "Error submitting form data")
+            }
+        }).catch(error => {
+            logger.error(error, "Error submitting form data")
+        });
     };
 
     return data !== null ? (
