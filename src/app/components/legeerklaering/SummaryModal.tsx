@@ -39,7 +39,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                 downloadBlob(responseData);
                 logger.info("File downloaded successfully");
             } else {
-                logger.error(response, "Error submitting form data")
+                logger.error(await response.text(), "Error submitting form data")
             }
         }).catch(error => {
             logger.error(error, "Error submitting form data")
