@@ -19,7 +19,7 @@ export default class HelseopplysningerService {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${tokenSet.access_token}`
+                    "Authorization": `Bearer ${tokenSet.id_token}`
                 },
                 body: JSON.stringify({
                     legeerklæring: {
