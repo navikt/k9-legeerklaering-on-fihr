@@ -15,7 +15,7 @@ export default class HelseopplysningerService {
         logger.info("Genererer PDF...");
         try {
             const tokenSet = await AzureClientConfiguration.getServerHelseToken();
-            const pdfResponse = await fetch(`${this.baseUrl}/dev/pdf`, {
+            const pdfResponse = await fetch(`${this.baseUrl}/pdf`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
