@@ -28,9 +28,9 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
     };
 
 
-    const registrerer = () => {
+    const hentPdfOppsummering = () => {
         console.log("Registrerer");
-        fetch(`${window.location.origin}/api/registrerer`, {
+        fetch(`${window.location.origin}/api/oppsummering/pdf`, {
             method: 'POST',
             body: JSON.stringify(data)
         }).then(async response => {
@@ -172,7 +172,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
             </Modal.Body>
             <Modal.Footer>
                 <div className="ml-4 mt-4 mb-16">
-                    <Button type="submit" onClick={registrerer}>Alt ser bra ut. Send inn</Button>
+                    <Button type="submit" onClick={hentPdfOppsummering}>Alt ser bra ut. Send inn</Button>
                 </div>
             </Modal.Footer>
         </Modal>
