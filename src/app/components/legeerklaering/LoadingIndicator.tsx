@@ -1,10 +1,19 @@
 import {Loader} from "@navikt/ds-react";
 
 import css from './legeerklaering.module.css'
+import { BaseApi } from "@/app/(withFhirApi)/alt/portalpoc/BaseApi";
 
 export interface LoadingIndicatorProps {
     readonly txt?: string;
 }
+
+
+export const loadingTxt = (loading: BaseApi["loading"]): string | undefined =>
+    loading === 'fhirConnecting' ?
+        "Kobler til journalsystem":
+        loading === 'fhirLoading' ?
+            "Henter informasjon fra Journalsystem" :
+            undefined ;
 
 const LoadingIndicator = ({txt = "Laster EHR informasjon"}: LoadingIndicatorProps) => {
     return (
