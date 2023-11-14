@@ -1,3 +1,5 @@
+'use client'
+import { setFakeFhirApiName } from "./fakeFhirApiFlag";
 
 const Page = () => {
     return <div className="mx-auto mt-2 max-w-4xl p-4">
@@ -42,7 +44,7 @@ const Page = () => {
         <h2 className="pt-4">Lokalt simulerte api <small>(Krever ikke noe api tilgang)</small></h2>
         <ul className="bulletlist my-4">
             <li>
-                <a href="simulation/fake1">Fake Kid1</a>
+                <a onClick={() => setFakeFhirApiName("fake1")} href="/">Fake Kid1</a>
             </li>
         </ul>
     </div>

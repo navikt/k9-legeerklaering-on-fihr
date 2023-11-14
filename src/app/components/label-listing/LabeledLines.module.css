@@ -1,0 +1,10 @@
+.listing {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    gap: var(--a-spacing-2);
+}
+
+.right {
+    text-align: right;
+}
