@@ -1,21 +1,25 @@
 import React, { ReactNode } from 'react';
-import { Heading, HelpText, Panel } from '@navikt/ds-react';
+import { Heading, HStack, ReadMore, VStack } from '@navikt/ds-react';
+import { componentSize } from '@/utils/constants';
 
 interface SectionProps {
     title: string;
-    helpText?: string;
+    readMoreHeader?: string;
+    readMore?: string;
     children: ReactNode;
 }
 
-const Section: React.FC<SectionProps> = ({ title, helpText, children }) => {
+const Section: React.FC<SectionProps> = ({ title, readMoreHeader, readMore, children }) => {
     return (
-        <Panel className="mb-4">
-            <div className="flex items-center space-x-4 mb-4">
-                <Heading size={'medium'} className="mb-4" level="2">{title}</Heading>
-                {helpText && <HelpText title={title}>{helpText}</HelpText>}
-            </div>
+        <VStack className="mt-4" gap="4">
+            <HStack gap="2" justify="start" align="start">
+                <Heading size={'small'} className="mb-4">{title}</Heading>
+            </HStack>
+            <HStack>
+                {readMore && <ReadMore size={componentSize} header={readMoreHeader}>{readMore}</ReadMore>}
+            </HStack>
             {children}
-        </Panel>
+        </VStack>
     );
 }
 

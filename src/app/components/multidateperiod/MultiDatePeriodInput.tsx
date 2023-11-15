@@ -1,11 +1,11 @@
-import DatePeriod, {datePeriod, datePeriodsEqual} from "@/models/DatePeriod";
-import {ReactNode, Ref, useEffect, useRef} from "react";
-import {BodyShort, Button, DatePicker, useRangeDatepicker} from "@navikt/ds-react";
+import DatePeriod, { datePeriod, datePeriodsEqual } from "@/models/DatePeriod";
+import { ReactNode, Ref, useEffect, useRef } from "react";
+import { BodyShort, Button, DatePicker, useRangeDatepicker } from "@navikt/ds-react";
 
 import css from './multidateperiod.module.css';
-import {addOneDay, dayCount} from "@/utils/datecalc";
+import { addOneDay, dayCount } from "@/utils/datecalc";
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
-import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
+import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 
 export interface DatePeriodInputProps {
     readonly value: DatePeriod | undefined;
@@ -39,6 +39,7 @@ export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel =
         <DatePicker {...datepickerProps} wrapperClassName={css.wrapper}>
             <div className={css.inputwrapper}>
                 <DatePicker.Input
+                    size="small"
                     {...fromInputProps}
                     label="Fra og med"
                     hideLabel={hideLabel}
@@ -46,13 +47,14 @@ export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel =
                     ref={startInputRef}
                 />
                 <DatePicker.Input
+                    size="small"
                     {...toInputProps}
                     label="Til og med"
                     hideLabel={hideLabel}
                     className={css.endInput}
                 />
                 <div className={css.description}>
-                    {error ? <ErrorMessager error={error} /> : <BodyShort>{ summary }</BodyShort> }
+                    {error ? <ErrorMessager error={error} /> : <BodyShort size="small">{ summary }</BodyShort> }
                 </div>
                 <div className={css.actions}>
                     {actionSlot}

@@ -1,28 +1,18 @@
 'use client'
 import CenterColumn from "../../CenterColumn";
 import InitDataDependentRender from "../../InitDataDependentRender";
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { BaseApiContext } from "../../BaseApi";
 import PaddedPanel from "../../PaddedPanel";
-import {
-    Box,
-    Button,
-    CheckboxGroup,
-    Checkbox,
-    Heading,
-    HStack,
-    Label,
-    ReadMore,
-    Textarea,
-} from "@navikt/ds-react";
+import { Box, Button, Checkbox, CheckboxGroup, Heading, HStack, Label, ReadMore, Textarea, } from "@navikt/ds-react";
 import Section from "@/app/components/Section";
 import { tekst } from "@/utils/tekster";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import { ObjectSchema } from "yup";
 import * as yup from "yup";
+import { ObjectSchema } from "yup";
 import { Diagnosekode } from "@navikt/diagnosekoder";
 import DatePeriod from "@/models/DatePeriod";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -157,7 +147,7 @@ const Page = () => {
 
                 <Section
                     title={tekst("legeerklaering.diagnose.tittel")}
-                    helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
+                    readMore={tekst("legeerklaering.diagnose.hjelpetekst")}
                 >
                     <Controller
                         control={control}
@@ -178,7 +168,7 @@ const Page = () => {
 
                 <Section
                     title={tekst("legeerklaering.tilsyn-varighet.tittel")}
-                    helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
+                    readMore={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
                 >
                     <Controller
                         control={control}

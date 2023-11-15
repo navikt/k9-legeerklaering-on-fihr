@@ -7,8 +7,8 @@ import { mapTilPSBLegeerklæringInnsending } from '@/app/api/oppsummering/mapper
 
 export const POST = async (request: NextRequest): Promise<Response> => {
     logRequest(request);
-    const data = await request.json() as LegeerklaeringData;
     logger.info("Registrerer legeerklæring...");
+    const data = await request.json() as LegeerklaeringData;
 
     const innsending = mapTilPSBLegeerklæringInnsending(data);
     return new HelseopplysningerService().generatePdf(innsending);

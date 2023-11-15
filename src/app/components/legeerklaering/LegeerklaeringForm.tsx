@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Button, DatePicker, ReadMore, Textarea, TextField, useDatepicker } from '@navikt/ds-react';
+import React from 'react';
+import { Button, DatePicker, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
-import SummaryModal from "@/app/components/legeerklaering/SummaryModal";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
@@ -18,15 +17,17 @@ import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
 import { logger } from '@navikt/next-logger';
 import RelatedPerson from "@/models/RelatedPerson";
+import { componentSize } from '@/utils/constants';
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
     readonly patient: Patient | undefined;
     readonly hospital: Hospital | undefined;
+    onFormSubmit: (data: LegeerklaeringData) => void
 }
 
 function undefinedIfNull<T>(something: T | undefined | null): T | undefined {
-    if(something === null) {
+    if (something === null) {
         return undefined
     }
     return something
@@ -99,9 +100,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     innleggelsesPerioder: yup.array().of(datePeriodValidation).required()
 })
 
-export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
-    const [submittedData, setSubmittedData] = useState<LegeerklaeringData | null>(null);
-
+export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
     const {
         control,
         register,
@@ -112,25 +111,25 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         resolver: yupResolver(schema),
         defaultValues: {
             barn: {
-                name: ehrInfo.patient?.name,
-                ehrId: ehrInfo.patient?.ehrId,
-                fnr: ehrInfo.patient?.fnr,
-                birthDate: ehrInfo.patient?.birthDate,
+                name: patient?.name,
+                ehrId: patient?.ehrId,
+                fnr: patient?.fnr,
+                birthDate: patient?.birthDate,
             },
             lege: {
-                hprNumber: ehrInfo.doctor?.hprNumber,
-                name: ehrInfo.doctor?.name,
-                activeSystemUser: ehrInfo.doctor?.activeSystemUser || false,
-                ehrId: ehrInfo.doctor?.ehrId,
+                hprNumber: doctor?.hprNumber,
+                name: doctor?.name,
+                activeSystemUser: doctor?.activeSystemUser || false,
+                ehrId: doctor?.ehrId,
             },
             sykehus: {
-                name: ehrInfo.hospital?.name,
-                phoneNumber: ehrInfo.hospital?.phoneNumber,
+                name: hospital?.name,
+                phoneNumber: hospital?.phoneNumber,
                 address: {
-                    line1: ehrInfo.hospital?.address?.line1,
-                    line2: ehrInfo.hospital?.address?.line2,
-                    postalCode: ehrInfo.hospital?.address?.postalCode,
-                    city: ehrInfo.hospital?.address?.city,
+                    line1: hospital?.address?.line1,
+                    line2: hospital?.address?.line2,
+                    postalCode: hospital?.address?.postalCode,
+                    city: hospital?.address?.city,
                 }
             },
             hoveddiagnose: undefined,
@@ -151,15 +150,14 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         datepickerProps: barnFoedselDatepickerProps,
         inputProps: barnFoedselsInputProps
     } = useDatepicker({
-        defaultSelected: ehrInfo.patient?.birthDate,
+        defaultSelected: patient?.birthDate,
         onDateChange: (dato) => {
             setValue('barn.birthDate', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
     });
 
     const onSubmit = (data: LegeerklaeringData) => {
-        setSubmittedData(data)
-        logger.info("Form data", data);
+        onFormSubmit(data)
     };
 
     const onError: SubmitErrorHandler<LegeerklaeringData> = errors => {
@@ -170,10 +168,11 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
         <form onSubmit={handleSubmit(onSubmit, onError)}>
             <Section
                 title={tekst("legeerklaering.om-barnet.tittel")}
-                helpText={tekst("legeerklaering.om-barnet.hjelpetekst")}
             >
                 <TextField
+                    size={componentSize}
                     label={tekst("legeerklaering.felles.navn.label")}
+                    readOnly
                     defaultValue={defaultValues?.barn?.name}
                     {...register("barn.name", {required: true})}
                     error={errors.barn?.name?.message}
@@ -181,7 +180,9 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 />
                 <div className="mb-4">
                     <TextField
+                        size={componentSize}
                         label={tekst("legeerklaering.om-barnet.ident.label")}
+                        readOnly
                         defaultValue={undefinedIfNull(defaultValues?.barn?.fnr)}
                         {...register("barn.fnr", {required: false})}
                         error={errors.barn?.fnr?.message}
@@ -189,7 +190,9 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     />
                     <DatePicker{...barnFoedselDatepickerProps}>
                         <DatePicker.Input
+                            size={componentSize}
                             label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
+                            readOnly
                             {...barnFoedselsInputProps}
                             error={errors.barn?.birthDate?.message}
                         />
@@ -199,31 +202,29 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
 
             <Section
                 title={tekst("legeerklaering.legens-vurdering.tittel")}
-                helpText={tekst("legeerklaering.legens-vurdering.hjelpetekst")}
+                readMoreHeader={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
+                readMore={tekst("legeerklaering.legens-vurdering.hjelpetekst")}
             >
-                <ReadMore
-                    size='small'
-                    header={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
-                    className="mb-8">
-                    {tekst("legeerklaering.legens-vurdering.les-mer.tekst")}
-                </ReadMore>
                 <Textarea
+                    size={componentSize}
                     label={tekst("legeerklaering.legens-vurdering.label")}
                     {...register("legensVurdering", {required: true})}
-                    error={errors.legensVurdering?.message }
+                    error={errors.legensVurdering?.message}
                     minRows={10}
                 />
             </Section>
 
             <Section
                 title={tekst("legeerklaering.diagnose.tittel")}
-                helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
+                readMoreHeader={tekst("legeerklaering.diagnose.hjelpetekst.tittel")}
+                readMore={tekst("legeerklaering.diagnose.hjelpetekst")}
             >
                 <Controller
                     control={control}
                     name="hoveddiagnose"
                     render={({field: {onChange, value}}) => (
-                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.hoveddiagnose?.message}  />
+                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                                             error={errors.hoveddiagnose?.message}/>
                     )}
                 />
 
@@ -231,14 +232,33 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     control={control}
                     name="bidiagnoser"
                     render={({field: {onChange, value}}) => (
-                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange} error={errors.bidiagnoser?.message} />
+                        <BidiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                                          error={errors.bidiagnoser?.message}/>
+                    )}
+                />
+            </Section>
+
+            <Section
+                title={tekst("legeerklaering.innleggelse-varighet.tittel")}
+            >
+                <Controller
+                    control={control}
+                    name="innleggelsesPerioder"
+                    render={({field: {onChange, value}}) => (
+                        <MultiDatePeriodInput
+                            value={value}
+                            onChange={onChange}
+                            error={errors.innleggelsesPerioder?.message}
+                            valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}
+                        />
                     )}
                 />
             </Section>
 
             <Section
                 title={tekst("legeerklaering.tilsyn-varighet.tittel")}
-                helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
+                readMoreHeader={tekst("legeerklaering.tilsyn-varighet.hjelpetekst.tittel")}
+                readMore={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <Controller
                     control={control}
@@ -254,23 +274,12 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 />
             </Section>
 
-            <Section title={tekst("legeerklaering.innleggelse-varighet.tittel")}>
-                <Controller
-                    control={control}
-                    name="innleggelsesPerioder"
-                    render={({field: {onChange, value}}) => (
-                        <MultiDatePeriodInput
-                            value={value}
-                            onChange={onChange}
-                            error={errors.innleggelsesPerioder?.message}
-                            valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}
-                        />
-                    )}
-                />
-            </Section>
-
-            <Section title={tekst("legeerklaering.om-legen.tittel")}>
+            <Section
+                title={tekst("legeerklaering.om-legen.tittel")}
+            >
                 <TextField
+                    size={componentSize}
+                    readOnly
                     label={tekst("legeerklaering.felles.navn.label")}
                     defaultValue={defaultValues?.lege?.name}
                     {...register("lege.name", {required: true})}
@@ -278,6 +287,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     className="mb-4 w-1/2"
                 />
                 <TextField
+                    size={componentSize}
+                    readOnly
                     label={tekst("legeerklaering.om-legen.hpr-nummer.label")}
                     defaultValue={defaultValues?.lege?.hprNumber}
                     {...register("lege.hprNumber", {required: true})}
@@ -286,15 +297,21 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 />
             </Section>
 
-            <Section title="Opplysninger om sykehuset">
+            <Section
+                title="Opplysninger om sykehuset"
+            >
                 <div className="flex space-x-4 mb-4">
                     <TextField
+                        size={componentSize}
+                        readOnly
                         label={tekst("legeerklaering.felles.navn.label")}
                         {...register("sykehus.name", {required: true})}
                         error={errors.sykehus?.name?.message}
                         className="w-3/4"
                     />
                     <TextField
+                        size={componentSize}
+                        readOnly
                         label={tekst("legeerklaering.om-sykehuset.tlf.label")}
                         type="tel"
                         {...register("sykehus.phoneNumber", {required: true})}
@@ -302,6 +319,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                         className="w-1/4"
                     /></div>
                 <TextField
+                    size={componentSize}
+                    readOnly
                     label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
                     defaultValue={defaultValues?.sykehus?.address?.line1}
                     {...register("sykehus.address.line1", {required: true})}
@@ -309,6 +328,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                     className="mb-4 w-3/4"
                 />
                 <TextField
+                    size={componentSize}
+                    readOnly
                     label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
                     hideLabel={true}
                     defaultValue={defaultValues?.sykehus?.address?.line2}
@@ -318,6 +339,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 />
                 <div className="flex mb-4 space-x-4">
                     <TextField
+                        size={componentSize}
+                        readOnly
                         label={tekst("legeerklaering.om-sykehuset.postnummer.label")}
                         defaultValue={defaultValues?.sykehus?.address?.postalCode}
                         type="number"
@@ -326,6 +349,8 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                         className="w-1/4"
                     />
                     <TextField
+                        size={componentSize}
+                        readOnly
                         label={tekst("legeerklaering.om-sykehuset.poststed.label")}
                         defaultValue={defaultValues?.sykehus?.address?.city}
                         {...register("sykehus.address.city", {required: true})}
@@ -335,10 +360,9 @@ export default function LegeerklaeringForm(ehrInfo: EhrInfoLegeerklaeringForm) {
                 </div>
             </Section>
 
-            <div className="ml-4 mt-4 mb-16"><Button type="submit">Registrer</Button></div>
-
-            {/*(Temporary) summary modal displayed when user submits form*/}
-            <SummaryModal show={submittedData !== null} onClose={() => setSubmittedData(null)} data={submittedData} />
+            <VStack>
+                <Button size={componentSize} type="submit">Til oppsummering</Button>
+            </VStack>
         </form>
     )
 }

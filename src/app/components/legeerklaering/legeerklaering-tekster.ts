@@ -16,6 +16,7 @@ export const LegeerklaeringTekster = {
 
     "legeerklaering.diagnose.tittel": "Diagnose",
     "legeerklaering.diagnose.hjelpetekst": "Benytt kodene fra ICD-10 hvis det er satt en diagnose. Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke skrive noe her.",
+    "legeerklaering.diagnose.hjelpetekst.tittel": "Ler mer",
     "legeerklaering.diagnose.hoveddiagnose.label": "Hoveddiagnosekode",
     "legeerklaering.diagnose.hoveddiagnose.paakrevd": "Hoveddiagnosekode er påkrevd",
     "legeerklaering.diagnose.bidiagnoser.label": "Bidiagnose(r)",
@@ -23,6 +24,7 @@ export const LegeerklaeringTekster = {
 
     "legeerklaering.tilsyn-varighet.tittel": "Forventet varighet på tilsyns- og pleiebehovet",
     "legeerklaering.tilsyn-varighet.hjelpetekst": "Her skal du sette en dato på hvor langt fram i tid du forventer at barnet har behov for kontinuerlig tilsyn og pleie. Hvis du er usikker på varigheten setter du en dato så langt frem i tid som du er sikker på per nå.",
+    "legeerklaering.tilsyn-varighet.hjelpetekst.tittel": "Les mer",
     "legeerklaering.tilsyn-varighet.fom.label": "Fra",
     "legeerklaering.tilsyn-varighet.fom.paakrevd": "Fra dato er påkrevd",
     "legeerklaering.tilsyn-varighet.tom.label": "Til",
