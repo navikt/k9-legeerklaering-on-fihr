@@ -102,11 +102,11 @@ export default function Home() {
     return <div>
         <Header doctor={state.doctor}/>
         <div className="container mx-auto">
-            <VStack gap="2">
-                <HStack className="mt-8" justify="start">
+            <VStack gap="2" justify="center">
+                <HStack className="mt-8" align="center" justify="start">
                     <Heading size="medium">Legeerklæring: Pleiepenger for sykt barn</Heading>
                 </HStack>
-                <HStack align="center">
+                <HStack align="center" justify="center">
                     {state.error ? (
                         <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/>
                     ) : (

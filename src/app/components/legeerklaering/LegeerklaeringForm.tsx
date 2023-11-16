@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, DatePicker, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
+import { Button, DatePicker, HStack, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
@@ -18,6 +18,7 @@ import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeri
 import { logger } from '@navikt/next-logger';
 import RelatedPerson from "@/models/RelatedPerson";
 import { componentSize } from '@/utils/constants';
+import { ChevronRightIcon } from '@navikt/aksel-icons';
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -360,8 +361,17 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 </div>
             </Section>
 
-            <VStack>
-                <Button size={componentSize} type="submit">Til oppsummering</Button>
+            <VStack className="mt-8" gap={"4"}>
+                <HStack>
+                    <Button
+                        size={componentSize}
+                        type="submit"
+                        icon={<ChevronRightIcon aria-hidden/>}
+                        iconPosition="right"
+                    >
+                        Til oppsummering
+                    </Button>
+                </HStack>
             </VStack>
         </form>
     )
