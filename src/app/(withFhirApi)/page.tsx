@@ -56,7 +56,6 @@ export default function Home() {
     };
 
     const handleFormSubmit = (submittedData: LegeerklaeringData) => {
-        console.log(submittedData, "Submitted data in home")
         setFormData(submittedData)
         hentPdfOppsummering(submittedData)
         setVisOppsummering(true)

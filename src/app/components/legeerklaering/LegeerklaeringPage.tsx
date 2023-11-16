@@ -4,7 +4,6 @@ import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from "@/app/components/
 import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
 import React from "react";
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
-import { logger } from '@navikt/next-logger';
 
 
 export interface LegeerklaeringPageProps {
@@ -15,7 +14,6 @@ export interface LegeerklaeringPageProps {
 const LegeerklaeringPage = ({data, handleFormSubmit}: LegeerklaeringPageProps) => {
     const onFormSubmit = (submittedData: LegeerklaeringData) => {
         handleFormSubmit(submittedData);
-        logger.info(submittedData, "Form data submitted");
     };
 
     return (
