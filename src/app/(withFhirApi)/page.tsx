@@ -102,7 +102,7 @@ export default function Home() {
     return <div>
         <Header doctor={state.doctor}/>
         <div className="container mx-auto">
-            <VStack gap="2" justify="center">
+            <VStack gap="2" justify="center" className="w-100">
                 <HStack className="mt-8" align="center" justify="start">
                     <Heading size="medium">Legeerklæring: Pleiepenger for sykt barn</Heading>
                 </HStack>

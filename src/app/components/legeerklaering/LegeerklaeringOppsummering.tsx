@@ -3,7 +3,6 @@ import { Alert, Button, Heading, HStack, VStack } from '@navikt/ds-react';
 import { tekst } from '@/utils/tekster';
 import React, { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightLastIcon } from '@navikt/aksel-icons';
-import { logger } from '@navikt/next-logger';
 
 export interface LegeerklaeringOppsummeringProps {
     data: LegeerklaeringData;
@@ -24,7 +23,6 @@ const LegeerklaeringOppsummering = ({
         // Create a URL for the Blob
         const newPdfUrl = window.URL.createObjectURL(pdf);
         setPdfUrl(newPdfUrl);
-        logger.info("PDF URL: " + newPdfUrl);
 
         // Cleanup function to revoke the URL when the component unmounts
         return () => {
