@@ -25,7 +25,6 @@ import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import RelatedPerson from "@/models/RelatedPerson";
-import { logger } from '@navikt/next-logger';
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -280,7 +279,6 @@ export const fnrSyntetisk40FromIdentifier = (identifier: IIdentifier): string | 
 
 export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
     for(const identifier of identifiers) {
-        logger.info(identifier, `fnrFromIdentifiers`)
         const fnr = fnrFromIdentifier(identifier) ?? fnrSyntetisk40FromIdentifier(identifier)
         if(fnr !== undefined) {
             return fnr
