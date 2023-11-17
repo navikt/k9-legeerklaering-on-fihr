@@ -4,6 +4,7 @@ import { Box, Button, Heading, HStack, VStack } from "@navikt/ds-react";
 import HospitalListing from "./HospitalListing";
 import { ArrowsCirclepathIcon, HospitalIcon, PersonCircleIcon } from "@navikt/aksel-icons";
 import InitDataDependentRender from "./InitDataDependentRender";
+import { componentSize } from '@/utils/constants';
 
 const StartStatus = (baseApi: BaseApi) => {
         return (
@@ -12,11 +13,11 @@ const StartStatus = (baseApi: BaseApi) => {
                     <HStack gap="4">
                         <Box background="bg-subtle" padding="4" borderRadius="medium">
                             <PersonCircleIcon style={{float: "left"}} fontSize="1.8rem" />
-                            <Heading spacing level="3" size="small">Bruker</Heading>
+                            <Heading spacing level="3" size={componentSize}>Bruker</Heading>
                             <UserListing user={initData.practitioner} />
                         </Box>
                         <Box background="bg-subtle" padding="4" borderRadius="medium" borderColor="border-strong">
-                            <Heading spacing level="3" size="small">
+                            <Heading spacing level="3" size={componentSize}>
                                 <HospitalIcon style={{float: "left"}} aria-hidden fontSize="1.8rem" />
                                 Sykehus</Heading>
                             <HospitalListing hospital={initData.hospital} />
@@ -28,7 +29,7 @@ const StartStatus = (baseApi: BaseApi) => {
                             onClick={baseApi.refreshInitData}
                             disabled={baseApi.loading !== false}
                             variant="tertiary-neutral"
-                            size="small">
+                            size={componentSize}>
                             oppfriske <ArrowsCirclepathIcon style={{display: "inline"}} />
                         </Button>
                         dette vinduet.

@@ -1,13 +1,14 @@
 "use client"
 
-import {Button, Label} from "@navikt/ds-react";
-import {PencilIcon, TrashIcon} from "@navikt/aksel-icons";
-import React, {ReactNode, useId, useRef, useState} from "react";
-import type {Diagnosekode} from "@navikt/diagnosekoder";
+import { Button, Label } from "@navikt/ds-react";
+import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import React, { ReactNode, useId, useRef, useState } from "react";
+import type { Diagnosekode } from "@navikt/diagnosekoder";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
+import { componentSize } from '@/utils/constants';
 
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;
@@ -46,14 +47,14 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
     const classNames = ["navds-form-field", className, dkCss.inputwrapper].filter(c => c !== undefined).join(" ")
     return (
         <div className={classNames}>
-            <Label htmlFor={id}>Hoveddiagnose</Label>
+            <Label size={componentSize} htmlFor={id}>Hoveddiagnose</Label>
             <div className={dkCss.framedline} onClick={handleInputClick}>
                 <div className={dkCss.value}><span>{value?.code}</span><Divider /><span>{value?.text}</span></div>
-                <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size="small"
+                <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
                         onClick={() => setShowModal(true)} icon={<PencilIcon />}>
                     { showModalBtnText }
                 </Button>
-                <Button disabled={value === undefined} type="button" variant="tertiary" size="small"
+                <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize}
                         onClick={handleRemoveDiagnose}  icon={<TrashIcon />}>
                     Fjern
                 </Button>

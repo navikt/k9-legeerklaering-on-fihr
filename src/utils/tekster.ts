@@ -1,8 +1,10 @@
 import { LegeerklaeringTekster } from '@/app/components/legeerklaering/legeerklaering-tekster';
+import { LegeerklaeringOppsummeringTekster } from '@/app/components/legeerklaering/legeerklaering-oppsummering-tekster';
 
 
 const tekster = {
-    ...LegeerklaeringTekster
+    ...LegeerklaeringTekster,
+    ...LegeerklaeringOppsummeringTekster
 }
 
 export const tekst = (tekst: keyof typeof tekster): string => {

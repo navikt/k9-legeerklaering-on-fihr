@@ -1,13 +1,14 @@
 "use client"
 
-import React, {ReactNode, useId, useRef, useState} from "react";
-import {Button, Label} from "@navikt/ds-react";
-import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
+import React, { ReactNode, useId, useRef, useState } from "react";
+import { Button, Label } from "@navikt/ds-react";
+import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
-import type {Diagnosekode} from "@navikt/diagnosekoder";
+import type { Diagnosekode } from "@navikt/diagnosekoder";
 
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
+import { componentSize } from '@/utils/constants';
 
 export interface BidiagnoseSelectProps {
     readonly value: Diagnosekode[]
@@ -54,7 +55,7 @@ const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectP
 
     return (
         <div className={classNames}>
-            <Label htmlFor={id}>Bidiagnose</Label>
+            <Label size={componentSize} htmlFor={id}>Bidiagnose</Label>
             <div className={dkCss.framedlisting} onClick={handleInputClick}>
                 {value.map(dk => {
                     return (
@@ -62,14 +63,14 @@ const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectP
                             <div className={dkCss.value}>
                                 <span>{dk.code}</span> - <span>{dk.text}</span>
                             </div>
-                            <Button disabled={value === undefined} type="button" variant="tertiary" size="small" icon={<TrashIcon />}
+                            <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize} icon={<TrashIcon />}
                                     onClick={(ev) => {ev.stopPropagation(); handleRemovedDiagnose(dk)}}>
                                 Fjern
                             </Button>
                         </div>
                     )
                 })}
-                <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size="small"
+                <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
                         onClick={() => setShowModal(true)} icon={<PlusIcon />}>
                     Legg til <u>bi</u>diagnose
                 </Button>

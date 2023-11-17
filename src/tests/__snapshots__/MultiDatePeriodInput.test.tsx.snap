@@ -15,10 +15,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="inputwrapper"
           >
             <div
-              class="startInput navds-form-field navds-form-field--medium navds-date__field"
+              class="startInput navds-form-field navds-form-field--small navds-date__field"
             >
               <label
-                class="navds-form-field__label navds-label"
+                class="navds-form-field__label navds-label navds-label--small"
                 for="datepicker-input-r9"
               >
                 Fra og med
@@ -28,7 +28,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               >
                 <input
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                   id="datepicker-input-r9"
                   size="10"
                   value="01.04.2023"
@@ -71,10 +71,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               />
             </div>
             <div
-              class="endInput navds-form-field navds-form-field--medium navds-date__field"
+              class="endInput navds-form-field navds-form-field--small navds-date__field"
             >
               <label
-                class="navds-form-field__label navds-label"
+                class="navds-form-field__label navds-label navds-label--small"
                 for="datepicker-input-rb"
               >
                 Til og med
@@ -84,7 +84,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               >
                 <input
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                   id="datepicker-input-rb"
                   size="10"
                   value="19.04.2023"
@@ -130,7 +130,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="description"
             >
               <p
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 = 19 dager
               </p>
@@ -177,10 +177,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="inputwrapper"
           >
             <div
-              class="startInput navds-form-field navds-form-field--medium navds-date__field"
+              class="startInput navds-form-field navds-form-field--small navds-date__field"
             >
               <label
-                class="navds-form-field__label navds-sr-only navds-label"
+                class="navds-form-field__label navds-sr-only navds-label navds-label--small"
                 for="datepicker-input-rf"
               >
                 Fra og med
@@ -190,7 +190,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               >
                 <input
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                   id="datepicker-input-rf"
                   size="10"
                   value="15.05.2023"
@@ -233,10 +233,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               />
             </div>
             <div
-              class="endInput navds-form-field navds-form-field--medium navds-date__field"
+              class="endInput navds-form-field navds-form-field--small navds-date__field"
             >
               <label
-                class="navds-form-field__label navds-sr-only navds-label"
+                class="navds-form-field__label navds-sr-only navds-label navds-label--small"
                 for="datepicker-input-rh"
               >
                 Til og med
@@ -246,7 +246,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               >
                 <input
                   autocomplete="off"
-                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                  class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                   id="datepicker-input-rh"
                   size="10"
                   value="20.05.2023"
@@ -292,7 +292,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               class="description"
             >
               <p
-                class="navds-body-short navds-body-short--medium"
+                class="navds-body-short navds-body-short--small"
               >
                 = 6 dager
               </p>
@@ -380,10 +380,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           class="inputwrapper"
         >
           <div
-            class="startInput navds-form-field navds-form-field--medium navds-date__field"
+            class="startInput navds-form-field navds-form-field--small navds-date__field"
           >
             <label
-              class="navds-form-field__label navds-label"
+              class="navds-form-field__label navds-label navds-label--small"
               for="datepicker-input-r9"
             >
               Fra og med
@@ -393,7 +393,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <input
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                 id="datepicker-input-r9"
                 size="10"
                 value="01.04.2023"
@@ -436,10 +436,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             />
           </div>
           <div
-            class="endInput navds-form-field navds-form-field--medium navds-date__field"
+            class="endInput navds-form-field navds-form-field--small navds-date__field"
           >
             <label
-              class="navds-form-field__label navds-label"
+              class="navds-form-field__label navds-label navds-label--small"
               for="datepicker-input-rb"
             >
               Til og med
@@ -449,7 +449,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <input
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                 id="datepicker-input-rb"
                 size="10"
                 value="19.04.2023"
@@ -495,7 +495,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="description"
           >
             <p
-              class="navds-body-short navds-body-short--medium"
+              class="navds-body-short navds-body-short--small"
             >
               = 19 dager
             </p>
@@ -542,10 +542,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           class="inputwrapper"
         >
           <div
-            class="startInput navds-form-field navds-form-field--medium navds-date__field"
+            class="startInput navds-form-field navds-form-field--small navds-date__field"
           >
             <label
-              class="navds-form-field__label navds-sr-only navds-label"
+              class="navds-form-field__label navds-sr-only navds-label navds-label--small"
               for="datepicker-input-rf"
             >
               Fra og med
@@ -555,7 +555,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <input
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                 id="datepicker-input-rf"
                 size="10"
                 value="15.05.2023"
@@ -598,10 +598,10 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             />
           </div>
           <div
-            class="endInput navds-form-field navds-form-field--medium navds-date__field"
+            class="endInput navds-form-field navds-form-field--small navds-date__field"
           >
             <label
-              class="navds-form-field__label navds-sr-only navds-label"
+              class="navds-form-field__label navds-sr-only navds-label navds-label--small"
               for="datepicker-input-rh"
             >
               Til og med
@@ -611,7 +611,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <input
                 autocomplete="off"
-                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--medium"
+                class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
                 id="datepicker-input-rh"
                 size="10"
                 value="20.05.2023"
@@ -657,7 +657,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             class="description"
           >
             <p
-              class="navds-body-short navds-body-short--medium"
+              class="navds-body-short navds-body-short--small"
             >
               = 6 dager
             </p>
