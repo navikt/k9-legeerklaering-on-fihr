@@ -25,7 +25,6 @@ import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import RelatedPerson from "@/models/RelatedPerson";
-import { isSyntheticIdentifierAllowed } from '@/utils/environment';
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -285,11 +284,15 @@ export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefin
 
         if (fnr !== undefined) {
             return fnr;
-        } else if (isSyntheticIdentifierAllowed() && syntetiskFnr !== undefined) {
+        } else if (syntetiskFnr !== undefined) {
             return syntetiskFnr;
-        } else if (!isSyntheticIdentifierAllowed() && syntetiskFnr !== undefined) {
+        }
+        // TODO: Blokker for syntetisk fnr i prod
+        /*
+        else if (!isSyntheticIdentifierAllowed() && syntetiskFnr !== undefined) {
             throw new Error(`Syntetiske fødselsnummerer ikke tillatt i produksjonsmiljø`);
         }
+         */
     }
 };
 
