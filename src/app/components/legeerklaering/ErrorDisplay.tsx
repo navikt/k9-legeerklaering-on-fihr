@@ -1,4 +1,5 @@
-import {Alert, Heading} from "@navikt/ds-react";
+import { Alert, Heading } from "@navikt/ds-react";
+import { componentSize } from '@/utils/constants';
 
 export interface ErrorDisplayProps {
     readonly heading?: string;
@@ -7,7 +8,7 @@ export interface ErrorDisplayProps {
 
 export default function ErrorDisplay({heading, error}: ErrorDisplayProps) {
     const headingElem = heading ?
-        <Heading size="small" level="3">
+        <Heading size={componentSize} level="3">
             {heading}
         </Heading> :
         null;
