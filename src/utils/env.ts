@@ -7,9 +7,12 @@ export const serverEnvSchema = yup.object().shape({
     FHIR_CLIENT_ID: yup.string().required(),
     FHIR_SUBSCRIPTION_KEY: yup.string().required(),
     FHIR_BASE_URL: yup.string().required(),
+
     // Helseopplysninger Server
     HELSEOPPLYSNINGER_SERVER_BASE_URL: yup.string().required(),
     HELSEOPPLYSNINGER_SERVER_SCOPE: yup.string().required(),
+
+    // Flagg
     SIMULATION_ALLOWED: yup.boolean().required(),
     SYNTHETIC_IDENTIFIER_ALLOWED: yup.boolean().required()
 });
