@@ -17,7 +17,7 @@ Create a .env file in the root of the project with the following variables:
 - `FHIR_CLIENT_ID=NAV_legeerklaering`
 - `FHIR_SUBSCRIPTION_KEY` (can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile))
 - `HELSEOPPLYSNINGER_SERVER_BASE_URL=https://helseserver.intern.dev.nav.no`
-- `HELSEOPPLYSNINGER_SERVER_SCOPE=dev-gcp:helseopplysninger:server-helse`
+- `HELSEOPPLYSNINGER_SERVER_SCOPE=api://dev-gcp.helseopplysninger.server-helse/.default`
 - `AZURE_APP_CLIENT_ID=k9-legeerklaering-on-fhir`
 - `AZURE_APP_CLIENT_SECRET=some-secret`
 - `AZURE_APP_WELL_KNOWN_URL=http://localhost:8080/default/.well-known/openid-configuration` (the well-known url for the mocked azure ad container i docker-compose)

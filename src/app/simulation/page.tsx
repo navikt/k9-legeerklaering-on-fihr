@@ -38,6 +38,11 @@ const Page = () => {
                     Test0264 (har D-nummer)
                 </a>
             </li>
+            <li>
+                <a href="/?iss=https://api.dips.no/fhir&launch=cdp2019153&simulation=opendips-BetydeligFjellkjede">
+                    Betydelig Fjellkjede (syntetisk fødselsnummer +40)
+                </a>
+            </li>
 
         </ul>
 
