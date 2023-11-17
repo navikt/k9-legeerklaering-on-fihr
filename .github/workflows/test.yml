@@ -21,7 +21,7 @@ jobs:
           scope: '@navikt'
 
       - name: Installere moduler
-        run: npm install
+        run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Kjøre tester
