@@ -25,6 +25,7 @@ import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import RelatedPerson from "@/models/RelatedPerson";
+import { getServerEnv } from '@/utils/env';
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -278,14 +279,20 @@ export const dnrFromIdentifier = (identifier: IIdentifier): string | undefined =
 export const fnrSyntetisk40FromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, fnrSyntetisk40Oid)
 
 export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
-    for(const identifier of identifiers) {
-        const fnr = fnrFromIdentifier(identifier) ?? fnrSyntetisk40FromIdentifier(identifier)
-        if(fnr !== undefined) {
-            return fnr
+    const { SYNTHETIC_IDENTIFIER_ALLOWED } = getServerEnv();
+    for (const identifier of identifiers) {
+        const fnr = fnrFromIdentifier(identifier);
+        const syntetiskFnr = fnrSyntetisk40FromIdentifier(identifier);
+
+        if (fnr !== undefined) {
+            return fnr;
+        } else if (SYNTHETIC_IDENTIFIER_ALLOWED && syntetiskFnr !== undefined) {
+            return syntetiskFnr;
+        } else if (!SYNTHETIC_IDENTIFIER_ALLOWED && syntetiskFnr !== undefined) {
+            throw new Error(`Syntetiske fødselsnummerer ikke tillatt i produksjonsmiljø`);
         }
     }
-    return undefined
-}
+};
 
 export const dnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
     for(const identifier of identifiers) {
