@@ -14,7 +14,8 @@ import {
     IIdentifier,
     IPeriod,
     IPractitioner,
-    IPractitionerRole, IRelatedPerson,
+    IPractitionerRole,
+    IRelatedPerson,
     IResourceList
 } from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod from "@/models/DatePeriod";
@@ -215,13 +216,14 @@ type oid = `urn:oid:${string}`
 export const hprOid: oid = "urn:oid:2.16.578.1.12.4.1.4.4"
 export const fnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.1`
 export const dnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.2`
+export const fnrSyntetisk40Oid: oid = `urn:oid:2.16.578.1.12.4.1.4.3`
 export const orgnrOid: oid = "urn:oid:2.16.578.1.12.4.1.4.101"
 
 const oidFromIdentifier = (identifier: IIdentifier | undefined, oid: oid): string | undefined => {
     if(
         identifier !== undefined &&
         identifier.system === oid &&
-        identifier.use === IdentifierUseKind._official &&
+       ( identifier.use === IdentifierUseKind._official ||identifier.use === IdentifierUseKind._temp) &&
         identifier.value !== undefined &&
         identifier.value.length > 0
     ) {
@@ -273,15 +275,26 @@ export const fnrFromIdentifier = (identifier: IIdentifier): string | undefined =
 
 export const dnrFromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, dnrOid)
 
+export const fnrSyntetisk40FromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, fnrSyntetisk40Oid)
+
 export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
-    for(const identifier of identifiers) {
-        const fnr = fnrFromIdentifier(identifier)
-        if(fnr !== undefined) {
-            return fnr
+    for (const identifier of identifiers) {
+        const fnr = fnrFromIdentifier(identifier);
+        const syntetiskFnr = fnrSyntetisk40FromIdentifier(identifier);
+
+        if (fnr !== undefined) {
+            return fnr;
+        } else if (syntetiskFnr !== undefined) {
+            return syntetiskFnr;
         }
+        // TODO: Blokker for syntetisk fnr i prod
+        /*
+        else if (!isSyntheticIdentifierAllowed() && syntetiskFnr !== undefined) {
+            throw new Error(`Syntetiske fødselsnummerer ikke tillatt i produksjonsmiljø`);
+        }
+         */
     }
-    return undefined
-}
+};
 
 export const dnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
     for(const identifier of identifiers) {
