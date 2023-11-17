@@ -14,7 +14,8 @@ import {
     IIdentifier,
     IPeriod,
     IPractitioner,
-    IPractitionerRole, IRelatedPerson,
+    IPractitionerRole,
+    IRelatedPerson,
     IResourceList
 } from "@ahryman40k/ts-fhir-types/lib/R4";
 import DatePeriod from "@/models/DatePeriod";
@@ -24,6 +25,7 @@ import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import RelatedPerson from "@/models/RelatedPerson";
+import { logger } from '@navikt/next-logger';
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -215,13 +217,14 @@ type oid = `urn:oid:${string}`
 export const hprOid: oid = "urn:oid:2.16.578.1.12.4.1.4.4"
 export const fnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.1`
 export const dnrOid: oid = `urn:oid:2.16.578.1.12.4.1.4.2`
+export const fnrSyntetisk40Oid: oid = `urn:oid:2.16.578.1.12.4.1.4.3`
 export const orgnrOid: oid = "urn:oid:2.16.578.1.12.4.1.4.101"
 
 const oidFromIdentifier = (identifier: IIdentifier | undefined, oid: oid): string | undefined => {
     if(
         identifier !== undefined &&
         identifier.system === oid &&
-        identifier.use === IdentifierUseKind._official &&
+       ( identifier.use === IdentifierUseKind._official ||identifier.use === IdentifierUseKind._temp) &&
         identifier.value !== undefined &&
         identifier.value.length > 0
     ) {
@@ -273,9 +276,12 @@ export const fnrFromIdentifier = (identifier: IIdentifier): string | undefined =
 
 export const dnrFromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, dnrOid)
 
+export const fnrSyntetisk40FromIdentifier = (identifier: IIdentifier): string | undefined => oidFromIdentifier(identifier, fnrSyntetisk40Oid)
+
 export const fnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefined => {
     for(const identifier of identifiers) {
-        const fnr = fnrFromIdentifier(identifier)
+        logger.info(identifier, `fnrFromIdentifiers`)
+        const fnr = fnrFromIdentifier(identifier) ?? fnrSyntetisk40FromIdentifier(identifier)
         if(fnr !== undefined) {
             return fnr
         }
