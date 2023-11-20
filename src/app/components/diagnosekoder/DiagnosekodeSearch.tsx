@@ -1,7 +1,7 @@
 "use client"
 
-import {Alert, Button, Loader, Search, Table} from "@navikt/ds-react";
-import type {Diagnosekode, ICD10Diagnosekode} from "@navikt/diagnosekoder";
+import { Alert, Button, Loader, Search, Table } from "@navikt/ds-react";
+import type { Diagnosekode, DiagnosekodeSearchResult, ICD10Diagnosekode } from "@navikt/diagnosekoder";
 import {
     ForwardedRef,
     forwardRef,
@@ -12,14 +12,13 @@ import {
     useRef,
     useState
 } from "react";
-import {ArrowRightIcon, ChevronDownDoubleIcon} from '@navikt/aksel-icons';
+import { ArrowRightIcon, ChevronDownDoubleIcon } from '@navikt/aksel-icons';
 
 import diagnosekoderCss from './diagnosekoder.module.css';
-import debounce, {AbortedDebounce} from "@/utils/debounce";
-
 import dkCss from './diagnosekoder.module.css';
-import type {DiagnosekodeSearchResult} from "@navikt/diagnosekoder";
-import {searchDiagnosekoderFetch} from "@/app/api/diagnosekoder/client";
+import debounce, { AbortedDebounce } from "@/utils/debounce";
+import { searchDiagnosekoderFetch } from "@/app/api/diagnosekoder/client";
+import { componentSize } from '@/utils/constants';
 
 interface DiagnosekoderProp {
     readonly diagnosekoder: Diagnosekode[];
@@ -45,7 +44,7 @@ const DiagnosekodeRow = ({code, text, onSelectedDiagnose}: Diagnosekode & OnSele
                 <Button
                     onClick={(ev) => {ev.stopPropagation(); handleSelected()}}
                     variant="tertiary"
-                    size="small"
+                    size={componentSize}
                     aria-label="Velg"
                     icon={<ArrowRightIcon aria-hidden />}>
                 </Button>
@@ -143,7 +142,7 @@ const DiagnosekodeTable = forwardRef(({diagnosekoder, onSelectedDiagnose, onKeyD
     return (
         <div>
             {isSlowLoading ? <Loader className={dkCss.centerOverlay} variant="neutral" size="3xlarge" title="Laster søkeresultat" /> : null}
-            <Table ref={tableRef} onKeyDown={onKeyDown}>
+            <Table size={componentSize} ref={tableRef} onKeyDown={onKeyDown}>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell scope="col" className={dkCss.diagnosekodeCol}>Kode</Table.HeaderCell>
@@ -278,13 +277,14 @@ const DiagnosekodeSearch = ({onSelectedDiagnose}: OnSelectedDiagnose) => {
 
     const showMoreElements = searchResult.hasMore ?
         <div className="flex justify-center py-4">
-            <Button onClick={handleShowMoreClicked} variant="tertiary" icon={<ChevronDownDoubleIcon aria-hidden />}>Vis flere rader</Button>
+            <Button size={componentSize} onClick={handleShowMoreClicked} variant="tertiary" icon={<ChevronDownDoubleIcon aria-hidden />}>Vis flere rader</Button>
         </div> :
         null;
 
     return (
         <>
                 <Search
+                    size={componentSize}
                     autoFocus
                     label="Søk med kode eller beskrivelse"
                     onChange={handleSearchChanged}

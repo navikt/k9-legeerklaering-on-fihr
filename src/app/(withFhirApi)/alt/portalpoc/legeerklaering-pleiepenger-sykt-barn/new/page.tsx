@@ -157,7 +157,7 @@ const Page = () => {
 
                 <Section
                     title={tekst("legeerklaering.diagnose.tittel")}
-                    helpText={tekst("legeerklaering.diagnose.hjelpetekst")}
+                    readMore={tekst("legeerklaering.diagnose.hjelpetekst")}
                 >
                     <Controller
                         control={control}
@@ -178,7 +178,7 @@ const Page = () => {
 
                 <Section
                     title={tekst("legeerklaering.tilsyn-varighet.tittel")}
-                    helpText={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
+                    readMore={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
                 >
                     <Controller
                         control={control}
