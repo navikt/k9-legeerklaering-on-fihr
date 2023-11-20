@@ -10,6 +10,7 @@ import validateRoute from "@/utils/validateRoute";
 import { pagename } from "./pagenames";
 import UserListing from "./UserListing";
 import type { BaseApi } from "./BaseApi";
+import { componentSize } from '@/utils/constants';
 
 export interface UserProps {
     readonly user: Practitioner | undefined;
@@ -49,7 +50,7 @@ const UserPart = ({user}: UserProps) => {
 const ReloadBtn = ({loading, refreshInitData}: ReloadBtnProps) => {
     return <Button
         variant="tertiary-neutral"
-        size="small"
+        size={componentSize}
         disabled={loading !== false}
         icon={<ArrowsCirclepathIcon aria-hidden />}
         onClick={refreshInitData}

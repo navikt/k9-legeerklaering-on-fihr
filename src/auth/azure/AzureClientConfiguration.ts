@@ -1,6 +1,7 @@
 import getAuthClient from '@navikt/next-auth-wonderwall/dist/auth/azure/client';
 import { logger } from '@navikt/next-logger';
 import { BaseClient, TokenSet } from 'openid-client';
+import { getServerEnv } from '@/utils/env';
 
 export default class AzureClientConfiguration {
     private static _client: BaseClient | null = null;
@@ -22,11 +23,19 @@ export default class AzureClientConfiguration {
     }
 
     static getServerHelseToken = async (): Promise<TokenSet> => {
-        const client = await this.getClient();
+        const client = await AzureClientConfiguration.getClient();
         logger.info("Getting server token...");
-        const handle = await client.deviceAuthorization({scope: process.env.HELSEOPPLYSNINGER_SERVER_SCOPE});
-        const tokenSet = await handle.poll();
-        logger.info("Server token retrieved");
-        return tokenSet;
+
+        return client.grant({
+            grant_type: "client_credentials",
+            scope: getServerEnv().HELSEOPPLYSNINGER_SERVER_SCOPE,
+        })
+            .then((tokenSet) => {
+                logger.info("Token received");
+                return tokenSet;
+            }).catch((error) => {
+                logger.error(error, "Error getting server token");
+                throw new Error(error);
+            })
     };
 }

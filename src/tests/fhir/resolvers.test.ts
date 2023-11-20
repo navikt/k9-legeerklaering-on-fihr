@@ -1,11 +1,17 @@
 import {
     dateTimePeriodResolver,
-    dateTimeResolver, dnrFromIdentifier, dnrFromIdentifiers, fnrFromIdentifier, fnrFromIdentifiers,
+    dateTimeResolver,
+    dnrFromIdentifier,
+    dnrFromIdentifiers,
+    fnrFromIdentifier,
+    fnrFromIdentifiers,
+    fnrSyntetisk40FromIdentifier,
     hprNumberFromIdentifiers,
     isDateWithinPeriod,
     organizationNumberFromIdentifier,
     phoneContactResolver,
-    postalAddressResolver, resolveRelatedPersonFromIRelatedPerson
+    postalAddressResolver,
+    resolveRelatedPersonFromIRelatedPerson
 } from "@/integrations/fhir/resolvers";
 import {
     ContactPointSystemKind,
@@ -200,6 +206,13 @@ const fnrIdentifierInput = validateOrThrow(R4.RTTI_Identifier.decode({
     "value": fnrInput
 }))
 
+const fnrSyntetisk40Input = "02512351754"
+const fnrSyntetisk40IdentifierInput = validateOrThrow(R4.RTTI_Identifier.decode({
+    "use": "temp",
+    "system": "urn:oid:2.16.578.1.12.4.1.4.3",
+    "value": fnrSyntetisk40Input
+}))
+
 const dnrInput = "43056078023"
 const dnrIdentifierInput = validateOrThrow(R4.RTTI_Identifier.decode({
     "use": "official",
@@ -211,6 +224,13 @@ describe("fhir resolve fnr from identifier", () => {
     test("with valid single input", () => {
         const expected = "12082190455"
         expect(fnrFromIdentifier(fnrIdentifierInput)).toEqual(expected)
+    })
+})
+
+describe("fhir resolve synthetic fnr from identifier", () => {
+    test("with valid single input", () => {
+        const expected = "02512351754"
+        expect(fnrSyntetisk40FromIdentifier(fnrSyntetisk40IdentifierInput)).toEqual(expected)
     })
 })
 
