@@ -2,7 +2,6 @@
 
 import "@navikt/ds-css";
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
 import FhirApiContext from "@/app/(withFhirApi)/FhirApiContext";
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 import LegeerklaeringOppsummering from '@/app/components/legeerklaering/LegeerklaeringOppsummering';
@@ -14,6 +13,7 @@ import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
 import { logger } from '@navikt/next-logger';
 import { Heading, HStack, VStack } from '@navikt/ds-react';
+import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
 
 export const dynamic = 'force-dynamic'
 
