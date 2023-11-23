@@ -74,6 +74,7 @@ export class FhirProxy {
                 headers: newHeaders,
                 body: incomingReq.body,
                 // @ts-ignore
+                // https://github.com/nodejs/node/issues/46221
                 duplex: "half",
                 mode: incomingReq.mode,
                 credentials: incomingReq.credentials,
