@@ -53,6 +53,17 @@ export default function Home() {
 
     const handleJournalføring = () => {
         console.log("Journalfører");
+        if (isInited(fhirApi)) {
+            console.log("FhirApi er inited");
+            fhirApi.createDocument(
+                state.patient?.ehrId!!,
+                state.doctor?.ehrId!!,
+                state.hospital?.ehrId!!,
+                pdf!!
+            )
+        } else if (isInitError(fhirApi)) {
+            onError(fhirApi.initError)
+        }
     };
 
     const handleFormSubmit = (submittedData: LegeerklaeringData) => {

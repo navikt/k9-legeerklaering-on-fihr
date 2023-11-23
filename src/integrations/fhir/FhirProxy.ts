@@ -73,6 +73,7 @@ export class FhirProxy {
                 method: incomingReq.method,
                 headers: newHeaders,
                 body: incomingReq.body,
+                duplex: "half",
                 mode: incomingReq.mode,
                 credentials: incomingReq.credentials,
                 cache: incomingReq.cache,

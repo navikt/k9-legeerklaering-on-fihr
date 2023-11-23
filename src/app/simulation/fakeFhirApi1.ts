@@ -3,6 +3,9 @@ import InitData from "@/models/InitData";
 import delay from "@/utils/delay";
 
 class Fake1FhirApi implements FhirApi {
+    createDocument(patientEhrId:string, providerEhrId:string, hospitalEhrId:string, pdf:Blob): Promise<any> {
+        throw new Error("Method not implemented.");
+    }
     async getInitState(): Promise<InitData> {
         await delay(1000);
         return {
