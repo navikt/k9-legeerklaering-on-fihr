@@ -24,7 +24,7 @@ import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
 import RelatedPerson from "@/models/RelatedPerson";
-import { DocumentReferenceStatusKind } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { DocumentReferenceStatusKind, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
 
 
@@ -146,8 +146,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             reader.onerror = reject;
         });
 
-
-    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<any> {
+    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<IDocumentReference> {
         const pdfAsBase64 = await this.blobToBase64(pdf);
         const docunmentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
@@ -165,7 +164,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ]
         )
 
-        this.client.request(
+        return this.client.request<IDocumentReference>(
             {
                 url: "DocumentReference",
                 method: "POST",
@@ -173,12 +172,13 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 headers: {
                     "Content-Type": "application/json",
                 },
-            },
-            {flat: true}
-        ).then((data) => {
+            }
+        ).then((data: IDocumentReference) => {
             console.log(data);
+            return data;
         }).catch((error) => {
             console.log(error);
+            throw error;
         })
     }
 
