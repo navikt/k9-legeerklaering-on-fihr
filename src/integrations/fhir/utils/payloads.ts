@@ -4,7 +4,7 @@ import { R4 } from '@ahryman40k/ts-fhir-types';
 
 export const createAndValidateDocumentReferencePayload = (
     patientIdentifier: string,
-    practitionerIdentifier: string,
+    practitionerRoleIdentifier: string,
     organizationIdentifier: string,
     documentReferenceStatus: DocumentReferenceStatusKind,
     content: Array<IDocumentReference_Content>
@@ -29,7 +29,7 @@ export const createAndValidateDocumentReferencePayload = (
         },
         "author": [
             {
-                "reference": `PractitionerRole/${practitionerIdentifier}`,
+                "reference": `PractitionerRole/${practitionerRoleIdentifier}`,
                 "identifier": {
                     "system": "urn:oid:1.3.6.1.4.1.9038.51.1",
                     "value": "1000755"

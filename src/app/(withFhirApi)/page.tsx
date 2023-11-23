@@ -57,7 +57,7 @@ export default function Home() {
             console.log("FhirApi er inited");
             fhirApi.createDocument(
                 state.patient?.ehrId!!,
-                state.doctor?.ehrId!!,
+                state.doctor?.practiotionerRoleId!!,
                 state.hospital?.ehrId!!,
                 pdf!!
             )

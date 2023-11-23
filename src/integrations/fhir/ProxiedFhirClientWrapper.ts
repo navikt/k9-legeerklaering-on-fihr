@@ -80,6 +80,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 ehrId: practitionerFromRole.ehrId,
                 hprNumber: practitionerFromRole.hprNumber,
                 name: practitionerFromRole.name,
+                practiotionerRoleId: iPractitionerRole.id,
                 activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true : practitionerFromRole.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
             }
@@ -102,6 +103,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             return {
                 ehrId: mergedPractitioner.ehrId,
                 hprNumber: mergedPractitioner.hprNumber,
+                practiotionerRoleId: iPractitionerRole.id,
                 name: mergedPractitioner.name,
                 activeSystemUser: mergedPractitioner.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
