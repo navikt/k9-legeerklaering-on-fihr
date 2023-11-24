@@ -13,7 +13,7 @@ import { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/Legee
 import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
 import { logger } from '@navikt/next-logger';
-import { Alert, Heading, HStack, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Heading, HStack, VStack } from '@navikt/ds-react';
 import { IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 
 export const dynamic = 'force-dynamic'
@@ -123,10 +123,15 @@ export default function Home() {
                 </HStack>
 
                 {dokumentOpprettet && (
-                    <Alert variant="success">
-                       <Heading size="small">Legeerklæringen er sendt til NAV</Heading>
-                        Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i DIPS.
-                    </Alert>
+                    <>
+                        <Alert variant="success">
+                            <Heading size="small">Legeerklæringen er sendt til NAV</Heading>
+                            <BodyShort size="small">Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i DIPS.</BodyShort>
+                            <br/>
+                            <BodyShort size="small">Du kan nå lukke denne fanen.</BodyShort>
+
+                        </Alert>
+                    </>
                 )}
 
                 {!dokumentOpprettet && (
