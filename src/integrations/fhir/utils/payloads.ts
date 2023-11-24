@@ -38,7 +38,7 @@ export const createAndValidateDocumentReferencePayload = (
         ],
         "custodian": {
             // TODO: cChange this to Organization/${organizationIdentifier} when we have a real organization
-            "reference": `Organization/afa22`,
+            "reference": `Organization/afa1000145`,
             "identifier": {
                 "system": "http://dips.no/fhir/namingsystem/dips-organizationid",
                 "value": "22"
