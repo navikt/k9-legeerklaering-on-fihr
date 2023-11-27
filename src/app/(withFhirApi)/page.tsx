@@ -59,7 +59,7 @@ export default function Home() {
             console.log("FhirApi er inited");
             const response: IDocumentReference = await fhirApi.createDocument(
                 state.patient?.ehrId!!,
-                state.doctor?.practiotionerRoleId!!,
+                state.doctor?.practitionerRoleId!!,
                 state.hospital?.ehrId!!,
                 pdf!!
             )

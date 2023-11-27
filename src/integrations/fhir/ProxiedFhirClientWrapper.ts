@@ -80,7 +80,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 ehrId: practitionerFromRole.ehrId,
                 hprNumber: practitionerFromRole.hprNumber,
                 name: practitionerFromRole.name,
-                practiotionerRoleId: iPractitionerRole.id,
+                practitionerRoleId: iPractitionerRole.id,
                 activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true : practitionerFromRole.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
             }
@@ -103,7 +103,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             return {
                 ehrId: mergedPractitioner.ehrId,
                 hprNumber: mergedPractitioner.hprNumber,
-                practiotionerRoleId: iPractitionerRole.id,
+                practitionerRoleId: iPractitionerRole.id,
                 name: mergedPractitioner.name,
                 activeSystemUser: mergedPractitioner.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
@@ -148,7 +148,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
 
     public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<IDocumentReference> {
         const pdfAsBase64 = await this.blobToBase64(pdf);
-        const docunmentReference = createAndValidateDocumentReferencePayload(
+        const documentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
             providerEhrId,
             hospitalEhrId,
@@ -164,22 +164,16 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ]
         )
 
-        return this.client.request<IDocumentReference>(
+        return await this.client.request<IDocumentReference>(
             {
                 url: "DocumentReference",
                 method: "POST",
-                body: JSON.stringify(docunmentReference),
+                body: JSON.stringify(documentReference),
                 headers: {
                     "Content-Type": "application/json",
                 },
             }
-        ).then((data: IDocumentReference) => {
-            console.log(data);
-            return data;
-        }).catch((error) => {
-            console.log(error);
-            throw error;
-        })
+        )
     }
 
     public async getPatient(): Promise<Patient> {
