@@ -146,7 +146,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             reader.onerror = reject;
         });
 
-    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<IDocumentReference> {
+    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<boolean> {
         const pdfAsBase64 = await this.blobToBase64(pdf);
         const documentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
@@ -164,7 +164,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ]
         )
 
-        return await this.client.request<IDocumentReference>(
+        await this.client.request<IDocumentReference>(
             {
                 url: "DocumentReference",
                 method: "POST",
@@ -173,7 +173,8 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                     "Content-Type": "application/json",
                 },
             }
-        )
+        );
+        return true
     }
 
     public async getPatient(): Promise<Patient> {

@@ -14,7 +14,6 @@ import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
 import { logger } from '@navikt/next-logger';
 import { Alert, BodyShort, Heading, HStack, VStack } from '@navikt/ds-react';
-import { IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 
 export const dynamic = 'force-dynamic'
 
@@ -57,13 +56,7 @@ export default function Home() {
         console.log("Journalfører");
         if (isInited(fhirApi)) {
             console.log("FhirApi er inited");
-            const response: IDocumentReference = await fhirApi.createDocument(
-                state.patient?.ehrId!!,
-                state.doctor?.practitionerRoleId!!,
-                state.hospital?.ehrId!!,
-                pdf!!
-            )
-            console.log("Dokument opprettet", response);
+           await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, pdf!!)
             setDokumentOpprettet(true)
 
         } else if (isInitError(fhirApi)) {
