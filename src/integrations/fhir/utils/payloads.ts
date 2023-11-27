@@ -37,7 +37,7 @@ export const createAndValidateDocumentReferencePayload = (
             }
         ],
         "custodian": {
-            // TODO: cChange this to Organization/${organizationIdentifier} when we have a real organization
+            // TODO: This should be changed to the department identifier for the practitioner
             "reference": `Organization/afa1000145`,
             "identifier": {
                 "system": "http://dips.no/fhir/namingsystem/dips-organizationid",
