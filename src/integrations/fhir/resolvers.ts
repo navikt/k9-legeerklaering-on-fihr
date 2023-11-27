@@ -255,6 +255,7 @@ export const resolvePractitionerFromIPractitionerRole = (practitionerRole: IPrac
     return {
         ehrId: identifierValue,
         hprNumber: hprNumberFromIdentifiers(practitionerRole.identifier || []),
+        practitionerRoleId: practitionerRole.id,
         name: officialHumanNameResolver(practitioner?.name),
         activeSystemUser: trueIfUndefined(practitionerRole.active)
     }

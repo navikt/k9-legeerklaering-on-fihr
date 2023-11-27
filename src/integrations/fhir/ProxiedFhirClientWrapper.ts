@@ -2,15 +2,19 @@ import Practitioner, { PartialPractitioner } from "@/models/Practitioner";
 import { R4 } from "@ahryman40k/ts-fhir-types";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
 import {
-    dateTimeResolver, dnrFromIdentifiers, fnrFromIdentifiers,
-    iPractitionerRoleFromListing, iResourceListFromArray, isRelatedPerson,
+    dateTimeResolver,
+    dnrFromIdentifiers,
+    fnrFromIdentifiers,
+    iPractitionerRoleFromListing,
+    iResourceListFromArray,
+    isRelatedPerson,
     officialHumanNameResolver,
-    officialIdentifierResolver,
     organizationNumberFromIdentifiers,
     phoneContactResolver,
     postalAddressResolver,
     resolvePractitionerFromIPractitioner,
-    resolvePractitionerFromIPractitionerRole, resolveRelatedPersonFromIRelatedPerson
+    resolvePractitionerFromIPractitionerRole,
+    resolveRelatedPersonFromIRelatedPerson
 } from "@/integrations/fhir/resolvers";
 import Patient from "@/models/Patient";
 import Client from "fhirclient/lib/Client";
@@ -20,6 +24,8 @@ import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
 import RelatedPerson from "@/models/RelatedPerson";
+import { DocumentReferenceStatusKind, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
@@ -48,7 +54,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         }
     }
 
-    public async getPractitioner(): Promise<Practitioner & {readonly organizationReference: string | undefined}> {
+    public async getPractitioner(): Promise<Practitioner & { readonly organizationReference: string | undefined }> {
         // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerRole" like we do below instead.
         // This seems to contain the Practitioner info we in the smart api demo would get back from client.user.read.
         // I suspect this is a non-standard API call. Will perhaps need to make this more dynamic to adapt to other EHR systems.
@@ -65,7 +71,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         }
         const practitionerFromRole = resolvePractitionerFromIPractitionerRole(iPractitionerRole)
         // If the practitioner info resolved from practitioner role is complete, return it
-        if(
+        if (
             practitionerFromRole.ehrId !== undefined &&
             practitionerFromRole.hprNumber !== undefined &&
             practitionerFromRole.name !== undefined
@@ -74,12 +80,13 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 ehrId: practitionerFromRole.ehrId,
                 hprNumber: practitionerFromRole.hprNumber,
                 name: practitionerFromRole.name,
-                activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true: practitionerFromRole.activeSystemUser,
+                practitionerRoleId: iPractitionerRole.id,
+                activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true : practitionerFromRole.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
             }
         }
         // Practitioner role did not have complete info, try getting it from Practitioner endpoint
-        if(iPractitionerRole?.practitioner?.reference === undefined) {
+        if (iPractitionerRole?.practitioner?.reference === undefined) {
             throw new Error(`No practitioner reference in PractitionerRole from $getCurrentUser`)
         }
         const iPractitioner = validateOrThrow(R4.RTTI_Practitioner.decode(await this.client.request(iPractitionerRole.practitioner.reference)))
@@ -88,7 +95,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ...practitionerFromRole,
             ...practitioner,
         }
-        if(
+        if (
             mergedPractitioner.ehrId !== undefined &&
             mergedPractitioner.hprNumber !== undefined &&
             mergedPractitioner.name !== undefined
@@ -96,6 +103,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             return {
                 ehrId: mergedPractitioner.ehrId,
                 hprNumber: mergedPractitioner.hprNumber,
+                practitionerRoleId: iPractitionerRole.id,
                 name: mergedPractitioner.name,
                 activeSystemUser: mergedPractitioner.activeSystemUser,
                 organizationReference: iPractitionerRole.organization?.reference
@@ -117,13 +125,56 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             .flatMap(r => {
                 if (R4.RTTI_RelatedPerson.is(r)) {
                     const rp = resolveRelatedPersonFromIRelatedPerson(r)
-                    if(isRelatedPerson(rp)) {
+                    if (isRelatedPerson(rp)) {
                         return [rp]
                     }
                 }
                 return []
             })
         return relatedPersons
+    }
+
+    public blobToBase64 = (file: Blob): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const result = reader.result as string;
+                resolve(result.split(",")[1]);
+            };
+
+            reader.readAsDataURL(file);
+            reader.onerror = reject;
+        });
+
+    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<boolean> {
+        const pdfAsBase64 = await this.blobToBase64(pdf);
+        const documentReference = createAndValidateDocumentReferencePayload(
+            patientEhrId,
+            providerEhrId,
+            hospitalEhrId,
+            DocumentReferenceStatusKind._current,
+            [
+                {
+                    "attachment": {
+                        "contentType": "application/pdf",
+                        "data": pdfAsBase64,
+                        "title": "title",
+                    }
+                }
+            ]
+        )
+
+        await this.client.request<IDocumentReference>(
+            {
+                url: "DocumentReference",
+                method: "POST",
+                body: JSON.stringify(documentReference),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return true
     }
 
     public async getPatient(): Promise<Patient> {
