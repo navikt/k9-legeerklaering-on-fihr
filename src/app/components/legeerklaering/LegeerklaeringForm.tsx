@@ -283,8 +283,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
 
             <Section
                 title={tekst("legeerklaering.tilsyn-varighet.tittel")}
-                readMoreHeader={tekst("legeerklaering.tilsyn-varighet.hjelpetekst.tittel")}
-                readMore={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <Controller
                     control={control}
