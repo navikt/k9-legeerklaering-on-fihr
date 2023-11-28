@@ -19,7 +19,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <label
                 class="navds-form-field__label navds-label navds-label--small"
-                for="datepicker-input-r9"
+                for="datepicker-input-r1"
               >
                 Fra og med
               </label>
@@ -29,7 +29,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 <input
                   autocomplete="off"
                   class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                  id="datepicker-input-r9"
+                  id="datepicker-input-r1"
+                  placeholder="dd.mm.åååå"
                   size="10"
                   value="01.04.2023"
                 />
@@ -39,7 +40,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   type="button"
                 >
                   <svg
-                    aria-labelledby="title-ra"
+                    aria-labelledby="title-r2"
                     fill="none"
                     focusable="false"
                     height="1em"
@@ -50,7 +51,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <title
-                      id="title-ra"
+                      id="title-r2"
                     >
                       Åpne datovelger
                     </title>
@@ -67,7 +68,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 aria-live="polite"
                 aria-relevant="additions removals"
                 class="navds-form-field__error"
-                id="datepicker-input-error-r9"
+                id="datepicker-input-error-r1"
               />
             </div>
             <div
@@ -75,7 +76,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <label
                 class="navds-form-field__label navds-label navds-label--small"
-                for="datepicker-input-rb"
+                for="datepicker-input-r3"
               >
                 Til og med
               </label>
@@ -85,7 +86,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 <input
                   autocomplete="off"
                   class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                  id="datepicker-input-rb"
+                  id="datepicker-input-r3"
+                  placeholder="dd.mm.åååå"
                   size="10"
                   value="19.04.2023"
                 />
@@ -95,7 +97,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   type="button"
                 >
                   <svg
-                    aria-labelledby="title-rc"
+                    aria-labelledby="title-r4"
                     fill="none"
                     focusable="false"
                     height="1em"
@@ -106,7 +108,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <title
-                      id="title-rc"
+                      id="title-r4"
                     >
                       Åpne datovelger
                     </title>
@@ -123,7 +125,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 aria-live="polite"
                 aria-relevant="additions removals"
                 class="navds-form-field__error"
-                id="datepicker-input-error-rb"
+                id="datepicker-input-error-r3"
               />
             </div>
             <div
@@ -181,7 +183,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <label
                 class="navds-form-field__label navds-sr-only navds-label navds-label--small"
-                for="datepicker-input-rf"
+                for="datepicker-input-r7"
               >
                 Fra og med
               </label>
@@ -191,7 +193,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 <input
                   autocomplete="off"
                   class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                  id="datepicker-input-rf"
+                  id="datepicker-input-r7"
+                  placeholder="dd.mm.åååå"
                   size="10"
                   value="15.05.2023"
                 />
@@ -201,7 +204,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   type="button"
                 >
                   <svg
-                    aria-labelledby="title-rg"
+                    aria-labelledby="title-r8"
                     fill="none"
                     focusable="false"
                     height="1em"
@@ -212,7 +215,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <title
-                      id="title-rg"
+                      id="title-r8"
                     >
                       Åpne datovelger
                     </title>
@@ -229,7 +232,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 aria-live="polite"
                 aria-relevant="additions removals"
                 class="navds-form-field__error"
-                id="datepicker-input-error-rf"
+                id="datepicker-input-error-r7"
               />
             </div>
             <div
@@ -237,7 +240,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
             >
               <label
                 class="navds-form-field__label navds-sr-only navds-label navds-label--small"
-                for="datepicker-input-rh"
+                for="datepicker-input-r9"
               >
                 Til og med
               </label>
@@ -247,7 +250,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 <input
                   autocomplete="off"
                   class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                  id="datepicker-input-rh"
+                  id="datepicker-input-r9"
+                  placeholder="dd.mm.åååå"
                   size="10"
                   value="20.05.2023"
                 />
@@ -257,7 +261,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   type="button"
                 >
                   <svg
-                    aria-labelledby="title-ri"
+                    aria-labelledby="title-ra"
                     fill="none"
                     focusable="false"
                     height="1em"
@@ -268,7 +272,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <title
-                      id="title-ri"
+                      id="title-ra"
                     >
                       Åpne datovelger
                     </title>
@@ -285,7 +289,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 aria-live="polite"
                 aria-relevant="additions removals"
                 class="navds-form-field__error"
-                id="datepicker-input-error-rh"
+                id="datepicker-input-error-r9"
               />
             </div>
             <div
@@ -384,7 +388,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           >
             <label
               class="navds-form-field__label navds-label navds-label--small"
-              for="datepicker-input-r9"
+              for="datepicker-input-r1"
             >
               Fra og med
             </label>
@@ -394,7 +398,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               <input
                 autocomplete="off"
                 class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                id="datepicker-input-r9"
+                id="datepicker-input-r1"
+                placeholder="dd.mm.åååå"
                 size="10"
                 value="01.04.2023"
               />
@@ -404,7 +409,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 type="button"
               >
                 <svg
-                  aria-labelledby="title-ra"
+                  aria-labelledby="title-r2"
                   fill="none"
                   focusable="false"
                   height="1em"
@@ -415,7 +420,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <title
-                    id="title-ra"
+                    id="title-r2"
                   >
                     Åpne datovelger
                   </title>
@@ -432,7 +437,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               aria-live="polite"
               aria-relevant="additions removals"
               class="navds-form-field__error"
-              id="datepicker-input-error-r9"
+              id="datepicker-input-error-r1"
             />
           </div>
           <div
@@ -440,7 +445,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           >
             <label
               class="navds-form-field__label navds-label navds-label--small"
-              for="datepicker-input-rb"
+              for="datepicker-input-r3"
             >
               Til og med
             </label>
@@ -450,7 +455,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               <input
                 autocomplete="off"
                 class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                id="datepicker-input-rb"
+                id="datepicker-input-r3"
+                placeholder="dd.mm.åååå"
                 size="10"
                 value="19.04.2023"
               />
@@ -460,7 +466,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 type="button"
               >
                 <svg
-                  aria-labelledby="title-rc"
+                  aria-labelledby="title-r4"
                   fill="none"
                   focusable="false"
                   height="1em"
@@ -471,7 +477,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <title
-                    id="title-rc"
+                    id="title-r4"
                   >
                     Åpne datovelger
                   </title>
@@ -488,7 +494,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               aria-live="polite"
               aria-relevant="additions removals"
               class="navds-form-field__error"
-              id="datepicker-input-error-rb"
+              id="datepicker-input-error-r3"
             />
           </div>
           <div
@@ -546,7 +552,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           >
             <label
               class="navds-form-field__label navds-sr-only navds-label navds-label--small"
-              for="datepicker-input-rf"
+              for="datepicker-input-r7"
             >
               Fra og med
             </label>
@@ -556,7 +562,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               <input
                 autocomplete="off"
                 class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                id="datepicker-input-rf"
+                id="datepicker-input-r7"
+                placeholder="dd.mm.åååå"
                 size="10"
                 value="15.05.2023"
               />
@@ -566,7 +573,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 type="button"
               >
                 <svg
-                  aria-labelledby="title-rg"
+                  aria-labelledby="title-r8"
                   fill="none"
                   focusable="false"
                   height="1em"
@@ -577,7 +584,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <title
-                    id="title-rg"
+                    id="title-r8"
                   >
                     Åpne datovelger
                   </title>
@@ -594,7 +601,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               aria-live="polite"
               aria-relevant="additions removals"
               class="navds-form-field__error"
-              id="datepicker-input-error-rf"
+              id="datepicker-input-error-r7"
             />
           </div>
           <div
@@ -602,7 +609,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
           >
             <label
               class="navds-form-field__label navds-sr-only navds-label navds-label--small"
-              for="datepicker-input-rh"
+              for="datepicker-input-r9"
             >
               Til og med
             </label>
@@ -612,7 +619,8 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               <input
                 autocomplete="off"
                 class="navds-date__field-input navds-text-field__input navds-body-short navds-body-short--small"
-                id="datepicker-input-rh"
+                id="datepicker-input-r9"
+                placeholder="dd.mm.åååå"
                 size="10"
                 value="20.05.2023"
               />
@@ -622,7 +630,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                 type="button"
               >
                 <svg
-                  aria-labelledby="title-ri"
+                  aria-labelledby="title-ra"
                   fill="none"
                   focusable="false"
                   height="1em"
@@ -633,7 +641,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <title
-                    id="title-ri"
+                    id="title-ra"
                   >
                     Åpne datovelger
                   </title>
@@ -650,7 +658,7 @@ exports[`MultiDatePeriodInput renders filled row values and accepts edits to it 
               aria-live="polite"
               aria-relevant="additions removals"
               class="navds-form-field__error"
-              id="datepicker-input-error-rh"
+              id="datepicker-input-error-r9"
             />
           </div>
           <div
