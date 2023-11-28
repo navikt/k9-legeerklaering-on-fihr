@@ -11,6 +11,7 @@ export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSB
             fødselsdato: data.barn.birthDate,
         },
         vurdering: data.legensVurdering,
+        vurderingAvOmsorgspersoner: data.vurderingAvOmsorgspersoner,
         hoveddiagnose: {
             term: data.hoveddiagnose?.text,
             kode: data.hoveddiagnose?.code,
