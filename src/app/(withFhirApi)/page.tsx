@@ -6,7 +6,6 @@ import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPa
 import FhirApiContext from "@/app/(withFhirApi)/FhirApiContext";
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 import LegeerklaeringOppsummering from '@/app/components/legeerklaering/LegeerklaeringOppsummering';
-import Header from '@/app/components/Header';
 import { isInited, isInitError, isIniting } from '@/app/hooks/useAsyncInit';
 import ensureError from '@/utils/ensureError';
 import { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
@@ -14,6 +13,8 @@ import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
 import { logger } from '@navikt/next-logger';
 import { Alert, BodyShort, Heading, HStack, VStack } from '@navikt/ds-react';
+import TopBar from '@/app/(withFhirApi)/alt/portalpoc/TopBar';
+import { BaseApi, useBaseApi } from '@/app/(withFhirApi)/alt/portalpoc/BaseApi';
 
 export const dynamic = 'force-dynamic'
 
@@ -24,6 +25,8 @@ export interface PageState extends EhrInfoLegeerklaeringForm {
 
 export default function Home() {
     const fhirApi = useContext(FhirApiContext)
+    const baseApi: BaseApi = useBaseApi(fhirApi)
+
     const [formData, setFormData] = useState<LegeerklaeringData | undefined>()
     const [visOppsummering, setVisOppsummering] = useState<boolean>(false)
     const [pdf, setPdf] = useState<Blob | undefined>(undefined)
@@ -108,7 +111,7 @@ export default function Home() {
     }, [fhirApi, onError])
 
     return <div>
-        <Header doctor={state.doctor}/>
+        <TopBar loading={baseApi.loading} refreshInitData={baseApi.refreshInitData} user={baseApi.initData?.practitioner} />
         <div className="container mx-auto">
             <VStack gap="2" justify="center" className="w-100">
                 <HStack className="mt-8" align="center" justify="start">

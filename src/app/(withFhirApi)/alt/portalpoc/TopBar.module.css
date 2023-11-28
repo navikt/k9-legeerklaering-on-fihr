@@ -9,6 +9,7 @@
     top: 0;
     left: 0;
     right: 0;
+    border-bottom: #071A36 1px solid;
     background-color: var(--a-bg-default, white);
     /* We want the bar to be above inputs and other page content, but below popovers, modals, etc. */
     z-index: calc(var(--a-z-index-popover, 1000) - 100);
