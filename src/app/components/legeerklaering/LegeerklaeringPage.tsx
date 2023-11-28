@@ -1,7 +1,6 @@
 'use client';
 
 import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from "@/app/components/legeerklaering/LegeerklaeringForm";
-import ContactInfoSection from "@/app/components/legeerklaering/ContactInfoSection";
 import React from "react";
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 
@@ -25,7 +24,6 @@ const LegeerklaeringPage = ({data, handleFormSubmit}: LegeerklaeringPageProps) =
                     hospital={data.hospital}
                     onFormSubmit={onFormSubmit}
                 />
-                <ContactInfoSection/>
             </div>
         </>
     )
