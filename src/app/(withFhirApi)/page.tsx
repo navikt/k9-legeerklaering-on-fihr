@@ -59,7 +59,7 @@ export default function Home() {
         console.log("Journalfører");
         if (isInited(fhirApi)) {
             console.log("FhirApi er inited");
-           await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, pdf!!)
+            await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, pdf!!)
             setDokumentOpprettet(true)
 
         } else if (isInitError(fhirApi)) {
@@ -111,7 +111,8 @@ export default function Home() {
     }, [fhirApi, onError])
 
     return <div>
-        <TopBar loading={baseApi.loading} refreshInitData={baseApi.refreshInitData} user={baseApi.initData?.practitioner} />
+        <TopBar loading={baseApi.loading} refreshInitData={baseApi.refreshInitData}
+                user={baseApi.initData?.practitioner}/>
         <div className="container mx-auto">
             <VStack gap="2" justify="center" className="w-100">
                 <HStack className="mt-8" align="center" justify="start">
@@ -122,7 +123,8 @@ export default function Home() {
                     <>
                         <Alert variant="success">
                             <Heading size="small">Legeerklæringen er sendt til NAV</Heading>
-                            <BodyShort size="small">Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i DIPS.</BodyShort>
+                            <BodyShort size="small">Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i
+                                DIPS.</BodyShort>
                             <br/>
                             <BodyShort size="small">Du kan nå lukke denne fanen.</BodyShort>
 

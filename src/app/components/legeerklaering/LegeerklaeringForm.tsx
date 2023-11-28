@@ -1,5 +1,15 @@
 import React from 'react';
-import { Button, HStack, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
+import {
+    Alert,
+    BodyShort,
+    Button,
+    Heading,
+    HStack,
+    Textarea,
+    TextField,
+    useDatepicker,
+    VStack
+} from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
@@ -165,8 +175,27 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         logger.warn("form validation errors", errors)
     }
 
+    const erOver18 = (fødselsdato: Date | undefined): boolean => {
+        if (!fødselsdato) {
+            return false;
+        }
+
+        const idag = new Date();
+        const attenÅrSiden = new Date(idag.getFullYear() - 18, idag.getMonth(), idag.getDate());
+        return fødselsdato <= attenÅrSiden;
+    };
+
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
+            {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4"><Alert variant="warning">
+                <Heading size="small">Obs! Pasienten er over 18 år</Heading>
+                <BodyShort size="small">
+                    Du må inkludere i vurderingen av barnets tilstand om pasienten er utviklingshemmet i tillegg til svært alvorlig eller livstruende syk.
+                </BodyShort>
+                <br/>
+            </Alert></VStack>
+            }
+
             <Section
                 title={tekst("legeerklaering.om-barnet.tittel")}
             >
