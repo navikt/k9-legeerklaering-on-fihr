@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, DatePicker, HStack, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
+import { Button, HStack, Textarea, TextField, useDatepicker, VStack } from '@navikt/ds-react';
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
 import { tekst } from '@/utils/tekster';
@@ -174,31 +174,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     size={componentSize}
                     label={tekst("legeerklaering.felles.navn.label")}
                     readOnly
-                    defaultValue={defaultValues?.barn?.name}
-                    {...register("barn.name", {required: true})}
-                    error={errors.barn?.name?.message}
+                    defaultValue={`${defaultValues?.barn?.name} (${defaultValues?.barn?.fnr})`}
                     className="w-1/2 mb-4"
                 />
-                <div className="mb-4">
-                    <TextField
-                        size={componentSize}
-                        label={tekst("legeerklaering.om-barnet.ident.label")}
-                        readOnly
-                        defaultValue={undefinedIfNull(defaultValues?.barn?.fnr)}
-                        {...register("barn.fnr", {required: false})}
-                        error={errors.barn?.fnr?.message}
-                        className="w-1/2 mb-4"
-                    />
-                    <DatePicker{...barnFoedselDatepickerProps}>
-                        <DatePicker.Input
-                            size={componentSize}
-                            label={tekst("legeerklaering.om-barnet.foedselsdato.label")}
-                            readOnly
-                            {...barnFoedselsInputProps}
-                            error={errors.barn?.birthDate?.message}
-                        />
-                    </DatePicker>
-                </div>
+
             </Section>
 
             <Section
@@ -273,92 +252,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                         />
                     )}
                 />
-            </Section>
-
-            <Section
-                title={tekst("legeerklaering.om-legen.tittel")}
-            >
-                <TextField
-                    size={componentSize}
-                    readOnly
-                    label={tekst("legeerklaering.felles.navn.label")}
-                    defaultValue={defaultValues?.lege?.name}
-                    {...register("lege.name", {required: true})}
-                    error={errors.lege?.name?.message}
-                    className="mb-4 w-1/2"
-                />
-                <TextField
-                    size={componentSize}
-                    readOnly
-                    label={tekst("legeerklaering.om-legen.hpr-nummer.label")}
-                    defaultValue={defaultValues?.lege?.hprNumber}
-                    {...register("lege.hprNumber", {required: true})}
-                    error={errors.lege?.hprNumber?.message}
-                    className="w-1/2"
-                />
-            </Section>
-
-            <Section
-                title="Opplysninger om sykehuset"
-            >
-                <div className="flex space-x-4 mb-4">
-                    <TextField
-                        size={componentSize}
-                        readOnly
-                        label={tekst("legeerklaering.felles.navn.label")}
-                        {...register("sykehus.name", {required: true})}
-                        error={errors.sykehus?.name?.message}
-                        className="w-3/4"
-                    />
-                    <TextField
-                        size={componentSize}
-                        readOnly
-                        label={tekst("legeerklaering.om-sykehuset.tlf.label")}
-                        type="tel"
-                        {...register("sykehus.phoneNumber", {required: true})}
-                        error={errors.sykehus?.phoneNumber?.message}
-                        className="w-1/4"
-                    /></div>
-                <TextField
-                    size={componentSize}
-                    readOnly
-                    label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
-                    defaultValue={defaultValues?.sykehus?.address?.line1}
-                    {...register("sykehus.address.line1", {required: true})}
-                    error={errors.sykehus?.address?.line1?.message}
-                    className="mb-4 w-3/4"
-                />
-                <TextField
-                    size={componentSize}
-                    readOnly
-                    label={tekst("legeerklaering.om-sykehuset.gateadresse.label")}
-                    hideLabel={true}
-                    defaultValue={defaultValues?.sykehus?.address?.line2}
-                    {...register("sykehus.address.line2")}
-                    error={errors.sykehus?.address?.line2?.message}
-                    className="mb-4 w-3/4"
-                />
-                <div className="flex mb-4 space-x-4">
-                    <TextField
-                        size={componentSize}
-                        readOnly
-                        label={tekst("legeerklaering.om-sykehuset.postnummer.label")}
-                        defaultValue={defaultValues?.sykehus?.address?.postalCode}
-                        type="number"
-                        {...register("sykehus.address.postalCode", {required: true})}
-                        error={errors.sykehus?.address?.postalCode?.message}
-                        className="w-1/4"
-                    />
-                    <TextField
-                        size={componentSize}
-                        readOnly
-                        label={tekst("legeerklaering.om-sykehuset.poststed.label")}
-                        defaultValue={defaultValues?.sykehus?.address?.city}
-                        {...register("sykehus.address.city", {required: true})}
-                        error={errors.sykehus?.address?.city?.message}
-                        className="w-3/4"
-                    />
-                </div>
             </Section>
 
             <VStack className="mt-8" gap={"4"}>
