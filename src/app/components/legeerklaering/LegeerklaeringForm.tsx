@@ -50,9 +50,22 @@ const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
     text: yup.string().required()
 })
 
-const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
+const tilsynsPeriodValidation: ObjectSchema<DatePeriod> = yup.object({
     start: yup.date().required("Fra dato er påkrevd"),
     end: yup.date().required("Til dato er påkrevd"),
+}).test({
+    name: 'datePeriodStartBeforeEnd',
+    skipAbsent: true,
+    message: `Periode start må være før slutt`,
+    test: (period) =>
+        period.start === undefined ||
+        period.end === undefined ||
+        period.start.getTime() <= period.end.getTime()
+})
+
+const innleggelsesPeriodValidation: ObjectSchema<DatePeriod> = yup.object({
+    start: yup.date().optional(),
+    end: yup.date().optional(),
 }).test({
     name: 'datePeriodStartBeforeEnd',
     skipAbsent: true,
@@ -109,8 +122,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
-    tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
-    innleggelsesPerioder: yup.array().of(datePeriodValidation).required()
+    tilsynPerioder: yup.array().of(tilsynsPeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
+    innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).optional()
 })
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -272,7 +285,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     name="innleggelsesPerioder"
                     render={({field: {onChange, value}}) => (
                         <MultiDatePeriodInput
-                            value={value}
+                            value={value ?? []}
                             onChange={onChange}
                             error={errors.innleggelsesPerioder?.message}
                             valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}

@@ -120,7 +120,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                             <Heading level="5" size="xsmall">Perioder</Heading>
                             <List>
                                 {
-                                    data.innleggelsesPerioder.map(innleggelsesPeriode =>
+                                    data.innleggelsesPerioder?.map(innleggelsesPeriode =>
                                         <List.Item
                                             key={`innleggp-${innleggelsesPeriode.start?.getTime()}-${innleggelsesPeriode.end?.getTime()}`}>
                                             {innleggelsesPeriode.start?.toLocaleDateString('no-NO')} - {innleggelsesPeriode.end?.toLocaleDateString('no-NO')}
