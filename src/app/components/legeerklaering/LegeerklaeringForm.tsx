@@ -123,7 +123,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPerioder: yup.array().of(tilsynsPeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
-    innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).optional()
+    innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required()
 })
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -166,7 +166,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 start: undefined,
                 end: undefined,
             }],
-            innleggelsesPerioder: []
+            innleggelsesPerioder: [{
+                start: undefined,
+                end: undefined,
+            }]
         }
     })
 
@@ -281,7 +284,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     name="innleggelsesPerioder"
                     render={({field: {onChange, value}}) => (
                         <MultiDatePeriodInput
-                            value={value ?? []}
+                            value={value}
                             onChange={onChange}
                             error={errors.innleggelsesPerioder?.message}
                             valueErrors={errors.innleggelsesPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)}
