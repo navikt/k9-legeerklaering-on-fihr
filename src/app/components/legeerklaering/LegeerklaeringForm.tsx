@@ -166,10 +166,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 start: undefined,
                 end: undefined,
             }],
-            innleggelsesPerioder: [{
-                start: undefined,
-                end: undefined,
-            }]
+            innleggelsesPerioder: []
         }
     })
 
