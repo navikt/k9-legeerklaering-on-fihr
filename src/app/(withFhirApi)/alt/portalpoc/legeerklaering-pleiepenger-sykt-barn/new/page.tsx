@@ -1,28 +1,18 @@
 'use client'
 import CenterColumn from "../../CenterColumn";
 import InitDataDependentRender from "../../InitDataDependentRender";
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { BaseApiContext } from "../../BaseApi";
 import PaddedPanel from "../../PaddedPanel";
-import {
-    Box,
-    Button,
-    CheckboxGroup,
-    Checkbox,
-    Heading,
-    HStack,
-    Label,
-    ReadMore,
-    Textarea,
-} from "@navikt/ds-react";
+import { Box, Button, Checkbox, CheckboxGroup, Heading, HStack, Label, ReadMore, Textarea, } from "@navikt/ds-react";
 import Section from "@/app/components/Section";
 import { tekst } from "@/utils/tekster";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import { ObjectSchema } from "yup";
 import * as yup from "yup";
+import { ObjectSchema } from "yup";
 import { Diagnosekode } from "@navikt/diagnosekoder";
 import DatePeriod from "@/models/DatePeriod";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -59,7 +49,7 @@ const datePeriodValidation: ObjectSchema<DatePeriod> = yup.object({
 const schema: ObjectSchema<FormData> = yup.object({
     hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
-    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.paakrevd")),
+    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
     innleggelsesPerioder: yup.array().of(datePeriodValidation).required(),
     omsorgspersoner: yup.array().of(yup.string().trim().required()).min(0, "Minst en omsorgsperson er påkrevd").required()
@@ -140,15 +130,15 @@ const Page = () => {
                     )} />
                 </PaddedPanel>
                 <PaddedPanel>
-                    <Heading spacing level="2" size="medium">{tekst("legeerklaering.legens-vurdering.tittel")}</Heading>
+                    <Heading spacing level="2" size="medium">{tekst("legeerklaering.legens-vurdering.barn.tittel")}</Heading>
                     <ReadMore
                         size='small'
-                        header={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
+                        header={tekst("legeerklaering.legens-vurdering.barn.les-mer.tittel")}
                         className="mb-8">
-                        {tekst("legeerklaering.legens-vurdering.les-mer.tekst")}
+                        {tekst("legeerklaering.legens-vurdering.barn.les-mer.tekst")}
                     </ReadMore>
                     <Textarea
-                        label={tekst("legeerklaering.legens-vurdering.label")}
+                        label={tekst("legeerklaering.legens-vurdering.barn.label")}
                         {...register("legensVurdering", {required: true})}
                         error={errors.legensVurdering?.message }
                         minRows={10}

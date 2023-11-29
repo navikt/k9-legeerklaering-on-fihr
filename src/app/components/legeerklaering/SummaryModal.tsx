@@ -72,9 +72,9 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     </Accordion.Item>
 
                     <Accordion.Item defaultOpen>
-                        <Accordion.Header>{tekst('legeerklaering.legens-vurdering.tittel')}</Accordion.Header>
+                        <Accordion.Header>{tekst('legeerklaering.legens-vurdering.barn.tittel')}</Accordion.Header>
                         <Accordion.Content>
-                            <Heading level="5" size="xsmall">{tekst("legeerklaering.legens-vurdering.label")}</Heading>
+                            <Heading level="5" size="xsmall">{tekst("legeerklaering.legens-vurdering.barn.label")}</Heading>
                             <Ingress spacing>{data.legensVurdering}</Ingress>
                         </Accordion.Content>
                     </Accordion.Item>

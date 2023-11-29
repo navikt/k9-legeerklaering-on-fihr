@@ -7,6 +7,7 @@ import { type Diagnosekode } from '@navikt/diagnosekoder'
 export default interface LegeerklaeringData {
     barn: Patient;
     legensVurdering: string;
+    vurderingAvOmsorgspersoner: string;
     hoveddiagnose?: Diagnosekode;
     bidiagnoser: Diagnosekode[];
     tilsynPerioder: DatePeriod[];

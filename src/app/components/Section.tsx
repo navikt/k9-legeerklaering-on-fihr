@@ -3,7 +3,7 @@ import { Heading, HStack, ReadMore, VStack } from '@navikt/ds-react';
 import { componentSize } from '@/utils/constants';
 
 interface SectionProps {
-    title: string;
+    title?: string;
     readMoreHeader?: string;
     readMore?: string;
     children: ReactNode;

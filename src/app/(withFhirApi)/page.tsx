@@ -12,7 +12,7 @@ import { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/Legee
 import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
 import { logger } from '@navikt/next-logger';
-import { Alert, BodyShort, Heading, HStack, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Heading, HStack, VStack } from '@navikt/ds-react';
 import TopBar from '@/app/(withFhirApi)/alt/portalpoc/TopBar';
 import { BaseApi, useBaseApi } from '@/app/(withFhirApi)/alt/portalpoc/BaseApi';
 
@@ -110,51 +110,51 @@ export default function Home() {
         }
     }, [fhirApi, onError])
 
-    return <div>
+    return <VStack>
         <TopBar loading={baseApi.loading} refreshInitData={baseApi.refreshInitData}
                 user={baseApi.initData?.practitioner}/>
-        <div className="container mx-auto">
-            <VStack gap="2" justify="center" className="w-100">
-                <HStack className="mt-8" align="center" justify="start">
-                    <Heading size="medium">Legeerklæring: Pleiepenger for sykt barn</Heading>
-                </HStack>
-
-                {dokumentOpprettet && (
-                    <>
-                        <Alert variant="success">
-                            <Heading size="small">Legeerklæringen er sendt til NAV</Heading>
-                            <BodyShort size="small">Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i
-                                DIPS.</BodyShort>
-                            <br/>
-                            <BodyShort size="small">Du kan nå lukke denne fanen.</BodyShort>
-
-                        </Alert>
-                    </>
-                )}
-
-                {!dokumentOpprettet && (
-                    <HStack align="center" justify="center">
-                        {state.error ? (
-                            <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/>
-                        ) : state.loading ? (
-                            <LoadingIndicator txt={isIniting(fhirApi) ? "Kobler til systemtjenester" : undefined}/>
-                        ) : visOppsummering && formData && pdf ? (
-                            <div>
-                                <LegeerklaeringOppsummering
-                                    data={formData}
-                                    pdf={pdf}
-                                    handleJournalfør={handleJournalføring}
-                                    handleSkjulOppsummering={skjulOppsummering}
-                                />
-                            </div>
-                        ) : (
-                            <LegeerklaeringPage
-                                data={state}
-                                handleFormSubmit={handleFormSubmit}/>
-                        )}
+            <Box className="flex justify-center" padding={{ xs: "2", md: "6" }}>
+                <VStack gap="2">
+                    <HStack className="mt-8" align="center" justify="start">
+                        <Heading size="medium">Legeerklæring: Pleiepenger for sykt barn</Heading>
                     </HStack>
-                )}
-            </VStack>
-        </div>
-    </div>
+
+                    {dokumentOpprettet && (
+                        <>
+                            <Alert variant="success">
+                                <Heading size="small">Legeerklæringen er sendt til NAV</Heading>
+                                <BodyShort size="small">Innsendte legeerklæringer er tilgjengelig i dokumentarkivet i
+                                    DIPS.</BodyShort>
+                                <br/>
+                                <BodyShort size="small">Du kan nå lukke denne fanen.</BodyShort>
+
+                            </Alert>
+                        </>
+                    )}
+
+                    {!dokumentOpprettet && (
+                        <HStack align="center" justify="start">
+                            {state.error ? (
+                                <ErrorDisplay heading="Feil ved lasting av EHR info" error={state.error}/>
+                            ) : state.loading ? (
+                                <LoadingIndicator txt={isIniting(fhirApi) ? "Kobler til systemtjenester" : undefined}/>
+                            ) : visOppsummering && formData && pdf ? (
+                                <div>
+                                    <LegeerklaeringOppsummering
+                                        data={formData}
+                                        pdf={pdf}
+                                        handleJournalfør={handleJournalføring}
+                                        handleSkjulOppsummering={skjulOppsummering}
+                                    />
+                                </div>
+                            ) : (
+                                <LegeerklaeringPage
+                                    data={state}
+                                    handleFormSubmit={handleFormSubmit}/>
+                            )}
+                        </HStack>
+                    )}
+                </VStack>
+            </Box>
+    </VStack>
 }
