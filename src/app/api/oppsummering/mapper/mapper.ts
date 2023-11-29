@@ -31,10 +31,12 @@ export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSB
                 fom: tilsyn.start,
                 tom: tilsyn.end,
             })),
-            innleggelsesPerioder:  data.innleggelsesPerioder?.map(innleggelse => ({
-                fom: innleggelse.start,
-                tom: innleggelse.end,
-            })) ?? []
+            innleggelsesPerioder: data.innleggelsesPerioder
+                .filter(innleggelse => Object.keys(innleggelse).length > 0)
+                .map(innleggelse => ({
+                    fom: innleggelse.start,
+                    tom: innleggelse.end,
+                }))
         },
         lege: {
             navn: somNavn(data.lege.name),
