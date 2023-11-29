@@ -10,7 +10,7 @@ export default interface LegeerklaeringData {
     vurderingAvOmsorgspersoner: string;
     hoveddiagnose?: Diagnosekode;
     bidiagnoser: Diagnosekode[];
-    tilsynPerioder: DatePeriod[];
+    tilsynPerioder: DatePeriod[]; // TODO: Skal ikke være liste
     innleggelsesPerioder?: DatePeriod[];
     lege: Practitioner;
     sykehus: Hospital;

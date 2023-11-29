@@ -201,13 +201,12 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
             {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4">
-                <Alert variant="warning">
+                <Alert variant="warning" size="small">
                     <Heading size="small">Obs! Pasienten er over 18 år</Heading>
                     <BodyShort size="small">
                         Du må inkludere i vurderingen av barnets tilstand om pasienten er utviklingshemmet i tillegg til
                         svært alvorlig eller livstruende syk.
                     </BodyShort>
-                    <br/>
                 </Alert>
             </VStack>
             }

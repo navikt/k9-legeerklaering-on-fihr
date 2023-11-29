@@ -130,7 +130,7 @@ export default function MultiDatePeriodInput({value, onChange, className, error,
                 size="small"
                 variant="secondary"
                 icon={<PlusIcon />}>
-                Legg til
+                Legg til ny periode
             </Button>
             <ErrorMessager error={error} />
         </div>

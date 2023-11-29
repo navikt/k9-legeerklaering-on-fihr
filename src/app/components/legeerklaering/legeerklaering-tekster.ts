@@ -8,8 +8,8 @@ export const LegeerklaeringTekster = {
     "legeerklaering.om-barnet.foedselsdato.paakrevd": "Barnets fødselsdato er påkrevd",
 
     "legeerklaering.legens-vurdering.barn.tittel": "Vurdering av barnets tilstand",
-    "legeerklaering.legens-vurdering.barn.les-mer.tittel": "Beskrivelse av barnets medisinske tilstand og funksjonsnivå",
-    "legeerklaering.legens-vurdering.barn.les-mer.tekst": "1. Beskriv barnets medisinske tilstand og funksjonsnivå. Gi en vurdering av behovet for kontinuerlig tilsyn og pleie, samt sykdomsutvikling og prognose. 2. Gi en vurdering av om det er behov én eller to personer samtidig for å pleie og/eller ha tilsynmed barnet når barnet er hjemme.Merk: Hvis pasienten er over 18 må du gi en vurdering av om pasienten er utviklingshemmet og svært alvorlig eller livstruende syk.",
+    "legeerklaering.legens-vurdering.barn.les-mer.tittel": "Hva skal vurderingen inneholde?",
+    "legeerklaering.legens-vurdering.barn.les-mer.tekst": "Beskriv barnets medisinske tilstand og funksjonsnivå. Vurder behovet for kontinuerlig tilsyn og pleie, samt sykdomsutvikling og prognose.",
     "legeerklaering.legens-vurdering.barn.label": "Vurdering av barnets tilstand",
     "legeerklaering.legens-vurdering.barn.paakrevd": "Legens vurdering er påkrevd",
 
@@ -20,8 +20,8 @@ export const LegeerklaeringTekster = {
     "legeerklaering.legens-vurdering.omsorgsperson.paakrevd": "Legens vurdering av omsorgspersoner er påkrevd",
 
     "legeerklaering.diagnose.tittel": "Diagnose",
-    "legeerklaering.diagnose.hjelpetekst": "Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke fylle ut dette.",
-    "legeerklaering.diagnose.hjelpetekst.tittel": "Bruk diagnosekode fra ICD-10 hvis diagnose er satt.",
+    "legeerklaering.diagnose.hjelpetekst.tittel": "Les mer om diagnosekoder",
+    "legeerklaering.diagnose.hjelpetekst": "Bruk diagnosekode fra ICD-10 hvis diagnose er satt. Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke fylle ut dette.",
     "legeerklaering.diagnose.hoveddiagnose.label": "Hoveddiagnosekode",
     "legeerklaering.diagnose.hoveddiagnose.paakrevd": "Hoveddiagnosekode er påkrevd",
     "legeerklaering.diagnose.bidiagnoser.label": "Bidiagnose(r)",
