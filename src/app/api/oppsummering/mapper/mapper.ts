@@ -1,7 +1,6 @@
 import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 
 
-// som navn
 const somNavn = (navn: string): Navn => {
     const navnArray = navn.split(",");
     return {
