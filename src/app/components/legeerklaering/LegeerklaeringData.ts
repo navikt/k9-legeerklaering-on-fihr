@@ -11,7 +11,7 @@ export default interface LegeerklaeringData {
     hoveddiagnose?: Diagnosekode;
     bidiagnoser: Diagnosekode[];
     tilsynPerioder: DatePeriod[];
-    innleggelsesPerioder: DatePeriod[];
+    innleggelsesPerioder?: DatePeriod[];
     lege: Practitioner;
     sykehus: Hospital;
 }
