@@ -5,6 +5,7 @@ import {
     Button,
     Heading,
     HStack,
+    ReadMore,
     Textarea,
     TextField,
     useDatepicker,
@@ -106,7 +107,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     }),
     hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
-    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.paakrevd")),
+    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
+    vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
     innleggelsesPerioder: yup.array().of(datePeriodValidation).required()
 })
@@ -146,6 +148,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             hoveddiagnose: undefined,
             bidiagnoser: [],
             legensVurdering: undefined,
+            vurderingAvOmsorgspersoner: undefined,
             tilsynPerioder: [{
                 start: undefined,
                 end: undefined,
@@ -187,47 +190,61 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
 
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
-            {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4"><Alert variant="warning">
-                <Heading size="small">Obs! Pasienten er over 18 år</Heading>
-                <BodyShort size="small">
-                    Du må inkludere i vurderingen av barnets tilstand om pasienten er utviklingshemmet i tillegg til svært alvorlig eller livstruende syk.
-                </BodyShort>
-                <br/>
-            </Alert></VStack>
+            {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4">
+                <Alert variant="warning">
+                    <Heading size="small">Obs! Pasienten er over 18 år</Heading>
+                    <BodyShort size="small">
+                        Du må inkludere i vurderingen av barnets tilstand om pasienten er utviklingshemmet i tillegg til
+                        svært alvorlig eller livstruende syk.
+                    </BodyShort>
+                    <br/>
+                </Alert>
+            </VStack>
             }
 
-            <Section
-                title={tekst("legeerklaering.om-barnet.tittel")}
-            >
+            <Section>
                 <TextField
                     size={componentSize}
-                    label={tekst("legeerklaering.felles.navn.label")}
+                    label={tekst("legeerklaering.om-barnet.tittel")}
                     readOnly
                     defaultValue={`${defaultValues?.barn?.name} (${defaultValues?.barn?.fnr})`}
-                    className="w-1/2 mb-4"
+                    className="w-1/2"
                 />
-
             </Section>
 
-            <Section
-                title={tekst("legeerklaering.legens-vurdering.tittel")}
-                readMoreHeader={tekst("legeerklaering.legens-vurdering.les-mer.tittel")}
-                readMore={tekst("legeerklaering.legens-vurdering.hjelpetekst")}
-            >
+            <Section>
                 <Textarea
                     size={componentSize}
-                    label={tekst("legeerklaering.legens-vurdering.label")}
+                    label={tekst("legeerklaering.legens-vurdering.barn.label")}
+                    description={
+                        <ReadMore size={componentSize}
+                                  header={tekst("legeerklaering.legens-vurdering.barn.les-mer.tittel")}>
+                            {tekst("legeerklaering.legens-vurdering.barn.les-mer.tekst")}
+                        </ReadMore>
+                    }
                     {...register("legensVurdering", {required: true})}
                     error={errors.legensVurdering?.message}
-                    minRows={10}
+                    minRows={5}
                 />
             </Section>
 
-            <Section
-                title={tekst("legeerklaering.diagnose.tittel")}
-                readMoreHeader={tekst("legeerklaering.diagnose.hjelpetekst.tittel")}
-                readMore={tekst("legeerklaering.diagnose.hjelpetekst")}
-            >
+            <Section>
+                <Textarea
+                    size={componentSize}
+                    label={tekst("legeerklaering.legens-vurdering.omsorgsperson.label")}
+                    description={
+                        <ReadMore size={componentSize}
+                                  header={tekst("legeerklaering.legens-vurdering.omsorgsperson.les-mer.tittel")}>
+                            {tekst("legeerklaering.legens-vurdering.omsorgsperson.les-mer.tekst")}
+                        </ReadMore>
+                    }
+                    {...register("vurderingAvOmsorgspersoner", {required: true})}
+                    error={errors.vurderingAvOmsorgspersoner?.message}
+                    minRows={5}
+                />
+            </Section>
+
+            <Section>
                 <Controller
                     control={control}
                     name="hoveddiagnose"
@@ -266,8 +283,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
 
             <Section
                 title={tekst("legeerklaering.tilsyn-varighet.tittel")}
-                readMoreHeader={tekst("legeerklaering.tilsyn-varighet.hjelpetekst.tittel")}
-                readMore={tekst("legeerklaering.tilsyn-varighet.hjelpetekst")}
             >
                 <Controller
                     control={control}

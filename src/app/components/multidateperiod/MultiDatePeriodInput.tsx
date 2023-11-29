@@ -42,6 +42,7 @@ export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel =
                     size="small"
                     {...fromInputProps}
                     label="Fra og med"
+                    placeholder="dd.mm.åååå"
                     hideLabel={hideLabel}
                     className={css.startInput}
                     ref={startInputRef}
@@ -50,6 +51,7 @@ export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel =
                     size="small"
                     {...toInputProps}
                     label="Til og med"
+                    placeholder="dd.mm.åååå"
                     hideLabel={hideLabel}
                     className={css.endInput}
                 />
