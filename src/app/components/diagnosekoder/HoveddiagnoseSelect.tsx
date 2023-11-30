@@ -39,8 +39,6 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
         selectBtnRef.current?.focus();
     }
 
-    const Divider = () => value ? <span>&nbsp;-&nbsp;</span> : null;
-    const showModalBtnText = value === undefined ? 'Velg' : 'Endre';
 
     // Always have the navds--form-field class first, then any provided by user, then the inputWrapper
     // navds-form-field was added to get styling of ErrorMessage to match the aksel components.
