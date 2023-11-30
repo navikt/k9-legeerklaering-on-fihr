@@ -1,8 +1,8 @@
 "use client"
 
 import React, { ReactNode, useId, useRef, useState } from "react";
-import { Button, Label } from "@navikt/ds-react";
-import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import { Button, Chips, Label, VStack } from "@navikt/ds-react";
+import { PlusIcon } from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 import type { Diagnosekode } from "@navikt/diagnosekoder";
 
@@ -55,28 +55,29 @@ const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectP
 
     return (
         <div className={classNames}>
-            <Label size={componentSize} htmlFor={id}>Bidiagnose</Label>
-            <div className={dkCss.framedlisting} onClick={handleInputClick}>
-                {value.map(dk => {
-                    return (
-                        <div key={dk.code} className={dkCss.line}>
-                            <div className={dkCss.value}>
-                                <span>{dk.code}</span> - <span>{dk.text}</span>
-                            </div>
-                            <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize} icon={<TrashIcon />}
-                                    onClick={(ev) => {ev.stopPropagation(); handleRemovedDiagnose(dk)}}>
-                                Fjern
-                            </Button>
-                        </div>
-                    )
-                })}
+            <Label size={componentSize} htmlFor={id}>Bidiagnose(r)</Label>
+            <VStack gap={value.length > 0 ? "4" : "0"} className={dkCss.framedlisting} onClick={handleInputClick}>
+                <Chips size={componentSize}>
+                    {value.map(dk => {
+                        return (
+                            <Chips.Removable
+                                key={dk.code}
+                                variant="action"
+                                onClick={() => handleRemovedDiagnose(dk)}
+                            >
+                                {`${dk.code} - ${dk.text}`}
+                            </Chips.Removable>
+                        )
+                    })}
+                </Chips>
                 <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
-                        onClick={() => setShowModal(true)} icon={<PlusIcon />}>
+                        onClick={() => setShowModal(true)} icon={<PlusIcon/>}>
                     Legg til <u>bi</u>diagnose
                 </Button>
-            </div>
-            <ErrorMessager error={error} />
-            <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)} onSelectedDiagnose={handleSelectedDiagnose} />
+            </VStack>
+            <ErrorMessager error={error}/>
+            <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)}
+                                     onSelectedDiagnose={handleSelectedDiagnose}/>
         </div>
     )
 }

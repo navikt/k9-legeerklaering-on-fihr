@@ -11,7 +11,7 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ title, readMoreHeader, readMore, children }) => {
     return (
-        <VStack className="mt-4" gap="4">
+        <VStack className="mt-4 mb-8" gap="4">
             <HStack gap="2" justify="start" align="start">
                 <Heading size={'small'} className="mb-4">{title}</Heading>
             </HStack>
