@@ -1,7 +1,7 @@
 "use client"
 
-import { Button, Label } from "@navikt/ds-react";
-import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import { Button, Chips, Label } from "@navikt/ds-react";
+import { PlusIcon } from "@navikt/aksel-icons";
 import React, { ReactNode, useId, useRef, useState } from "react";
 import type { Diagnosekode } from "@navikt/diagnosekoder";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
@@ -48,19 +48,16 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
             <Label size={componentSize} htmlFor={id}>Hoveddiagnose</Label>
             <div className={dkCss.framedlisting} onClick={handleInputClick}>
 
-                {value && <div key={value?.code} className={dkCss.line}>
-                    <div className={dkCss.value}>
-                        <span>{value?.code}</span> - <span>{value?.text}</span>
-                    </div>
-                    <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize}
-                            icon={<TrashIcon/>}
-                            onClick={(ev) => {
-                                ev.stopPropagation();
-                                handleRemoveDiagnose()
-                            }}>
-                        Fjern
-                    </Button>
-                </div>
+                {value &&
+                    <Chips>
+                        <Chips.Removable
+                            key={value.code}
+                            variant="action"
+                            onClick={() => handleRemoveDiagnose()}
+                        >
+                            {`${value.code} - ${value.text}`}
+                        </Chips.Removable>
+                    </Chips>
                 }
 
                 {!value && <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
