@@ -65,7 +65,7 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
 
                 {!value && <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
                                    onClick={() => setShowModal(true)} icon={<PlusIcon/>}>
-                    Legg til <u>bi</u>diagnose
+                    Legg til hoveddiagnose
                 </Button>}
             </div>
             <ErrorMessager error={error}/>
