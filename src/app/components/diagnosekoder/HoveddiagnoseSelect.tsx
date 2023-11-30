@@ -1,7 +1,7 @@
 "use client"
 
-import { Button, Label, ReadMore } from "@navikt/ds-react";
-import { PencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { Button, Label } from "@navikt/ds-react";
+import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import React, { ReactNode, useId, useRef, useState } from "react";
 import type { Diagnosekode } from "@navikt/diagnosekoder";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
@@ -9,7 +9,6 @@ import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/Diagnosekode
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
 import { componentSize } from '@/utils/constants';
-import { tekst } from '@/utils/tekster';
 
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;
@@ -49,20 +48,27 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
     return (
         <div className={classNames}>
             <Label size={componentSize} htmlFor={id}>Hoveddiagnose</Label>
-            <ReadMore size={componentSize}
-                      header={tekst("legeerklaering.diagnose.hjelpetekst.tittel")}>
-                {tekst("legeerklaering.diagnose.hjelpetekst")}
-            </ReadMore>
-            <div className={dkCss.framedline} onClick={handleInputClick}>
-                <div className={dkCss.value}><span>{value?.code}</span><Divider/><span>{value?.text}</span></div>
-                <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
-                        onClick={() => setShowModal(true)} icon={<PencilIcon/>}>
-                    {showModalBtnText}
-                </Button>
-                <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize}
-                        onClick={handleRemoveDiagnose} icon={<TrashIcon/>}>
-                    Fjern
-                </Button>
+            <div className={dkCss.framedlisting} onClick={handleInputClick}>
+
+                {value && <div key={value?.code} className={dkCss.line}>
+                    <div className={dkCss.value}>
+                        <span>{value?.code}</span> - <span>{value?.text}</span>
+                    </div>
+                    <Button disabled={value === undefined} type="button" variant="tertiary" size={componentSize}
+                            icon={<TrashIcon/>}
+                            onClick={(ev) => {
+                                ev.stopPropagation();
+                                handleRemoveDiagnose()
+                            }}>
+                        Fjern
+                    </Button>
+                </div>
+                }
+
+                {!value && <Button id={id} type="button" ref={selectBtnRef} variant="tertiary" size={componentSize}
+                                   onClick={() => setShowModal(true)} icon={<PlusIcon/>}>
+                    Legg til <u>bi</u>diagnose
+                </Button>}
             </div>
             <ErrorMessager error={error}/>
             <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)}
