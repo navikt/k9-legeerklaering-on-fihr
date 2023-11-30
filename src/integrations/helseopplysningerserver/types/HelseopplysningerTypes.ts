@@ -32,7 +32,7 @@ interface PSBLegeerklæring {
     vurdering: string;
     hoveddiagnose: Diagnose;
     bidiagnoser: Diagnose[];
-    tilsynsPerioder: Periode[];
+    tilsynsPeriode: Periode;
     innleggelsesPerioder: Periode[];
 }
 

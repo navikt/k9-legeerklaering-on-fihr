@@ -33,10 +33,10 @@ export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSB
                 term: bidiagnose.text,
                 kode: bidiagnose.code,
             })),
-            tilsynsPerioder: data.tilsynPerioder.map(tilsyn => ({
-                fom: tilsyn.start,
-                tom: tilsyn.end,
-            })),
+            tilsynsPeriode: {
+                fom: data.tilsynPeriode.start,
+                tom: data.tilsynPeriode.end,
+            },
             innleggelsesPerioder: data.innleggelsesPerioder
                 .filter(innleggelse => Object.keys(innleggelse).length > 0)
                 .map(innleggelse => ({

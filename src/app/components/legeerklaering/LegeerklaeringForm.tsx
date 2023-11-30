@@ -27,7 +27,7 @@ import { type Diagnosekode } from "@navikt/diagnosekoder";
 import { yupResolver } from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import DatePeriod from "@/models/DatePeriod";
-import MultiDatePeriodInput from "@/app/components/multidateperiod/MultiDatePeriodInput";
+import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
 import { logger } from '@navikt/next-logger';
 import RelatedPerson from "@/models/RelatedPerson";
 import { componentSize } from '@/utils/constants';
@@ -124,7 +124,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
-    tilsynPerioder: yup.array().of(tilsynsPeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
+    tilsynPeriode: tilsynsPeriodValidation,
     innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required(),
     omsorgspersoner: yup.array().optional().default([])
 })
@@ -165,10 +165,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             bidiagnoser: [],
             legensVurdering: undefined,
             vurderingAvOmsorgspersoner: undefined,
-            tilsynPerioder: [{
+            tilsynPeriode: {
                 start: undefined,
                 end: undefined,
-            }],
+            },
             innleggelsesPerioder: [{
                 start: undefined,
                 end: undefined,
@@ -350,13 +350,12 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             >
                 <Controller
                     control={control}
-                    name="tilsynPerioder"
+                    name="tilsynPeriode"
                     render={({field: {onChange, value}}) => (
-                        <MultiDatePeriodInput
+                        <DatePeriodInput
                             value={value}
                             onChange={onChange}
-                            error={errors.tilsynPerioder?.message}
-                            valueErrors={errors.tilsynPerioder?.map?.(e => e?.start?.message || e?.end?.message || e?.message)} // maps validation errors to the correct input row in MultiDatePeriodInput
+                            error={errors.tilsynPeriode?.message}
                         />
                     )}
                 />
