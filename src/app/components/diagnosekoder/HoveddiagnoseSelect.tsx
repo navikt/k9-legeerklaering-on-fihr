@@ -49,7 +49,7 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
             <div className={dkCss.framedlisting} onClick={handleInputClick}>
 
                 {value &&
-                    <Chips>
+                    <Chips size={componentSize}>
                         <Chips.Removable
                             key={value.code}
                             variant="action"
