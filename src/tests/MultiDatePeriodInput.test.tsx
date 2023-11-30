@@ -10,7 +10,7 @@ describe("MultiDatePeriodInput", () => {
         const rendered =
             render(<MultiDatePeriodInput value={[]} onChange={onChange} />)
 
-        const addBtn = rendered.getByRole("button", {name: "Legg til"})
+        const addBtn = rendered.getByRole("button", {name: "Legg til ny periode"})
         expect(addBtn).toBeEnabled();
         await userEvent.click(addBtn); expect(onChange).toHaveBeenCalledWith([{}])
     })
@@ -22,7 +22,7 @@ describe("MultiDatePeriodInput", () => {
         const rendered =
             render(<MultiDatePeriodInput value={value} onChange={onChange} />)
 
-        const addBtn = rendered.getByRole("button", {name: "Legg til"})
+        const addBtn = rendered.getByRole("button", {name: "Legg til ny periode"})
         expect(addBtn).toBeDisabled(); // Disabled since we now have incomplete input row
         await userEvent.click(addBtn); expect(onChange).not.toHaveBeenCalled()
         // Input start date
@@ -52,7 +52,7 @@ describe("MultiDatePeriodInput", () => {
         const rendered =
             render(<MultiDatePeriodInput value={value} onChange={onChange} />)
 
-        const addBtn = rendered.getByRole("button", {name: "Legg til"})
+        const addBtn = rendered.getByRole("button", {name: "Legg til ny periode"})
         expect(addBtn).toBeEnabled();
         const [endInput1, endInput2] = rendered.queryAllByLabelText("Til og med");
         const [startInput1, startInput2] = rendered.queryAllByLabelText("Fra og med");
