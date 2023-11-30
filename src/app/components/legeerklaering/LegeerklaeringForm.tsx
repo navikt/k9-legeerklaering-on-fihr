@@ -3,6 +3,8 @@ import {
     Alert,
     BodyShort,
     Button,
+    Checkbox,
+    CheckboxGroup,
     Heading,
     HStack,
     ReadMore,
@@ -123,7 +125,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPerioder: yup.array().of(tilsynsPeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
-    innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required()
+    innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required(),
+    omsorgspersoner: yup.array().optional().default([])
 })
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -169,7 +172,8 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             innleggelsesPerioder: [{
                 start: undefined,
                 end: undefined,
-            }]
+            }],
+            omsorgspersoner: []
         }
     })
 
@@ -201,6 +205,13 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         return fødselsdato <= attenÅrSiden;
     };
 
+    const håndterValgteOmsorgspersoner = (valgteEhrIds: string[]) => {
+        const valgteOmsorgspersoner = valgteEhrIds
+            .map(ehrId => patient?.caretakers.find(c => c.ehrId === ehrId))
+            .filter(Boolean) as RelatedPerson[];
+        return valgteOmsorgspersoner;
+    };
+
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
             {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4">
@@ -222,6 +233,47 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     defaultValue={`${defaultValues?.barn?.name} (${defaultValues?.barn?.fnr})`}
                     className="w-1/2"
                 />
+            </Section>
+
+            <Section>
+                <Controller name="omsorgspersoner" control={control} render={({field: {onChange, value}}) => (
+                    <CheckboxGroup
+                        legend={<Heading size="xsmall">Hvem skal ha tilgang til å bruke legeerklæringen?</Heading>}
+                        value={value.map(rp => rp.ehrId)} // EhrId for valgte omsorgspersoner
+                        onChange={(valgteEhrIds) => onChange(håndterValgteOmsorgspersoner(valgteEhrIds))}
+                        error={errors.omsorgspersoner?.message}
+                        description={
+                            <ReadMore size={componentSize}
+                                      header="De personer som blir valgt her får tilgang til å lese og bruke legeerklæringen">
+                                <p>
+                                    Dette tilsvarer at du tidligere ville skrevet ut og levert legeerklæringen på papir
+                                    til disse personene,
+                                    slik at de kunne søke om pleiepenger.
+                                </p>
+                                <p>Det er derfor viktig at du tenker på personvern og kontrollerer
+                                    at disse faktisk skal ha tilgang til informasjonen i legeerklæringen.
+                                </p>
+                                <p>
+                                    Hvis den/de som skal bruke legeerklæringen ikke viser her må du få lagt de inn som
+                                    relaterte personer
+                                    på pasienten i ditt journalsystem, og oppfriske.
+                                </p>
+                            </ReadMore>
+                        }
+                    >
+                        {
+                            patient?.caretakers.map(relatedPerson => (
+                                <Checkbox
+                                    size={componentSize}
+                                    key={`rp${relatedPerson.ehrId}`}
+                                    value={relatedPerson.ehrId}
+                                >
+                                    {relatedPerson.name} <small>({relatedPerson.fnr})</small>
+                                </Checkbox>
+                            ))
+                        }
+                    </CheckboxGroup>
+                )}/>
             </Section>
 
             <Section>
