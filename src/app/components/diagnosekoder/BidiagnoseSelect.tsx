@@ -55,7 +55,7 @@ const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectP
 
     return (
         <div className={classNames}>
-            <Label size={componentSize} htmlFor={id}>Bidiagnose</Label>
+            <Label size={componentSize} htmlFor={id}>Bidiagnose(r)</Label>
             <VStack gap="4" className={dkCss.framedlisting} onClick={handleInputClick}>
                 <Chips>
                     {value.map(dk => {
