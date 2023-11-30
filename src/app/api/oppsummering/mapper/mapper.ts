@@ -17,6 +17,12 @@ export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSB
                 id: data.barn.fnr,
                 fødselsdato: data.barn.birthDate,
             },
+            omsorgspersoner: data.omsorgspersoner.map(omsorgsperson => (
+                {
+                    navn: somNavn(omsorgsperson.name),
+                    id: omsorgsperson.fnr,
+                }
+            )),
             vurdering: data.legensVurdering,
             vurderingAvOmsorgspersoner: data.vurderingAvOmsorgspersoner,
             hoveddiagnose: {
