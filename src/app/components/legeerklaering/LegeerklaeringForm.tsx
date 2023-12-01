@@ -122,7 +122,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     }),
     hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
-    legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
+    vurderingAvBarnet: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPeriode: tilsynsPeriodValidation,
     innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required(),
@@ -163,7 +163,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             },
             hoveddiagnose: undefined,
             bidiagnoser: [],
-            legensVurdering: undefined,
+            vurderingAvBarnet: undefined,
             vurderingAvOmsorgspersoner: undefined,
             tilsynPeriode: {
                 start: undefined,
@@ -286,8 +286,8 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                             {tekst("legeerklaering.legens-vurdering.barn.les-mer.tekst")}
                         </ReadMore>
                     }
-                    {...register("legensVurdering", {required: true})}
-                    error={errors.legensVurdering?.message}
+                    {...register("vurderingAvBarnet", {required: true})}
+                    error={errors.vurderingAvBarnet?.message}
                     minRows={5}
                 />
             </Section>

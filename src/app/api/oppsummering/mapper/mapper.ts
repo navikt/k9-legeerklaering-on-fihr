@@ -23,7 +23,7 @@ export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSB
                     id: omsorgsperson.fnr,
                 }
             )),
-            vurdering: data.legensVurdering,
+            vurderingAvBarnet: data.vurderingAvBarnet,
             vurderingAvOmsorgspersoner: data.vurderingAvOmsorgspersoner,
             hoveddiagnose: {
                 term: data.hoveddiagnose?.text,

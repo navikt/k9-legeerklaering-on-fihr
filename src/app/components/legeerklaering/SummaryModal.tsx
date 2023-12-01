@@ -76,7 +76,7 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                         <Accordion.Content>
                             <Heading level="5"
                                      size="xsmall">{tekst("legeerklaering.legens-vurdering.barn.label")}</Heading>
-                            <Ingress spacing>{data.legensVurdering}</Ingress>
+                            <Ingress spacing>{data.vurderingAvBarnet}</Ingress>
                         </Accordion.Content>
                     </Accordion.Item>
 
