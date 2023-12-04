@@ -7,11 +7,11 @@ import RelatedPerson from '@/models/RelatedPerson';
 
 export default interface LegeerklaeringData {
     barn: Patient;
-    legensVurdering: string;
+    vurderingAvBarnet: string;
     vurderingAvOmsorgspersoner: string;
     hoveddiagnose?: Diagnosekode;
     bidiagnoser: Diagnosekode[];
-    tilsynPerioder: DatePeriod[]; // TODO: Skal ikke være liste
+    tilsynPeriode: DatePeriod;
     innleggelsesPerioder: DatePeriod[];
     lege: Practitioner;
     sykehus: Hospital;
