@@ -74,8 +74,9 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                     <Accordion.Item defaultOpen>
                         <Accordion.Header>{tekst('legeerklaering.legens-vurdering.barn.tittel')}</Accordion.Header>
                         <Accordion.Content>
-                            <Heading level="5" size="xsmall">{tekst("legeerklaering.legens-vurdering.barn.label")}</Heading>
-                            <Ingress spacing>{data.legensVurdering}</Ingress>
+                            <Heading level="5"
+                                     size="xsmall">{tekst("legeerklaering.legens-vurdering.barn.label")}</Heading>
+                            <Ingress spacing>{data.vurderingAvBarnet}</Ingress>
                         </Accordion.Content>
                     </Accordion.Item>
 
@@ -103,12 +104,11 @@ const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
                             <Heading level="5" size="xsmall">Perioder</Heading>
                             <List>
                                 {
-                                    data.tilsynPerioder.map(tilsynsPeriode =>
-                                        <List.Item
-                                            key={`tilsynp-${tilsynsPeriode.start?.getTime()}-${tilsynsPeriode.end?.getTime()}`}>
-                                            {tilsynsPeriode.start?.toLocaleDateString('no-NO')} - {tilsynsPeriode.end?.toLocaleDateString('no-NO')}
-                                        </List.Item>
-                                    )
+                                    <List.Item
+                                        key={`tilsynp-${data.tilsynPeriode.start?.getTime()}-${data.tilsynPeriode.end?.getTime()}`}>
+                                        {data.tilsynPeriode.start?.toLocaleDateString('no-NO')} - {data.tilsynPeriode.end?.toLocaleDateString('no-NO')}
+                                    </List.Item>
+
                                 }
                             </List>
                         </Accordion.Content>
