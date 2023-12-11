@@ -81,8 +81,9 @@ const innleggelsesPeriodValidation: ObjectSchema<DatePeriod> = yup.object({
 const caretakerValidation: ObjectSchema<RelatedPerson> = yup.object({
     name: yup.string().required(`Omsorgsperson navn påkrevd`),
     ehrId: yup.string().required(`Omsorgsperson ehrId påkrevd`),
-    fnr: yup.string().nullable().required()
+    fnr: yup.string().required(`Omsorgsperson fødselsnr/d-nr er påkrevd`)
 })
+
 
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     barn: yup.object({
@@ -126,7 +127,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPeriode: tilsynsPeriodValidation,
     innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required(),
-    omsorgspersoner: yup.array().optional().default([])
+    omsorgspersoner: yup.array().of(caretakerValidation).default([])
 })
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -212,6 +213,9 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         return valgteOmsorgspersoner;
     };
 
+    const omsorgspersonerError: string | undefined = errors.omsorgspersoner?.message ||
+        errors.omsorgspersoner?.map?.(invOmsp => invOmsp?.fnr?.message || invOmsp?.ehrId?.message || invOmsp?.name?.message).filter(msg => msg && msg.length > 0).at(0)
+
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
             {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4">
@@ -241,7 +245,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                         legend={<Heading size="xsmall">Hvem skal ha tilgang til å bruke legeerklæringen?</Heading>}
                         value={value.map(rp => rp.ehrId)} // EhrId for valgte omsorgspersoner
                         onChange={(valgteEhrIds) => onChange(håndterValgteOmsorgspersoner(valgteEhrIds))}
-                        error={errors.omsorgspersoner?.message}
+                        error={omsorgspersonerError}
                         description={
                             <ReadMore size={componentSize}
                                       header="De personer som blir valgt her får tilgang til å lese og bruke legeerklæringen">
