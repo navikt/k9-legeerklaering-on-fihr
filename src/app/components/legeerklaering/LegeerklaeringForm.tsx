@@ -116,7 +116,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
         }).required()
     }),
     hoveddiagnose: yup.object().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd")),
-    bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
+    bidiagnoser: yup.array().min(1, tekst("legeerklaering.diagnose.bidiagnoser.paakrevd")),
     vurderingAvBarnet: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPeriode: tilsynsPeriodValidation,
