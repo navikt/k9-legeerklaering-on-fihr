@@ -47,11 +47,6 @@ function undefinedIfNull<T>(something: T | undefined | null): T | undefined {
     return something
 }
 
-const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
-    code: yup.string().required().min(4).max(10),
-    text: yup.string().required()
-})
-
 const tilsynsPeriodValidation: ObjectSchema<DatePeriod> = yup.object({
     start: yup.date().required("Fra dato er påkrevd"),
     end: yup.date().required("Til dato er påkrevd"),
@@ -120,7 +115,7 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
             city: yup.string().required(tekst("legeerklaering.om-sykehuset.poststed.paakrevd")),
         }).required()
     }),
-    hoveddiagnose: diagnosekodeValidation.optional().default(undefined),
+    hoveddiagnose: yup.object().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd")),
     bidiagnoser: yup.array().of(diagnosekodeValidation).required(),
     vurderingAvBarnet: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
