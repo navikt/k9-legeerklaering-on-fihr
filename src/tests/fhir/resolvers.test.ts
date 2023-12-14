@@ -251,7 +251,7 @@ describe("fhir resolve fnr or dnr from identifiers", () => {
 })
 
 describe("fhir RelatedPerson from IRelatedPerson", () => {
-    test("some valid input without fødselsnr should work", () => {
+    test("some valid input without fødselsnr should NOT work", () => {
         const inp = validateOrThrow(R4.RTTI_RelatedPerson.decode({
             "resourceType": "RelatedPerson",
             "id": "aoz2018889cdp2015831",
@@ -368,10 +368,10 @@ describe("fhir RelatedPerson from IRelatedPerson", () => {
                 }
             ]
         }))
-        const expected: RelatedPerson = {
+        const expected: Partial<RelatedPerson> = {
             ehrId: "aoz2018889cdp2015831",
             name: "Lastname1, Firstname1",
-            fnr: null
+            fnr: undefined
         }
         const result = resolveRelatedPersonFromIRelatedPerson(inp)
         expect(result).toEqual(expected)
