@@ -23,7 +23,7 @@ export const LegeerklaeringTekster = {
     "legeerklaering.diagnose.hjelpetekst.tittel": "Les mer om diagnosekoder",
     "legeerklaering.diagnose.hjelpetekst": "Bruk diagnosekode fra ICD-10 hvis diagnose er satt. Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke fylle ut dette.",
     "legeerklaering.diagnose.hoveddiagnose.label": "Hoveddiagnosekode",
-    "legeerklaering.diagnose.hoveddiagnose.paakrevd": "Hoveddiagnosekode er påkrevd",
+    "legeerklaering.diagnose.hoveddiagnose.paakrevd": "Hoveddiagnose er påkrevd",
     "legeerklaering.diagnose.bidiagnoser.label": "Bidiagnose(r)",
     "legeerklaering.diagnose.bidiagnoser.paakrevd": "Bidiagnose(r) er påkrevd",
 
