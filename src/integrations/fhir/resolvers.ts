@@ -312,11 +312,11 @@ export const resolveRelatedPersonFromIRelatedPerson = (iRelatedPerson: IRelatedP
     return {
         ehrId: iRelatedPerson.id,
         name: officialHumanNameResolver(iRelatedPerson.name),
-        fnr: fnrFromIdentifiers(identifiers) || dnrFromIdentifiers(identifiers) || null,
+        fnr:  fnrFromIdentifiers(identifiers) || dnrFromIdentifiers(identifiers)
     }
 }
 
 export const isRelatedPerson = (prp: Partial<RelatedPerson>): prp is RelatedPerson =>
     prp.ehrId !== undefined && prp.ehrId.length > 0 &&
     prp.name !== undefined && prp.name.length > 0 &&
-    typeof prp.fnr === "string" || prp.fnr === null
+    typeof prp.fnr === "string"
