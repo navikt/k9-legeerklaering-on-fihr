@@ -320,10 +320,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 <Controller
                     control={control}
                     name="hoveddiagnose"
-                    render={({field: {onChange, value}}) => {
-                        return <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                    render={({field: {onChange, value}}) => (
+                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
                                              error={errors.hoveddiagnose?.code?.message || errors.hoveddiagnose?.text?.message}/>
-                    }}
+                    )}
                 />
 
                 <Controller
