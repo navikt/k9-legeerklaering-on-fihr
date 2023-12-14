@@ -13,25 +13,25 @@ import {
     useDatepicker,
     VStack
 } from '@navikt/ds-react';
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
+import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
-import { tekst } from '@/utils/tekster';
+import {tekst} from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
-import { ObjectSchema } from "yup";
-import { type Diagnosekode } from "@navikt/diagnosekoder";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {ObjectSchema} from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import DatePeriod from "@/models/DatePeriod";
-import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import { logger } from '@navikt/next-logger';
+import MultiDatePeriodInput, {DatePeriodInput} from "@/app/components/multidateperiod/MultiDatePeriodInput";
+import {logger} from '@navikt/next-logger';
 import RelatedPerson from "@/models/RelatedPerson";
-import { componentSize } from '@/utils/constants';
-import { ChevronRightIcon } from '@navikt/aksel-icons';
+import {componentSize} from '@/utils/constants';
+import {ChevronRightIcon} from '@navikt/aksel-icons';
+import {Diagnosekode} from "@navikt/diagnosekoder";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -79,6 +79,16 @@ const caretakerValidation: ObjectSchema<RelatedPerson> = yup.object({
     fnr: yup.string().nullable().required()
 })
 
+const hoveddiagnoseValidator: ObjectSchema<Diagnosekode> = yup.object({
+    code: yup.string().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd")),
+    text: yup.string().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd"))
+})
+
+const bidiagnosekodeValidator: ObjectSchema<Diagnosekode> = yup.object({
+    code: yup.string().required("Bidiagnosekode er påkrevd"),
+    text: yup.string().required("Bidiagnosetekst er påkrevd"),
+})
+
 const schema: ObjectSchema<LegeerklaeringData> = yup.object({
     barn: yup.object({
         name: yup.string().trim()
@@ -115,8 +125,8 @@ const schema: ObjectSchema<LegeerklaeringData> = yup.object({
             city: yup.string().required(tekst("legeerklaering.om-sykehuset.poststed.paakrevd")),
         }).required()
     }),
-    hoveddiagnose: yup.object().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd")),
-    bidiagnoser: yup.array().min(1, tekst("legeerklaering.diagnose.bidiagnoser.paakrevd")),
+    hoveddiagnose: hoveddiagnoseValidator,
+    bidiagnoser: yup.array().of(bidiagnosekodeValidator).min(1, tekst("legeerklaering.diagnose.bidiagnoser.paakrevd")).default([]),
     vurderingAvBarnet: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     vurderingAvOmsorgspersoner: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.omsorgsperson.paakrevd")),
     tilsynPeriode: tilsynsPeriodValidation,
@@ -307,10 +317,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 <Controller
                     control={control}
                     name="hoveddiagnose"
-                    render={({field: {onChange, value}}) => (
-                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
-                                             error={errors.hoveddiagnose?.message}/>
-                    )}
+                    render={({field: {onChange, value}}) => {
+                        return <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                                             error={errors.hoveddiagnose?.code?.message || errors.hoveddiagnose?.text?.message}/>
+                    }}
                 />
 
                 <Controller
