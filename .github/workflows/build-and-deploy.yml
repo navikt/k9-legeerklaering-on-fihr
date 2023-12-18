@@ -71,6 +71,9 @@ jobs:
         run: echo "IMAGE=${DOCKER_IMAGE}:${TAG}" >> $GITHUB_ENV
 
   deploy-dev-gcp:
+    permissions:
+      packages: write
+      contents: write
     name: Deployer til dev-gcp
     if: startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/heads/main') || github.event.deployment.payload.triggered # Build and push docker if branch is either main or dev-*
     runs-on: ubuntu-latest
@@ -80,7 +83,6 @@ jobs:
       - name: Deploye til dev-gcp
         uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/naiserator.yml
           VARS: nais/dev-gcp.json
