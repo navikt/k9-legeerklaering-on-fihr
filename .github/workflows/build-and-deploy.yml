@@ -72,7 +72,7 @@ jobs:
 
   deploy-dev-gcp:
     permissions:
-      packages: write
+      id-token: write
       contents: write
     name: Deployer til dev-gcp
     if: startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/heads/main') || github.event.deployment.payload.triggered # Build and push docker if branch is either main or dev-*
