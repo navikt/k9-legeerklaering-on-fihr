@@ -13,7 +13,7 @@
     "@ahryman40k/ts-fhir-types": "^4.0.39",
     "@hookform/resolvers": "^3.3.2",
     "@navikt/aksel-icons": "^5.7.2",
-    "@navikt/diagnosekoder": "^1.2023.0",
+    "@navikt/diagnosekoder": "^1.2024.0",
     "@navikt/ds-css": "^5.7.2",
     "@navikt/ds-react": "^5.7.2",
     "@navikt/ds-tailwind": "^5.7.2",
