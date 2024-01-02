@@ -50,5 +50,10 @@
     "tailwindcss": "^3.4.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "@expo/image-utils": {
+      "semver": "^7.5.4"
+    }
   }
 }
