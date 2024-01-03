@@ -65,10 +65,8 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                clip-rule="evenodd"
-                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                d="M14.087 6.874a.752.752 0 0 0-.117 1.156l3.22 3.22H5a.75.75 0 0 0 0 1.5h12.19l-3.22 3.22a.75.75 0 0 0 1.06 1.06l4.5-4.5a.75.75 0 0 0 0-1.06l-4.5-4.5a.75.75 0 0 0-.943-.096Z"
                 fill="currentColor"
-                fill-rule="evenodd"
               />
             </svg>
           </span>
@@ -109,10 +107,8 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                clip-rule="evenodd"
-                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                d="M14.087 6.874a.752.752 0 0 0-.117 1.156l3.22 3.22H5a.75.75 0 0 0 0 1.5h12.19l-3.22 3.22a.75.75 0 0 0 1.06 1.06l4.5-4.5a.75.75 0 0 0 0-1.06l-4.5-4.5a.75.75 0 0 0-.943-.096Z"
                 fill="currentColor"
-                fill-rule="evenodd"
               />
             </svg>
           </span>
@@ -153,10 +149,8 @@ exports[`DiagnosekodeSearch works initial empty search returns pages of results 
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                clip-rule="evenodd"
-                d="M14.03 4.97a.75.75 0 1 0-1.06 1.06l5.22 5.22H3.5a.75.75 0 0 0 0 1.5h14.69l-5.22 5.22a.75.75 0 1 0 1.06 1.06l6.5-6.5a.75.75 0 0 0 .22-.493m-.204-.55a.828.828 0 0 0-.016-.017l-6.5-6.5"
+                d="M14.087 6.874a.752.752 0 0 0-.117 1.156l3.22 3.22H5a.75.75 0 0 0 0 1.5h12.19l-3.22 3.22a.75.75 0 0 0 1.06 1.06l4.5-4.5a.75.75 0 0 0 0-1.06l-4.5-4.5a.75.75 0 0 0-.943-.096Z"
                 fill="currentColor"
-                fill-rule="evenodd"
               />
             </svg>
           </span>
