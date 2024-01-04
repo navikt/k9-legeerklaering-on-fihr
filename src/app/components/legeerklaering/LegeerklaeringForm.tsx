@@ -22,7 +22,7 @@ import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
-import { ObjectSchema } from "yup";
+import { ObjectSchema, Schema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
@@ -32,6 +32,11 @@ import { componentSize } from '@/utils/constants';
 import { ChevronRightIcon } from '@navikt/aksel-icons';
 import { Diagnosekode } from "@navikt/diagnosekoder";
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
+import {
+    LegeerklaeringDokumentReferanse,
+    randomLegeerklaeringDokumentReferanse
+} from "@/models/LegeerklaeringDokumentReferanse";
+import { legeerklaeringDokumentReferanseSchema } from "@/models/yup/LegeerklaeringDokumentReferanseSchema";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -89,7 +94,10 @@ const bidiagnosekodeValidator: ObjectSchema<Diagnosekode> = yup.object({
     text: yup.string().required("Bidiagnosetekst er påkrevd"),
 })
 
+const dokumentReferanseValidator: Schema<LegeerklaeringDokumentReferanse> = legeerklaeringDokumentReferanseSchema().required();
+
 const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
+    dokumentReferanse: dokumentReferanseValidator,
     barn: yup.object({
         name: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
@@ -144,6 +152,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
     } = useForm<LegeerklaeringDokument>({
         resolver: yupResolver(schema),
         defaultValues: {
+            dokumentReferanse: randomLegeerklaeringDokumentReferanse(),
             barn: {
                 name: patient?.name,
                 ehrId: patient?.ehrId,
@@ -234,6 +243,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             }
 
             <Section>
+                Ref: { defaultValues?.dokumentReferanse }
                 <TextField
                     size={componentSize}
                     label={tekst("legeerklaering.om-barnet.tittel")}
