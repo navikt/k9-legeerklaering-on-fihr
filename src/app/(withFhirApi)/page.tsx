@@ -4,7 +4,6 @@ import "@navikt/ds-css";
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
 import FhirApiContext from "@/app/(withFhirApi)/FhirApiContext";
-import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 import LegeerklaeringOppsummering from '@/app/components/legeerklaering/LegeerklaeringOppsummering';
 import { isInited, isInitError, isIniting } from '@/app/hooks/useAsyncInit';
 import ensureError from '@/utils/ensureError';
@@ -15,6 +14,7 @@ import { logger } from '@navikt/next-logger';
 import { Alert, BodyShort, Box, Heading, HStack, VStack } from '@navikt/ds-react';
 import TopBar from '@/app/(withFhirApi)/alt/portalpoc/TopBar';
 import { BaseApi, useBaseApi } from '@/app/(withFhirApi)/alt/portalpoc/BaseApi';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 export const dynamic = 'force-dynamic'
 
@@ -27,12 +27,12 @@ export default function Home() {
     const fhirApi = useContext(FhirApiContext)
     const baseApi: BaseApi = useBaseApi(fhirApi)
 
-    const [formData, setFormData] = useState<LegeerklaeringData | undefined>()
+    const [formData, setFormData] = useState<LegeerklaeringDokument | undefined>()
     const [visOppsummering, setVisOppsummering] = useState<boolean>(false)
     const [pdf, setPdf] = useState<Blob | undefined>(undefined)
     const [dokumentOpprettet, setDokumentOpprettet] = useState<boolean>(false)
 
-    const hentPdfOppsummering = (submittedData: LegeerklaeringData) => {
+    const hentPdfOppsummering = (submittedData: LegeerklaeringDokument) => {
         console.log("Henter pdf oppsummering")
         fetch(`${window.location.origin}/api/oppsummering/pdf`, {
             method: 'POST',
@@ -67,7 +67,7 @@ export default function Home() {
         }
     };
 
-    const handleFormSubmit = (submittedData: LegeerklaeringData) => {
+    const handleFormSubmit = (submittedData: LegeerklaeringDokument) => {
         setFormData(submittedData)
         hentPdfOppsummering(submittedData)
         setVisOppsummering(true)
