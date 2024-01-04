@@ -5,7 +5,7 @@ import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
 import RelatedPerson from '@/models/RelatedPerson';
 
-export default interface LegeerklaeringData {
+export default interface LegeerklaeringDokument {
     barn: Patient;
     vurderingAvBarnet: string;
     vurderingAvOmsorgspersoner: string;
