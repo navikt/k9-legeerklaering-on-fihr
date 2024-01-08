@@ -13,7 +13,7 @@ class Fake1FhirApi implements FhirApi {
                 name: "Fake Kid1",
                 birthDate: new Date("2019-03-16"),
                 ehrId: "fakepatient-1",
-                fnr: "55101088734",
+                fnr: "06495227438",
                 caretakers: [
                     {ehrId: "ct001", name: "Fake mother1", fnr: "99223344500"},
                     {ehrId: "ct002", name: "Fake father1", fnr: "89723246505"},
