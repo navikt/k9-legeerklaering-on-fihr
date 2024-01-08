@@ -26,6 +26,7 @@ import InitData from "@/models/InitData";
 import RelatedPerson from "@/models/RelatedPerson";
 import { DocumentReferenceStatusKind, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
+import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
@@ -146,13 +147,14 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             reader.onerror = reject;
         });
 
-    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<boolean> {
+    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<boolean> {
         const pdfAsBase64 = await this.blobToBase64(pdf);
         const documentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
             providerEhrId,
             hospitalEhrId,
             DocumentReferenceStatusKind._current,
+            description,
             [
                 {
                     "attachment": {
