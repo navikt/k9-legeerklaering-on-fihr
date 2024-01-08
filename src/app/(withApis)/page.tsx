@@ -50,7 +50,7 @@ export default function Home() {
         console.log("Journalfører");
         if (isInited(fhirApi)) {
             console.log("FhirApi er inited");
-            await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, pdf!!)
+            await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, formData?.dokumentReferanse!!, pdf!!)
             setDokumentOpprettet(true)
 
         } else if (isInitError(fhirApi)) {
