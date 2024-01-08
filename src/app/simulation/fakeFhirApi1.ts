@@ -40,7 +40,7 @@ class Fake1FhirApi implements FhirApi {
     }
 }
 
-export const initFakeApi1 = async (): Promise<FhirApi> => {
+export const initFakeFhirApi1 = async (): Promise<FhirApi> => {
     await delay(1000)
     return new Fake1FhirApi()
 }

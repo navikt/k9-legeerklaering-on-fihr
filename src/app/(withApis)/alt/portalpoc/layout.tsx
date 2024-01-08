@@ -4,7 +4,7 @@ import ChildrenProp from "@/utils/ChildrenProp";
 import TopBar from "./TopBar";
 import React, { useContext } from "react";
 import { BaseApi, BaseApiContext, useBaseApi } from "./BaseApi";
-import FhirApiContext from "@/app/(withFhirApi)/FhirApiContext";
+import FhirApiContext from "@/app/(withApis)/FhirApiContext";
 
 export const dynamic = 'force-dynamic';
 
