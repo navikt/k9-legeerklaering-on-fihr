@@ -1,5 +1,6 @@
 import {ErrorMessage} from "@navikt/ds-react";
 import React, {ReactNode} from "react";
+import {componentSize} from "@/utils/constants";
 
 export interface ErrorMessagerProps {
     readonly error: ReactNode;
@@ -17,12 +18,12 @@ export interface ErrorMessagerProps {
 export default function ErrorMessager({error}: ErrorMessagerProps) {
     return (
         <div
-            className="navds-form-field__error"
+            className="navds-form-field__error mt-1"
             aria-relevant="additions removals"
             aria-live="polite"
         >
             {error && (
-                <ErrorMessage size="medium">{error}</ErrorMessage>
+                <ErrorMessage size={componentSize}>{error}</ErrorMessage>
             )}
         </div>
     )
