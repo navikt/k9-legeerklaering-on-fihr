@@ -15,7 +15,7 @@ const Page = () => {
                 <NextLink href="/">Direkte til skjema for nyregistrering, opprinneleg versjon</NextLink>
             </li>
             <li>
-                <NextLink href="/alt/portalpoc">Nav sykehusintegrasjon startside alternativ 1</NextLink>
+                <NextLink href="/alt/portalpoc">Legeerklæring: Pleiepenger for sykt barn startside alternativ 1</NextLink>
             </li>
         </ul>
 
