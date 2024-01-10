@@ -243,7 +243,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             }
 
             <Section>
-                Ref: { defaultValues?.dokumentReferanse }
                 <TextField
                     size={componentSize}
                     label={tekst("legeerklaering.om-barnet.tittel")}
