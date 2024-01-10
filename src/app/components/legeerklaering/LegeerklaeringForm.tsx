@@ -331,7 +331,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     control={control}
                     name="hoveddiagnose"
                     render={({field: {onChange, value}}) => (
-                        <HoveddiagnoseSelect className="mb-4" value={value} onChange={onChange}
+                        <HoveddiagnoseSelect className="mb-2" value={value} onChange={onChange}
                                              error={errors.hoveddiagnose?.code?.message || errors.hoveddiagnose?.text?.message}/>
                     )}
                 />
@@ -373,7 +373,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                         <DatePeriodInput
                             value={value}
                             onChange={onChange}
-                            error={errors.tilsynPeriode?.message}
+                            error={errors.tilsynPeriode?.start?.message || errors.tilsynPeriode?.end?.message}
                         />
                     )}
                 />

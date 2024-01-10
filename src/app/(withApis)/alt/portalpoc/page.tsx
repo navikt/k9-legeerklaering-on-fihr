@@ -16,7 +16,7 @@ const Page = () => {
     return <>
         <CenterColumn>
             <PaddedPanel>
-                <Heading spacing level="1" size="large">NAV sykehusintegrasjon startside</Heading>
+                <Heading spacing level="1" size="large">Legeerklæring: Pleiepenger for sykt barn startside</Heading>
                 <BodyShort>
                     Dette skjermbildet blir levert av NAV, integrert inn i ditt sykehus sitt journalsystem.
                 </BodyShort>
