@@ -1,11 +1,11 @@
-import DatePeriod, { datePeriod, datePeriodsEqual } from "@/models/DatePeriod";
-import { ReactNode, Ref, useEffect, useRef } from "react";
-import { BodyShort, Button, DatePicker, useRangeDatepicker } from "@navikt/ds-react";
+import DatePeriod, {datePeriod, datePeriodsEqual} from "@/models/DatePeriod";
+import {ReactNode, Ref, useEffect, useRef} from "react";
+import {Button, DatePicker, useRangeDatepicker} from "@navikt/ds-react";
 
 import css from './multidateperiod.module.css';
-import { addOneDay, dayCount } from "@/utils/datecalc";
+import {addOneDay, dayCount} from "@/utils/datecalc";
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
-import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import {PlusIcon, TrashIcon} from "@navikt/aksel-icons";
 
 export interface DatePeriodInputProps {
     readonly value: DatePeriod | undefined;
@@ -19,7 +19,14 @@ export interface DatePeriodInputProps {
     readonly startInputRef?: Ref<HTMLInputElement>;
 }
 
-export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel = false, startInputRef}: DatePeriodInputProps) => {
+export const DatePeriodInput = ({
+                                    value,
+                                    onChange,
+                                    error,
+                                    actionSlot,
+                                    hideLabel = false,
+                                    startInputRef
+                                }: DatePeriodInputProps) => {
     const {datepickerProps, fromInputProps, toInputProps, selectedRange} = useRangeDatepicker({
         defaultSelected: value && {from: value?.start, to: value?.end},
         onRangeChange: (range) => {
@@ -36,33 +43,34 @@ export const DatePeriodInput = ({value, onChange, error, actionSlot, hideLabel =
     const summary = selectedDayCount === 1 ? `= ${selectedDayCount} dag` : (selectedDayCount > 0 ? `= ${selectedDayCount} dager` : undefined);
 
     return (
-        <DatePicker {...datepickerProps} wrapperClassName={css.wrapper}>
-            <div className={css.inputwrapper}>
-                <DatePicker.Input
-                    size="small"
-                    {...fromInputProps}
-                    label="Fra og med"
-                    placeholder="dd.mm.åååå"
-                    hideLabel={hideLabel}
-                    className={css.startInput}
-                    ref={startInputRef}
-                />
-                <DatePicker.Input
-                    size="small"
-                    {...toInputProps}
-                    label="Til og med"
-                    placeholder="dd.mm.åååå"
-                    hideLabel={hideLabel}
-                    className={css.endInput}
-                />
-                <div className={css.description}>
-                    {error ? <ErrorMessager error={error} /> : <BodyShort size="small">{ summary }</BodyShort> }
+        <div>
+            <DatePicker {...datepickerProps} wrapperClassName={css.wrapper}>
+                <div className={css.inputwrapper}>
+                    <DatePicker.Input
+                        size="small"
+                        {...fromInputProps}
+                        label="Fra og med"
+                        placeholder="dd.mm.åååå"
+                        hideLabel={hideLabel}
+                        className={css.startInput}
+                        ref={startInputRef}
+                    />
+                    <DatePicker.Input
+                        size="small"
+                        {...toInputProps}
+                        label="Til og med"
+                        placeholder="dd.mm.åååå"
+                        hideLabel={hideLabel}
+                        className={css.endInput}
+                    />
+
+                    <div className={css.actions}>
+                        {actionSlot}
+                    </div>
                 </div>
-                <div className={css.actions}>
-                    {actionSlot}
-                </div>
-            </div>
-        </DatePicker>
+            </DatePicker>
+            <ErrorMessager error={error} />
+        </div>
     )
 }
 
@@ -78,7 +86,13 @@ export interface MultiDatePeriodInputProps {
     readonly valueErrors?: (string | undefined)[];
 }
 
-export default function MultiDatePeriodInput({value, onChange, className, error, valueErrors}: MultiDatePeriodInputProps) {
+export default function MultiDatePeriodInput({
+                                                 value,
+                                                 onChange,
+                                                 className,
+                                                 error,
+                                                 valueErrors
+                                             }: MultiDatePeriodInputProps) {
     // When a period has been added to value, we want to focus the start date input of the added period
     const prevValue = useRef(value);
     const lastStartInputRef = useRef<HTMLInputElement>(null)
@@ -110,29 +124,30 @@ export default function MultiDatePeriodInput({value, onChange, className, error,
 
     return (
         <div className={`navds-form-field ${css.multiwrapper} ${className}`}>
-            { value.map((datePeriod, idx) => {
+            {value.map((datePeriod, idx) => {
                 return (
                     <DatePeriodInput
                         key={`dpi-${value.length}-${idx}`}
                         hideLabel={idx > 0}
                         value={datePeriod}
                         onChange={(changed) => handleChange(datePeriod, changed)}
-                        actionSlot={<Button onClick={() => handleDelete(idx)} size="small" variant="secondary" icon={<TrashIcon />}>Fjern</Button>}
+                        actionSlot={<Button onClick={() => handleDelete(idx)} size="small" variant="secondary"
+                                            icon={<TrashIcon/>}>Fjern</Button>}
                         startInputRef={idx === value.length - 1 ? lastStartInputRef : undefined}
                         error={valueErrors?.[idx]}
                     />
                 )
-            }) }
+            })}
             <Button
                 className={css.addbutton}
                 disabled={hasIncompleteValue}
                 onClick={handleAdd}
                 size="small"
                 variant="secondary"
-                icon={<PlusIcon />}>
+                icon={<PlusIcon/>}>
                 Legg til ny periode
             </Button>
-            <ErrorMessager error={error} />
+            <ErrorMessager error={error}/>
         </div>
     )
 }
