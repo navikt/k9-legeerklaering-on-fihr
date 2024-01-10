@@ -1,7 +1,7 @@
 "use client"
 
 import React, { ReactNode, useId, useRef, useState } from "react";
-import { Button, Label, VStack } from "@navikt/ds-react";
+import { Button, Label, ReadMore, VStack } from "@navikt/ds-react";
 import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/DiagnosekodeSearchModal";
 import type { Diagnosekode } from "@navikt/diagnosekoder";
@@ -56,6 +56,10 @@ const BidiagnoseSelect = ({value, onChange, className, error}: BidiagnoseSelectP
     return (
         <div className={classNames}>
             <Label size={componentSize} htmlFor={id}>Bidiagnose(r)</Label>
+            <ReadMore size={componentSize} header="Sett bidiagnose (ICD-10) hvis relevant">
+                Hvis det finnes andre diagnosekoder i tillegg til hoveddiagnose, som kan være relevante for pleiepenge søknad,
+                registrer de her.
+            </ReadMore>
             <VStack className={dkCss.framedlisting} onClick={handleInputClick}>
                 {value.map(dk => {
                     return (
