@@ -106,9 +106,6 @@ export default function Home() {
                 user={baseApi.initData?.practitioner}/>
             <Box className="flex justify-center" padding={{ xs: "2", md: "6" }}>
                 <VStack gap="2">
-                    <HStack className="mt-8" align="center" justify="start">
-                        <Heading size="medium">Legeerklæring: Pleiepenger for sykt barn</Heading>
-                    </HStack>
 
                     {dokumentOpprettet && (
                         <>
