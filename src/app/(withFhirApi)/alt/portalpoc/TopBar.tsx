@@ -71,12 +71,11 @@ const TopNavigation = () => {
             <Heading level="1" size="small">
                 {
                     segments.length === 0 ? // We're on top level, don't show as link
-                        "NAV sykehusintegrasjon" :
-                        <Link as={NextLink} underline={false} variant="neutral" href={baseUrl}>NAV sykehusintegrasjon</Link>
+                        "Legeerklæring: Pleiepenger for sykt barn" :
+                        <Link as={NextLink} underline={false} variant="neutral" href={baseUrl}>Legeerklæring: Pleiepenger for sykt barn</Link>
                 }
                 {/*NAV sykehusintegrasjon*/}
             </Heading>
-            <Tag variant="warning-moderate" size="xsmall" className={css.beta}>Beta</Tag>
             {
                 segments.map((segment, idx) => {
                     segmentUrl = `${segmentUrl}/${segment}`;
