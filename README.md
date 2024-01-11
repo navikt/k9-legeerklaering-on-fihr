@@ -21,6 +21,9 @@ Create a .env file in the root of the project with the following variables:
 - `AZURE_APP_CLIENT_ID=k9-legeerklaering-on-fhir`
 - `AZURE_APP_CLIENT_SECRET=some-secret`
 - `AZURE_APP_WELL_KNOWN_URL=http://localhost:8080/default/.well-known/openid-configuration` (the well-known url for the mocked azure ad container i docker-compose)
+
+If you want to do frontend development with a fake _helseopplysninger_ backend instead of having to connect to a real service,
+set `FAKE_HELSEOPPLYSNINGER=fake1` in the _.env_ file. This avoids the need to run docker compose for the mocked azure ad container.
 ### Install dependencies
 
 ```bash
