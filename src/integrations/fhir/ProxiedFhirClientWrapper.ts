@@ -7,14 +7,12 @@ import {
     fnrFromIdentifiers,
     iPractitionerRoleFromListing,
     iResourceListFromArray,
-    isRelatedPerson,
     officialHumanNameResolver,
     organizationNumberFromIdentifiers,
     phoneContactResolver,
     postalAddressResolver,
     resolvePractitionerFromIPractitioner,
     resolvePractitionerFromIPractitionerRole,
-    resolveRelatedPersonFromIRelatedPerson
 } from "@/integrations/fhir/resolvers";
 import Patient from "@/models/Patient";
 import Client from "fhirclient/lib/Client";
@@ -23,7 +21,6 @@ import { FhirApi } from "@/integrations/fhir/FhirApi";
 import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
-import RelatedPerson from "@/models/RelatedPerson";
 import { DocumentReferenceStatusKind, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
@@ -114,27 +111,6 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         }
     }
 
-    /**
-     * Get the patients related persons, e.g. the parents of a child patient.
-     * @param patientEhrId
-     * @private
-     */
-    private async getRelatedPersons(patientEhrId: string): Promise<RelatedPerson[]> {
-        // Using flat: true in request options to get an array response instead of maybe a bundle (https://docs.smarthealthit.org/client-js/client.html)
-        const listing = iResourceListFromArray(await this.client.request<unknown[]>(`RelatedPerson?patient=${patientEhrId}`, {flat: true}))
-        const relatedPersons: RelatedPerson[] = listing
-            .flatMap(r => {
-                if (R4.RTTI_RelatedPerson.is(r)) {
-                    const rp = resolveRelatedPersonFromIRelatedPerson(r)
-                    if (isRelatedPerson(rp)) {
-                        return [rp]
-                    }
-                }
-                return []
-            })
-        return relatedPersons
-    }
-
     public blobToBase64 = (file: Blob): Promise<string> =>
         new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -185,7 +161,6 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         const ehrId = patient.id
         const fnr = patient.identifier instanceof Array && (fnrFromIdentifiers(patient.identifier) || dnrFromIdentifiers(patient.identifier)) || null
         const birthDate = dateTimeResolver(patient.birthDate)
-        const caretakers = await this.getRelatedPersons(patient.id!!);
 
         if (ehrId !== undefined && name !== undefined) {
             return {
@@ -193,7 +168,6 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 ehrId,
                 fnr,
                 birthDate,
-                caretakers,
             }
         } else {
             throw new Error(`Patient returned from EHR system missing id and/or name (id: ${ehrId})`);

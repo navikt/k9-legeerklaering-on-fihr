@@ -28,7 +28,6 @@ interface Navn {
 
 interface PSBLegeerklæring {
     pasient: Pasient;
-    omsorgspersoner: Omsorgsperson[];
     vurderingAvBarnet: string;
     vurderingAvOmsorgspersoner?: string;
     hoveddiagnose: Diagnose;
@@ -47,11 +46,6 @@ interface Pasient {
     navn: Navn;
     id: string;
     fødselsdato: Date;
-}
-
-interface Omsorgsperson {
-    navn: Navn;
-    id: string;
 }
 
 interface Periode {
