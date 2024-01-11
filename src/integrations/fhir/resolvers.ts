@@ -24,7 +24,6 @@ import { R4 } from "@ahryman40k/ts-fhir-types";
 import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
-import RelatedPerson from "@/models/RelatedPerson";
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -306,17 +305,3 @@ export const dnrFromIdentifiers = (identifiers: IIdentifier[]): string | undefin
     }
     return undefined
 }
-
-export const resolveRelatedPersonFromIRelatedPerson = (iRelatedPerson: IRelatedPerson): Partial<RelatedPerson> => {
-    const identifiers = iRelatedPerson.identifier || []
-    return {
-        ehrId: iRelatedPerson.id,
-        name: officialHumanNameResolver(iRelatedPerson.name),
-        fnr:  fnrFromIdentifiers(identifiers) || dnrFromIdentifiers(identifiers)
-    }
-}
-
-export const isRelatedPerson = (prp: Partial<RelatedPerson>): prp is RelatedPerson =>
-    prp.ehrId !== undefined && prp.ehrId.length > 0 &&
-    prp.name !== undefined && prp.name.length > 0 &&
-    typeof prp.fnr === "string"
