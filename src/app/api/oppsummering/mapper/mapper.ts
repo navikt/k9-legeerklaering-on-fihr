@@ -1,4 +1,4 @@
-import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 
 const somNavn = (navn: string): Navn => {
@@ -9,7 +9,7 @@ const somNavn = (navn: string): Navn => {
     };
 };
 
-export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringData): PSBLegeerklæringInnsending => {
+export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringDokument): PSBLegeerklæringInnsending => {
     return ({
         legeerklæring: {
             pasient: {

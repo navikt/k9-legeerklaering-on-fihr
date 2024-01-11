@@ -4,8 +4,10 @@ import Practitioner from "@/models/Practitioner";
 import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
 import RelatedPerson from '@/models/RelatedPerson';
+import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
-export default interface LegeerklaeringData {
+export default interface LegeerklaeringDokument {
+    readonly dokumentReferanse: LegeerklaeringDokumentReferanse;
     barn: Patient;
     vurderingAvBarnet: string;
     vurderingAvOmsorgspersoner: string;

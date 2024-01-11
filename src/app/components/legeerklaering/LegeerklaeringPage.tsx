@@ -2,16 +2,16 @@
 
 import LegeerklaeringForm, { EhrInfoLegeerklaeringForm } from "@/app/components/legeerklaering/LegeerklaeringForm";
 import React from "react";
-import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 
 export interface LegeerklaeringPageProps {
     data: EhrInfoLegeerklaeringForm;
-    handleFormSubmit: (submittedData: LegeerklaeringData) => void;
+    handleFormSubmit: (submittedData: LegeerklaeringDokument) => void;
 }
 
 const LegeerklaeringPage = ({data, handleFormSubmit}: LegeerklaeringPageProps) => {
-    const onFormSubmit = (submittedData: LegeerklaeringData) => {
+    const onFormSubmit = (submittedData: LegeerklaeringDokument) => {
         handleFormSubmit(submittedData);
     };
 

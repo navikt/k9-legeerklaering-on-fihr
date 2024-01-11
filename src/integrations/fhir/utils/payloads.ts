@@ -1,12 +1,14 @@
 import { DocumentReferenceStatusKind, IDocumentReference_Content } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
+import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
 export const createAndValidateDocumentReferencePayload = (
     patientIdentifier: string,
     practitionerRoleIdentifier: string,
     organizationIdentifier: string,
     documentReferenceStatus: DocumentReferenceStatusKind,
+    description: LegeerklaeringDokumentReferanse,
     content: Array<IDocumentReference_Content>
 ) => validateOrThrow(R4.RTTI_DocumentReference.decode(
     {
@@ -44,6 +46,7 @@ export const createAndValidateDocumentReferencePayload = (
                 "value": "22"
             }
         },
+        "description": description,
         "content": content
     }
 ));

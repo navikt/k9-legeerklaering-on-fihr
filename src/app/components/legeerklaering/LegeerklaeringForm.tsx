@@ -13,31 +13,36 @@ import {
     useDatepicker,
     VStack
 } from '@navikt/ds-react';
-import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
+import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
 import Section from '@/app/components/Section';
-import {tekst} from '@/utils/tekster';
+import { tekst } from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
 import * as yup from "yup";
-import {ObjectSchema} from "yup";
-import {yupResolver} from "@hookform/resolvers/yup";
-import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
+import { ObjectSchema, Schema } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import DatePeriod from "@/models/DatePeriod";
-import MultiDatePeriodInput, {DatePeriodInput} from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import {logger} from '@navikt/next-logger';
+import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
+import { logger } from '@navikt/next-logger';
 import RelatedPerson from "@/models/RelatedPerson";
-import {componentSize} from '@/utils/constants';
-import {ChevronRightIcon} from '@navikt/aksel-icons';
-import {Diagnosekode} from "@navikt/diagnosekoder";
+import { componentSize } from '@/utils/constants';
+import { ChevronRightIcon } from '@navikt/aksel-icons';
+import { Diagnosekode } from "@navikt/diagnosekoder";
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
+import {
+    LegeerklaeringDokumentReferanse,
+    randomLegeerklaeringDokumentReferanse
+} from "@/models/LegeerklaeringDokumentReferanse";
+import { legeerklaeringDokumentReferanseSchema } from "@/models/yup/LegeerklaeringDokumentReferanseSchema";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
     readonly patient: Patient | undefined;
     readonly hospital: Hospital | undefined;
-    onFormSubmit: (data: LegeerklaeringData) => void
+    onFormSubmit: (data: LegeerklaeringDokument) => void
 }
 
 function undefinedIfNull<T>(something: T | undefined | null): T | undefined {
@@ -89,7 +94,10 @@ const bidiagnosekodeValidator: ObjectSchema<Diagnosekode> = yup.object({
     text: yup.string().required("Bidiagnosetekst er påkrevd"),
 })
 
-const schema: ObjectSchema<LegeerklaeringData> = yup.object({
+const dokumentReferanseValidator: Schema<LegeerklaeringDokumentReferanse> = legeerklaeringDokumentReferanseSchema().required();
+
+const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
+    dokumentReferanse: dokumentReferanseValidator,
     barn: yup.object({
         name: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
@@ -141,9 +149,10 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         setValue,
         handleSubmit,
         formState: {errors, defaultValues},
-    } = useForm<LegeerklaeringData>({
+    } = useForm<LegeerklaeringDokument>({
         resolver: yupResolver(schema),
         defaultValues: {
+            dokumentReferanse: randomLegeerklaeringDokumentReferanse(),
             barn: {
                 name: patient?.name,
                 ehrId: patient?.ehrId,
@@ -192,11 +201,11 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         }
     });
 
-    const onSubmit = (data: LegeerklaeringData) => {
+    const onSubmit = (data: LegeerklaeringDokument) => {
         onFormSubmit(data)
     };
 
-    const onError: SubmitErrorHandler<LegeerklaeringData> = errors => {
+    const onError: SubmitErrorHandler<LegeerklaeringDokument> = errors => {
         logger.warn("form validation errors", errors)
     }
 

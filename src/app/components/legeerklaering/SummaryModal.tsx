@@ -1,13 +1,13 @@
 import { Accordion, Button, Heading, Ingress, List, Modal } from "@navikt/ds-react";
 import { tekst } from "@/utils/tekster";
 import React from "react";
-import LegeerklaeringData from "@/app/components/legeerklaering/LegeerklaeringData";
 import { logger } from '@navikt/next-logger';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 export interface SummaryModalProps {
     readonly show: boolean;
     readonly onClose: () => void;
-    readonly data: LegeerklaeringData | null;
+    readonly data: LegeerklaeringDokument | null;
 }
 
 const SummaryModal = ({show, onClose, data}: SummaryModalProps) => {
