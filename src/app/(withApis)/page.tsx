@@ -3,18 +3,19 @@
 import "@navikt/ds-css";
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
-import FhirApiContext from "@/app/(withFhirApi)/FhirApiContext";
-import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
+import FhirApiContext from "@/app/(withApis)/FhirApiContext";
 import LegeerklaeringOppsummering from '@/app/components/legeerklaering/LegeerklaeringOppsummering';
 import { isInited, isInitError, isIniting } from '@/app/hooks/useAsyncInit';
 import ensureError from '@/utils/ensureError';
 import { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
 import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
-import { logger } from '@navikt/next-logger';
 import { Alert, BodyShort, Box, Heading, HStack, VStack } from '@navikt/ds-react';
-import TopBar from '@/app/(withFhirApi)/alt/portalpoc/TopBar';
-import { BaseApi, useBaseApi } from '@/app/(withFhirApi)/alt/portalpoc/BaseApi';
+import TopBar from '@/app/(withApis)/alt/portalpoc/TopBar';
+import { BaseApi, useBaseApi } from '@/app/(withApis)/alt/portalpoc/BaseApi';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
+import { mapTilPSBLegeerklæringInnsending } from "@/app/api/oppsummering/mapper/mapper";
+import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 
 export const dynamic = 'force-dynamic'
 
@@ -25,28 +26,18 @@ export interface PageState extends EhrInfoLegeerklaeringForm {
 
 export default function Home() {
     const fhirApi = useContext(FhirApiContext)
+    const helseOpplysningerApi = useContext(SelfApiContext)
     const baseApi: BaseApi = useBaseApi(fhirApi)
 
-    const [formData, setFormData] = useState<LegeerklaeringData | undefined>()
+    const [formData, setFormData] = useState<LegeerklaeringDokument | undefined>()
     const [visOppsummering, setVisOppsummering] = useState<boolean>(false)
     const [pdf, setPdf] = useState<Blob | undefined>(undefined)
     const [dokumentOpprettet, setDokumentOpprettet] = useState<boolean>(false)
 
-    const hentPdfOppsummering = (submittedData: LegeerklaeringData) => {
+    const hentPdfOppsummering = async (submittedData: LegeerklaeringDokument) => {
         console.log("Henter pdf oppsummering")
-        fetch(`${window.location.origin}/api/oppsummering/pdf`, {
-            method: 'POST',
-            body: JSON.stringify(submittedData)
-        }).then(async response => {
-            if (response.ok) {
-                const responseData = await response.blob()
-                setPdf(responseData)
-            } else {
-                logger.error(await response.text(), "Error submitting form data")
-            }
-        }).catch(error => {
-            logger.error(error, "Error submitting form data")
-        });
+        const pdfBlob = await helseOpplysningerApi.generatePdf(mapTilPSBLegeerklæringInnsending(submittedData))
+        setPdf(pdfBlob)
     };
 
     const skjulOppsummering = () => {
@@ -59,7 +50,7 @@ export default function Home() {
         console.log("Journalfører");
         if (isInited(fhirApi)) {
             console.log("FhirApi er inited");
-            await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, pdf!!)
+            await fhirApi.createDocument(state.patient?.ehrId!!, state.doctor?.practitionerRoleId!!, state.hospital?.ehrId!!, formData?.dokumentReferanse!!, pdf!!)
             setDokumentOpprettet(true)
 
         } else if (isInitError(fhirApi)) {
@@ -67,7 +58,7 @@ export default function Home() {
         }
     };
 
-    const handleFormSubmit = (submittedData: LegeerklaeringData) => {
+    const handleFormSubmit = (submittedData: LegeerklaeringDokument) => {
         setFormData(submittedData)
         hentPdfOppsummering(submittedData)
         setVisOppsummering(true)

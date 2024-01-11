@@ -1,3 +1,4 @@
+import 'server-only';
 import getAuthClient from '@navikt/next-auth-wonderwall/dist/auth/azure/client';
 import { logger } from '@navikt/next-logger';
 import { BaseClient, TokenSet } from 'openid-client';

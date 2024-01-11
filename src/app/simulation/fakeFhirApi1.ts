@@ -1,9 +1,10 @@
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import InitData from "@/models/InitData";
 import delay from "@/utils/delay";
+import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
 class Fake1FhirApi implements FhirApi {
-    createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, pdf: Blob): Promise<boolean> {
+    createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     async getInitState(): Promise<InitData> {
@@ -13,7 +14,7 @@ class Fake1FhirApi implements FhirApi {
                 name: "Fake Kid1",
                 birthDate: new Date("2019-03-16"),
                 ehrId: "fakepatient-1",
-                fnr: "55101088734",
+                fnr: "06495227438",
                 caretakers: [
                     {ehrId: "ct001", name: "Fake mother1", fnr: "99223344500"},
                     {ehrId: "ct002", name: "Fake father1", fnr: "89723246505"},
@@ -40,7 +41,7 @@ class Fake1FhirApi implements FhirApi {
     }
 }
 
-export const initFakeApi1 = async (): Promise<FhirApi> => {
+export const initFakeFhirApi1 = async (): Promise<FhirApi> => {
     await delay(1000)
     return new Fake1FhirApi()
 }

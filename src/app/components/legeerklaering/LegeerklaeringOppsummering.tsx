@@ -1,11 +1,11 @@
-import LegeerklaeringData from '@/app/components/legeerklaering/LegeerklaeringData';
 import { Alert, Button, Heading, HStack, VStack } from '@navikt/ds-react';
 import { tekst } from '@/utils/tekster';
 import React, { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightLastIcon } from '@navikt/aksel-icons';
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 export interface LegeerklaeringOppsummeringProps {
-    data: LegeerklaeringData;
+    data: LegeerklaeringDokument;
     pdf: Blob
     handleJournalfør: () => void;
     handleSkjulOppsummering: () => void;
