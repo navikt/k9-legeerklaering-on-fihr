@@ -3,7 +3,6 @@ import DatePeriod from "@/models/DatePeriod";
 import Practitioner from "@/models/Practitioner";
 import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
-import RelatedPerson from '@/models/RelatedPerson';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
 export default interface LegeerklaeringDokument {
@@ -17,5 +16,4 @@ export default interface LegeerklaeringDokument {
     innleggelsesPerioder: DatePeriod[];
     lege: Practitioner;
     sykehus: Hospital;
-    omsorgspersoner: RelatedPerson[]
 }
