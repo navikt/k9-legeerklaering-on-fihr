@@ -27,7 +27,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import DatePeriod from "@/models/DatePeriod";
 import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
 import { logger } from '@navikt/next-logger';
-import RelatedPerson from "@/models/RelatedPerson";
 import { componentSize } from '@/utils/constants';
 import { ChevronRightIcon } from '@navikt/aksel-icons';
 import { Diagnosekode } from "@navikt/diagnosekoder";
@@ -78,12 +77,6 @@ const innleggelsesPeriodValidation: ObjectSchema<DatePeriod> = yup.object({
         period.start.getTime() <= period.end.getTime()
 })
 
-const caretakerValidation: ObjectSchema<RelatedPerson> = yup.object({
-    name: yup.string().required(`Omsorgsperson navn påkrevd`),
-    ehrId: yup.string().required(`Omsorgsperson ehrId påkrevd`),
-    fnr: yup.string().required(`Omsorgsperson fødselsnr/d-nr er påkrevd`)
-})
-
 const hoveddiagnoseValidator: ObjectSchema<Diagnosekode> = yup.object({
     code: yup.string().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd")),
     text: yup.string().required(tekst("legeerklaering.diagnose.hoveddiagnose.paakrevd"))
@@ -109,7 +102,6 @@ const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
             .max(40, ({max, value}) => `Maks ${max} tegn tillatt (${value.length})`),
         ehrId: yup.string().required("ehrId må eksistere"),
         birthDate: yup.date().required(tekst("legeerklaering.om-barnet.foedselsdato.paakrevd")),
-        caretakers: yup.array().of(caretakerValidation).default([])
     }),
     lege: yup.object({
         ehrId: yup.string().required("legens epj systemid er påkrevd"),
@@ -139,7 +131,6 @@ const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
     vurderingAvOmsorgspersoner: yup.string().trim().optional().default(""), // Set to blank string for type compatibility
     tilsynPeriode: tilsynsPeriodValidation,
     innleggelsesPerioder: yup.array().of(innleggelsesPeriodValidation).required(),
-    omsorgspersoner: yup.array().of(caretakerValidation).default([])
 })
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -187,7 +178,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 start: undefined,
                 end: undefined,
             }],
-            omsorgspersoner: []
         }
     })
 
@@ -219,16 +209,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         return fødselsdato <= attenÅrSiden;
     };
 
-    const håndterValgteOmsorgspersoner = (valgteEhrIds: string[]) => {
-        const valgteOmsorgspersoner = valgteEhrIds
-            .map(ehrId => patient?.caretakers.find(c => c.ehrId === ehrId))
-            .filter(Boolean) as RelatedPerson[];
-        return valgteOmsorgspersoner;
-    };
-
-    const omsorgspersonerError: string | undefined = errors.omsorgspersoner?.message ||
-        errors.omsorgspersoner?.map?.(invOmsp => invOmsp?.fnr?.message || invOmsp?.ehrId?.message || invOmsp?.name?.message).filter(msg => msg && msg.length > 0).at(0)
-
     return (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
             {erOver18(defaultValues?.barn?.birthDate) && <VStack className="mt-4" gap="4">
@@ -250,47 +230,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                     defaultValue={`${defaultValues?.barn?.name} (${defaultValues?.barn?.fnr})`}
                     className="w-1/2"
                 />
-            </Section>
-
-            <Section>
-                <Controller name="omsorgspersoner" control={control} render={({field: {onChange, value}}) => (
-                    <CheckboxGroup
-                        legend={<Heading size="xsmall">Hvem skal ha tilgang til å bruke legeerklæringen?</Heading>}
-                        value={value.map(rp => rp.ehrId)} // EhrId for valgte omsorgspersoner
-                        onChange={(valgteEhrIds) => onChange(håndterValgteOmsorgspersoner(valgteEhrIds))}
-                        error={omsorgspersonerError}
-                        description={
-                            <ReadMore size={componentSize}
-                                      header="De personer som blir valgt her får tilgang til å lese og bruke legeerklæringen">
-                                <p>
-                                    Dette tilsvarer at du tidligere ville skrevet ut og levert legeerklæringen på papir
-                                    til disse personene,
-                                    slik at de kunne søke om pleiepenger.
-                                </p>
-                                <p>Det er derfor viktig at du tenker på personvern og kontrollerer
-                                    at disse faktisk skal ha tilgang til informasjonen i legeerklæringen.
-                                </p>
-                                <p>
-                                    Hvis den/de som skal bruke legeerklæringen ikke viser her må du få lagt de inn som
-                                    relaterte personer
-                                    på pasienten i ditt journalsystem, og oppfriske.
-                                </p>
-                            </ReadMore>
-                        }
-                    >
-                        {
-                            patient?.caretakers.map(relatedPerson => (
-                                <Checkbox
-                                    size={componentSize}
-                                    key={`rp${relatedPerson.ehrId}`}
-                                    value={relatedPerson.ehrId}
-                                >
-                                    {relatedPerson.name} <small>({relatedPerson.fnr})</small>
-                                </Checkbox>
-                            ))
-                        }
-                    </CheckboxGroup>
-                )}/>
             </Section>
 
             <Section>

@@ -24,7 +24,6 @@ interface FormData {
     bidiagnoser: Diagnosekode[];
     tilsynPerioder: DatePeriod[];
     innleggelsesPerioder: DatePeriod[];
-    omsorgspersoner: string[];
 }
 
 const diagnosekodeValidation: ObjectSchema<Diagnosekode> = yup.object({
@@ -52,7 +51,6 @@ const schema: ObjectSchema<FormData> = yup.object({
     legensVurdering: yup.string().trim().required(tekst("legeerklaering.legens-vurdering.barn.paakrevd")),
     tilsynPerioder: yup.array().of(datePeriodValidation).min(1, ({min}) => `Minimum ${min} periode må spesifiseres`).required(),
     innleggelsesPerioder: yup.array().of(datePeriodValidation).required(),
-    omsorgspersoner: yup.array().of(yup.string().trim().required()).min(0, "Minst en omsorgsperson er påkrevd").required()
 })
 
 
@@ -76,7 +74,6 @@ const Page = () => {
                 end: undefined,
             }],
             innleggelsesPerioder: [],
-            omsorgspersoner: []
         }
     })
 
@@ -96,38 +93,6 @@ const Page = () => {
                 <PaddedPanel>
                     <Heading spacing level="2" size="medium">Om barnet </Heading>
                     <Label>{initData.patient.name}</Label> - Fødselsdato {initData.patient.birthDate?.toLocaleDateString()} <small>({initData.patient.fnr})</small>
-                </PaddedPanel>
-                <PaddedPanel>
-                    <Controller name="omsorgspersoner" control={control} render={({field: {onChange, value}}) => (
-                        <CheckboxGroup
-                            legend={<Heading level="2" size="medium">Omsorgspersoner</Heading>}
-                            value={value}
-                            onChange={onChange}
-                            error={errors.omsorgspersoner?.message}
-                            // description="De personer som blir valgt her får tilgang til å lese og bruke legeerklæringen"
-                            description={
-                                <ReadMore size="small" header="De personer som blir valgt her får tilgang til å lese og bruke legeerklæringen">
-                                    <p>
-                                        Dette tilsvarer at du tidligere ville skrevet ut og levert legeerklæringen på papir til disse personene,
-                                        slik at de kunne søke om pleiepenger.
-                                    </p>
-                                    <p>Det er derfor viktig at du tenker på personvern og kontrollerer
-                                        at disse faktisk skal ha tilgang til informasjonen i legeerklæringen.
-                                    </p>
-                                    <p>
-                                        Hvis den/de som skal bruke legeerklæringen ikke viser her må du få lagt de inn som relaterte personer
-                                        på pasienten i ditt journalsystem, og oppfriske.
-                                    </p>
-                                </ReadMore>
-                            }
-                        >
-                            {
-                                api.initData?.patient.caretakers.map(relatedPerson => (
-                                    <Checkbox key={`rp${relatedPerson.ehrId}`} value={relatedPerson.ehrId} >{relatedPerson.name} <small>({relatedPerson.fnr})</small></Checkbox>
-                                ))
-                            }
-                        </CheckboxGroup>
-                    )} />
                 </PaddedPanel>
                 <PaddedPanel>
                     <Heading spacing level="2" size="medium">{tekst("legeerklaering.legens-vurdering.barn.tittel")}</Heading>
