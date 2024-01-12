@@ -3,6 +3,8 @@ import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
+const dipsDokumentType = "1001535"
+
 export const createAndValidateDocumentReferencePayload = (
     patientIdentifier: string,
     practitionerRoleIdentifier: string,
@@ -18,7 +20,7 @@ export const createAndValidateDocumentReferencePayload = (
             "coding": [
                 {
                     "system": "http://dips.no/fhir/namingsystem/dips-documenttypeid",
-                    "code": "1001354"
+                    "code": `${dipsDokumentType}`
                 }
             ]
         },
