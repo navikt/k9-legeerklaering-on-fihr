@@ -6,23 +6,25 @@ import { Alert, BodyShort, Box, Button, Heading, Link, VStack } from "@navikt/ds
 import { useBaseApi } from "@/app/(withApis)/BaseApi";
 import TopBar from "@/app/components/topbar/TopBar";
 import NavNextLink from "@/app/components/NavNextLink";
+import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
+import PdfIframe from "@/app/(withApis)/document/[id]/PdfIframe";
 
 export default function DocumentViewPage({params}: {params: {id: string}}) {
     const fhirApi = useContext(FhirApiContext)
     const baseApi = useBaseApi(fhirApi)
-    const [pdfUrl, setPdfUrl] = useState<string | undefined>()
+    const [pdfBlob, setPdfBlob] = useState<Blob | undefined>()
 
     const loadDocument = useCallback(async() => {
-    if (isInited(fhirApi)) {
-            const pdfBlob = await fhirApi.getDocumentPdf(params.id)
-            setPdfUrl(URL.createObjectURL(pdfBlob)) // Iframe needs an object url created from the pdf blob
-    } else if(isInitError(fhirApi)) {
-        throw fhirApi.initError
-    }
+        if (isInited(fhirApi)) {
+            // XXX Consider try/catch to get local error handling
+            setPdfBlob(await fhirApi.getDocumentPdf(params.id))
+        } else if(isInitError(fhirApi)) {
+            throw fhirApi.initError
+        }
     }, [fhirApi, params])
 
     useEffect(() => {
-            loadDocument()
+        loadDocument()
     }, [loadDocument]);
 
     const reload = async () => {
@@ -30,7 +32,6 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
     }
 
     const close = () => {
-        console.debug("close window")
         window.close()
     }
 
@@ -52,15 +53,19 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
                     <BodyShort size="small">Pdf vises under i tilfelle du ønsker å skrive den ut med en gang</BodyShort>
                 </Alert>
                 <Box className="flex justify-center">
-                    { window.opener !== null ?
+                    { window.opener !== null ? // window.close doesn't work when window was not opened by script. Not sure what the case is in smart on fhir, so testing it here.
                         <Button type="button" onClick={close} size="xsmall" variant="tertiary">Lukk fanen</Button> :
                         <span>Lukk fanen</span>
                     }
                     <span>, eller gå&nbsp;</span>
-                    <NavNextLink href="/">tilbake til ny utfylling</NavNextLink>
+                    <NavNextLink href="/">til ny utfylling</NavNextLink>
                 </Box>
             </VStack>
         </Box>
-        <iframe src={pdfUrl} width="100%" height="1250px" />
+        {
+            pdfBlob !== undefined ?
+                <PdfIframe pdf={pdfBlob} width="100%" height="1250px"/> :
+                <LoadingIndicator txt="Henter PDF" />
+        }
     </VStack>
 }

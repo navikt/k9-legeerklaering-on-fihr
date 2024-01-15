@@ -3,7 +3,7 @@ import { HprNumber } from "@/models/HprNumber";
 export default interface Practitioner {
     readonly ehrId: string;
     readonly hprNumber: HprNumber | undefined ;
-    readonly practitionerRoleId?: string | undefined ;
+    readonly practitionerRoleId: string | undefined;
     readonly name: string;
     readonly activeSystemUser: boolean;
 
