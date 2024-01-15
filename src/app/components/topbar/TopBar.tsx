@@ -1,24 +1,20 @@
 import Practitioner from "@/models/Practitioner";
 import Image from "next/image";
-import { Button, Heading, Link, Popover, Tag } from "@navikt/ds-react";
+import { Button, Heading, Popover } from "@navikt/ds-react";
 import React, { useEffect, useRef, useState } from "react";
 import css from "./TopBar.module.css";
-import { ArrowsCirclepathIcon, CaretDownIcon, ChevronRightDoubleIcon, PersonCircleIcon } from "@navikt/aksel-icons";
-import { useSelectedLayoutSegments } from "next/navigation";
-import NextLink from "next/link";
-import validateRoute from "@/utils/validateRoute";
-import { pagename } from "./pagenames";
+import { ArrowsCirclepathIcon, CaretDownIcon, PersonCircleIcon } from "@navikt/aksel-icons";
 import UserListing from "./UserListing";
 import { componentSize } from '@/utils/constants';
-import { BaseApi } from "@/app/(withApis)/BaseApi";
+import NavNextLink from "@/app/components/NavNextLink";
 
 export interface UserProps {
     readonly user: Practitioner | undefined;
 }
 
 export interface ReloadBtnProps {
-    loading: BaseApi["loading"];
-    refreshInitData(): Promise<void>;
+    loading: boolean;
+    reload(): Promise<void>;
 }
 
 export interface TopBarProps extends UserProps, ReloadBtnProps {
@@ -47,57 +43,31 @@ const UserPart = ({user}: UserProps) => {
     </> ;
 }
 
-const ReloadBtn = ({loading, refreshInitData}: ReloadBtnProps) => {
+const ReloadBtn = ({loading, reload}: ReloadBtnProps) => {
     return <Button
         variant="tertiary-neutral"
         size={componentSize}
         disabled={loading !== false}
         icon={<ArrowsCirclepathIcon aria-hidden />}
-        onClick={refreshInitData}
+        onClick={reload}
     >
         Oppfrisk
     </Button>
 }
 
-// The url of this layout
-const baseUrl = validateRoute("/alt/portalpoc")
-
 const TopNavigation = () => {
-    const segments = useSelectedLayoutSegments()
-
-    let segmentUrl = baseUrl
     return (
         <div className={css.topnavigation}>
             <Heading level="1" size="small">
-                {
-                    segments.length === 0 ? // We're on top level, don't show as link
-                        "Legeerklæring: Pleiepenger for sykt barn" :
-                        <Link as={NextLink} underline={false} variant="neutral" href={baseUrl}>Legeerklæring: Pleiepenger for sykt barn</Link>
-                }
-                {/*NAV sykehusintegrasjon*/}
+                <NavNextLink href="/" variant="neutral" underline={false}>Legeerklæring: Pleiepenger for sykt barn</NavNextLink>
             </Heading>
-            {
-                segments.map((segment, idx) => {
-                    segmentUrl = `${segmentUrl}/${segment}`;
-                    return <div key={`bc${idx}`} style={{display: "contents"}}>
-                        <ChevronRightDoubleIcon aria-hidden />
-                        <Heading level="2" size="small">
-                            {
-                                idx === segments.length - 1 ? // this is the last segment, don't show as link
-                                    pagename(segmentUrl) || segment :
-                                    <Link as={NextLink} underline={false} variant="neutral" href={segmentUrl}>{pagename(segmentUrl) || segment}</Link>
-                            }
-                        </Heading>
-                    </div>
-                })
-            }
         </div>
     )
 }
 
 
 // The top header bar always present on the page.
-const TopBar = ({user, refreshInitData, loading}: TopBarProps) => {
+const TopBar = ({user, reload, loading}: TopBarProps) => {
     const [classNames, setClassNames] = useState([css.bar])
 
     useEffect(() => {
@@ -124,7 +94,7 @@ const TopBar = ({user, refreshInitData, loading}: TopBarProps) => {
             <Image src="/nav-logo-red.svg" alt="Nav" width={64} height={64} className={css.navlogo} />
             <TopNavigation />
             <div className={css.spacer}/>
-            <ReloadBtn refreshInitData={refreshInitData} loading={loading} />
+            <ReloadBtn reload={reload} loading={loading} />
             <UserPart user={user} />
         </header>
     )

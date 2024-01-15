@@ -21,9 +21,10 @@ import { FhirApi } from "@/integrations/fhir/FhirApi";
 import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
-import { DocumentReferenceStatusKind, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
+import { DocumentReferenceStatusKind, IBinary, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
 import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
+import { base64ToBlob, blobToBase64 } from "@/utils/base64";
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
@@ -111,23 +112,11 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
         }
     }
 
-    public blobToBase64 = (file: Blob): Promise<string> =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const result = reader.result as string;
-                resolve(result.split(",")[1]);
-            };
-
-            reader.readAsDataURL(file);
-            reader.onerror = reject;
-        });
-
-    public async createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<boolean> {
-        const pdfAsBase64 = await this.blobToBase64(pdf);
+    public async createDocument(patientEhrId: string, practitionerRoleId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string> {
+        const pdfAsBase64 = await blobToBase64(pdf);
         const documentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
-            providerEhrId,
+            practitionerRoleId,
             hospitalEhrId,
             DocumentReferenceStatusKind._current,
             description,
@@ -142,7 +131,7 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
             ]
         )
 
-        await this.client.request<IDocumentReference>(
+        const created = await this.client.request<IDocumentReference>(
             {
                 url: "DocumentReference",
                 method: "POST",
@@ -152,7 +141,30 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 },
             }
         );
-        return true
+        if(created.id === undefined) {
+            throw new Error(`Document was created, but returned without id.`)
+        }
+        return created.id
+    }
+
+    public async getDocumentPdf(documentId:string): Promise<Blob> {
+        const url = new URL(`Binary/${documentId}`, this.client.state.serverUrl);
+        const binary = validateOrThrow(R4.RTTI_Binary.decode(await this.client.request<IBinary>({
+            url,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })))
+        if(binary.contentType === "application/pdf") {
+            if(binary.data !== undefined) {
+                return await base64ToBlob(binary.data, binary.contentType)
+            } else {
+                throw new Error(`binary document ${documentId}: data undefined`)
+            }
+        } else {
+            throw new Error(`binary document ${documentId}: contentType not pdf (${binary.contentType})`)
+        }
     }
 
     public async getPatient(): Promise<Patient> {

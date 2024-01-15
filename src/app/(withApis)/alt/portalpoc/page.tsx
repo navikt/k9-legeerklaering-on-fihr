@@ -1,7 +1,6 @@
 'use client';
 
 import { useContext } from "react";
-import { BaseApi, BaseApiContext } from "./BaseApi";
 import { BodyShort, Heading, LinkPanel } from "@navikt/ds-react";
 import CenterColumn from "./CenterColumn";
 
@@ -9,6 +8,7 @@ import NavNextLink from "@/app/components/NavNextLink";
 import StartStatus from "./StartStatus";
 import NavNextLinkPanel from "@/app/components/NavNextLinkPanel";
 import PaddedPanel from "./PaddedPanel";
+import { BaseApi, BaseApiContext } from "@/app/(withApis)/BaseApi";
 
 const Page = () => {
     const api: BaseApi = useContext(BaseApiContext)
