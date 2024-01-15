@@ -2,25 +2,29 @@
 
 import "@navikt/ds-css";
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import LegeerklaeringPage from "@/app/components/legeerklaering/LegeerklaeringPage";
 import FhirApiContext from "@/app/(withApis)/FhirApiContext";
-import LegeerklaeringOppsummering from '@/app/components/legeerklaering/LegeerklaeringOppsummering';
 import { isInited, isInitError, isIniting } from '@/app/hooks/useAsyncInit';
 import ensureError from '@/utils/ensureError';
-import { EhrInfoLegeerklaeringForm } from '@/app/components/legeerklaering/LegeerklaeringForm';
+import LegeerklaeringForm from '@/app/components/legeerklaering/LegeerklaeringForm';
 import LoadingIndicator from '@/app/components/legeerklaering/LoadingIndicator';
 import ErrorDisplay from '@/app/components/legeerklaering/ErrorDisplay';
-import { Alert, BodyShort, Box, Heading, HStack, VStack } from '@navikt/ds-react';
+import { Box, HStack, VStack } from '@navikt/ds-react';
 import TopBar from '@/app/components/topbar/TopBar';
 import { BaseApi, useBaseApi } from '@/app/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 import { mapTilPSBLegeerklæringInnsending } from "@/app/api/oppsummering/mapper/mapper";
 import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
+import Practitioner from "@/models/Practitioner";
+import Patient from "@/models/Patient";
+import Hospital from "@/models/Hospital";
 
 export const dynamic = 'force-dynamic'
 
-export interface PageState extends EhrInfoLegeerklaeringForm {
+export interface PageState {
+    readonly doctor: Practitioner | undefined;
+    readonly patient: Patient | undefined;
+    readonly hospital: Hospital | undefined;
     readonly loading: boolean;
     readonly error: Error | null;
 }
@@ -47,7 +51,6 @@ export default function Home() {
         doctor: undefined,
         patient: undefined,
         hospital: undefined,
-        onFormSubmit: handleFormSubmit,
     })
 
     const onError = useCallback((error: Error) => setState(state => ({...state, error})), [setState])
@@ -64,7 +67,6 @@ export default function Home() {
                         patient,
                         hospital,
                         error: null,
-                        onFormSubmit: state.onFormSubmit,
                     }))
                 } catch (e) {
                     onError(ensureError(e))
@@ -89,9 +91,12 @@ export default function Home() {
                             ) : state.loading ? (
                                 <LoadingIndicator txt={isIniting(fhirApi) ? "Kobler til systemtjenester" : undefined}/>
                             ) : (
-                                <LegeerklaeringPage
-                                    data={state}
-                                    handleFormSubmit={handleFormSubmit}/>
+                                <LegeerklaeringForm
+                                    doctor={state.doctor}
+                                    patient={state.patient}
+                                    hospital={state.hospital}
+                                    onFormSubmit={handleFormSubmit}
+                                />
                             )}
                         </HStack>
                 </VStack>
