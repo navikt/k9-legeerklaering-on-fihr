@@ -107,7 +107,8 @@ const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
         ehrId: yup.string().required("legens epj systemid er påkrevd"),
         hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
         name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd")),
-        activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd")
+        activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd"),
+        practitionerRoleId: yup.string().required("Legens practitionerRoleId er påkrevd")
     }),
     sykehus: yup.object({
         ehrId: yup.string().optional(),
@@ -155,6 +156,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 name: doctor?.name,
                 activeSystemUser: doctor?.activeSystemUser || false,
                 ehrId: doctor?.ehrId,
+                practitionerRoleId: doctor?.practitionerRoleId,
             },
             sykehus: {
                 name: hospital?.name,
@@ -325,7 +327,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                         icon={<ChevronRightIcon aria-hidden/>}
                         iconPosition="right"
                     >
-                        Til oppsummering
+                        Lagre
                     </Button>
                 </HStack>
             </VStack>
