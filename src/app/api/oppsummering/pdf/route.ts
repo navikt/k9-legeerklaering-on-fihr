@@ -3,6 +3,7 @@ import { logRequest } from '@/utils/loggerUtils';
 import { logger } from '@navikt/next-logger';
 import { FakeHelseopplysningerApi1 } from "@/app/simulation/fakeHelseopplysningerApi1";
 import HelseopplysningerClient from "@/integrations/helseopplysningerserver/HelseopplysningerClient";
+import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 const initHelseopplysningerApi = () => process.env.FAKE_HELSEOPPLYSNINGER === "fake1" ?
     new FakeHelseopplysningerApi1() :
