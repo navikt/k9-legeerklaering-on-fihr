@@ -1,5 +1,6 @@
 import { HelseopplysningerApi } from "@/integrations/helseopplysningerserver/HelseopplysningerApi";
 import { fakePdf } from "@/app/simulation/fakePdf";
+import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 /**
  * A fake implementation of the client for helseopplysninger server, for local development/testing without having to

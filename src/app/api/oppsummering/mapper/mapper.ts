@@ -1,4 +1,5 @@
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
+import { PSBLegeerklæringInnsending, Navn } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 
 const somNavn = (navn: string): Navn => {
@@ -12,6 +13,7 @@ const somNavn = (navn: string): Navn => {
 export const mapTilPSBLegeerklæringInnsending = (data: LegeerklaeringDokument): PSBLegeerklæringInnsending => {
     return ({
         legeerklæring: {
+            dokumentReferanse: data.dokumentReferanse,
             pasient: {
                 navn: somNavn(data.barn.name),
                 id: data.barn.fnr!!,
