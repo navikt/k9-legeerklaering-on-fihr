@@ -1,4 +1,5 @@
 import { SelfApi } from "@/integrations/self/SelfApi";
+import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 export class SelfClient implements SelfApi {
     async generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob> {

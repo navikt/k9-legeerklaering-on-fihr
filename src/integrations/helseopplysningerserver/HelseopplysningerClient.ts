@@ -2,6 +2,7 @@ import 'server-only';
 import { HelseopplysningerApi } from "@/integrations/helseopplysningerserver/HelseopplysningerApi";
 import { getServerEnv } from "@/utils/env";
 import AzureClientConfiguration from "@/auth/azure/AzureClientConfiguration";
+import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 export default class HelseopplysningerClient implements HelseopplysningerApi {
     async generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob> {
