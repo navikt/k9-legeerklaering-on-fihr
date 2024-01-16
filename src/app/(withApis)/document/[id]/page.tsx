@@ -2,7 +2,7 @@
 import FhirApiContext from "@/app/(withApis)/FhirApiContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { isInited, isInitError, isIniting } from "@/app/hooks/useAsyncInit";
-import { Alert, BodyShort, Box, Button, Heading, Link, VStack } from "@navikt/ds-react";
+import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Page, VStack } from "@navikt/ds-react";
 import { useBaseApi } from "@/app/(withApis)/BaseApi";
 import TopBar from "@/app/components/topbar/TopBar";
 import NavNextLink from "@/app/components/NavNextLink";
@@ -35,22 +35,23 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
         window.close()
     }
 
-    return <VStack>
+    return <Page>
         <TopBar
             loading={baseApi.loading !== false || isIniting(fhirApi)}
             reload={reload}
             user={baseApi.initData?.practitioner}
         />
         <Box className="flex justify-center" padding={{xs: "2", md: "6"}}>
+            <Page.Block width="lg">
             <VStack gap="6">
                 <Alert variant="success">
                     <Heading size="medium">Legeerklæring lagret</Heading>
-                    <BodyShort size="small">Legeerklæringen er nå lagret i pasientens journal.</BodyShort>
-                    <br/>
-                    <BodyShort size="small">Husk at den/de som skal søke om pleiepenger må få den overlevert elektronisk
+                    <BodyShort size="small" spacing>Legeerklæringen er nå lagret i pasientens journal.</BodyShort>
+                </Alert>
+                <Alert variant="info">
+                    <BodyShort size="small" spacing>Husk at den/de som skal søke om pleiepenger må få den overlevert elektronisk
                         eller via papirutskrift, slik at den kan legges ved søknad til NAV.</BodyShort>
-                    <br/>
-                    <BodyShort size="small">Pdf vises under i tilfelle du ønsker å skrive den ut med en gang</BodyShort>
+                    <BodyShort size="small" spacing>Pdf vises under i tilfelle du ønsker å skrive den ut med en gang.</BodyShort>
                 </Alert>
                 <Box className="flex justify-center">
                     { window.opener !== null ? // window.close doesn't work when window was not opened by script. Not sure what the case is in smart on fhir, so testing it here.
@@ -61,11 +62,17 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
                     <NavNextLink href="/">til ny utfylling</NavNextLink>
                 </Box>
             </VStack>
+            </Page.Block>
         </Box>
-        {
-            pdfBlob !== undefined ?
-                <PdfIframe pdf={pdfBlob} width="100%" height="1250px"/> :
-                <LoadingIndicator txt="Henter PDF" />
-        }
-    </VStack>
+        <HStack align="center" justify="center" padding="6">
+            <Page.Block width="lg">
+                <Heading size="small">Lagret PDF:</Heading>
+            {
+                pdfBlob !== undefined ?
+                    <PdfIframe pdf={pdfBlob} width="100%" height="1250px"/> :
+                    <LoadingIndicator txt="Henter PDF" />
+            }
+            </Page.Block>
+        </HStack>
+    </Page>
 }
