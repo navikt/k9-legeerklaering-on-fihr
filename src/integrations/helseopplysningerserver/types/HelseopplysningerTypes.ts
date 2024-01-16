@@ -10,7 +10,7 @@ interface Diagnose {
     kode: string;
 }
 
-interface PSBLegeerklæringInnsending {
+export interface PSBLegeerklæringInnsending {
     legeerklæring: PSBLegeerklæring;
     lege: Lege;
     sykehus: Sykehus;
@@ -21,12 +21,13 @@ interface Lege {
     hpr: string;
 }
 
-interface Navn {
+export interface Navn {
     fornavn: string;
     etternavn: string;
 }
 
-interface PSBLegeerklæring {
+export interface PSBLegeerklæring {
+    readonly dokumentReferanse: string;
     pasient: Pasient;
     vurderingAvBarnet: string;
     vurderingAvOmsorgspersoner?: string;
