@@ -1,6 +1,7 @@
 import { HelseopplysningerApi } from "@/integrations/helseopplysningerserver/HelseopplysningerApi";
 import {readFile} from "node:fs/promises";
 import {resolve} from "node:path";
+import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 /**
  * A fake implementation of the client for helseopplysninger server, for local development/testing without having to
