@@ -25,6 +25,7 @@ import { DocumentReferenceStatusKind, IBinary, IDocumentReference } from '@ahrym
 import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 import { base64ToBlob, blobToBase64 } from "@/utils/base64";
+import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 
 export default class ProxiedFhirClientWrapper implements FhirApi {
@@ -81,7 +82,8 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 name: practitionerFromRole.name,
                 practitionerRoleId: iPractitionerRole.id,
                 activeSystemUser: practitionerFromRole.activeSystemUser === undefined ? true : practitionerFromRole.activeSystemUser,
-                organizationReference: iPractitionerRole.organization?.reference
+                organizationReference: iPractitionerRole.organization?.reference,
+                departmentReference: practitionerFromRole.departmentReference,
             }
         }
         // Practitioner role did not have complete info, try getting it from Practitioner endpoint
@@ -105,19 +107,20 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                 practitionerRoleId: iPractitionerRole.id,
                 name: mergedPractitioner.name,
                 activeSystemUser: mergedPractitioner.activeSystemUser,
-                organizationReference: iPractitionerRole.organization?.reference
+                organizationReference: iPractitionerRole.organization?.reference,
+                departmentReference: mergedPractitioner.departmentReference,
             }
         } else {
             throw new IncompletePractitioner(mergedPractitioner)
         }
     }
 
-    public async createDocument(patientEhrId: string, practitionerRoleId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string> {
+    public async createDocument(patientEhrId: string, practitionerRoleId: string, custodianReference: DipsDepartmentReference, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string> {
         const pdfAsBase64 = await blobToBase64(pdf);
         const documentReference = createAndValidateDocumentReferencePayload(
             patientEhrId,
             practitionerRoleId,
-            hospitalEhrId,
+            custodianReference,
             DocumentReferenceStatusKind._current,
             description,
             [

@@ -38,7 +38,7 @@ export default function Home() {
     const handleFormSubmit = async (submittedData: LegeerklaeringDokument) => {
         if(isInited(fhirApi)) {
             const pdf = await helseOpplysningerApi.generatePdf(mapTilPSBLegeerklæringInnsending(submittedData))
-            const documentId = await fhirApi.createDocument(submittedData.barn.ehrId, submittedData.lege.practitionerRoleId!!, submittedData.sykehus.ehrId!!, submittedData.dokumentReferanse, pdf)
+            const documentId = await fhirApi.createDocument(submittedData.barn.ehrId, submittedData.lege.practitionerRoleId!!, submittedData.dokumentAnsvarlig, submittedData.dokumentReferanse, pdf)
             router.push(`/document/${documentId}`)
         } else {
             throw new Error("fhirApi not initialized, cannot submit")

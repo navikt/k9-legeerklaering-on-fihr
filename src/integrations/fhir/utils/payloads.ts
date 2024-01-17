@@ -2,6 +2,7 @@ import { DocumentReferenceStatusKind, IDocumentReference_Content } from '@ahryma
 import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
+import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 // Viss oppretting av DocumentReference returnerer feilmelding
 // (This document can not be saved without having EPR groups set.), så kan det vere pga feil i oppsett av brukertilgang.
@@ -10,7 +11,7 @@ const dipsDokumentType = "-1001535"
 export const createAndValidateDocumentReferencePayload = (
     patientIdentifier: string,
     practitionerRoleIdentifier: string,
-    organizationIdentifier: string,
+    custodianReference: DipsDepartmentReference,
     documentReferenceStatus: DocumentReferenceStatusKind,
     description: LegeerklaeringDokumentReferanse,
     content: Array<IDocumentReference_Content>
@@ -35,8 +36,7 @@ export const createAndValidateDocumentReferencePayload = (
             }
         ],
         "custodian": {
-            // TODO: This should be changed to the department identifier for the practitioner
-            "reference": `Organization/afa1000145`
+            "reference": custodianReference
         },
         "description": description,
         "content": content
