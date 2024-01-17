@@ -136,7 +136,6 @@ export default class ProxiedFhirClientWrapper implements FhirApi {
                     "attachment": {
                         "contentType": "application/pdf",
                         "data": pdfAsBase64,
-                        "title": "title",
                     }
                 }
             ]

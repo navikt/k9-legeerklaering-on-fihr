@@ -3,6 +3,10 @@ import { validateOrThrow } from '@/integrations/fhir/fhirValidator';
 import { R4 } from '@ahryman40k/ts-fhir-types';
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
 
+// Viss oppretting av DocumentReference returnerer feilmelding
+// (This document can not be saved without having EPR groups set.), så kan det vere pga feil i oppsett av brukertilgang.
+const dipsDokumentType = "-1001535"
+
 export const createAndValidateDocumentReferencePayload = (
     patientIdentifier: string,
     practitionerRoleIdentifier: string,
@@ -18,33 +22,21 @@ export const createAndValidateDocumentReferencePayload = (
             "coding": [
                 {
                     "system": "http://dips.no/fhir/namingsystem/dips-documenttypeid",
-                    "code": "1001354"
+                    "code": `${dipsDokumentType}`
                 }
             ]
         },
         "subject": {
-            "reference": `Patient/${patientIdentifier}`,
-            "identifier": {
-                "system": "http://dips.no/fhir/namingsystem/dips-patientid",
-                "value": "2015801"
-            }
+            "reference": `Patient/${patientIdentifier}`
         },
         "author": [
             {
-                "reference": `PractitionerRole/${practitionerRoleIdentifier}`,
-                "identifier": {
-                    "system": "urn:oid:1.3.6.1.4.1.9038.51.1",
-                    "value": "1000755"
-                }
+                "reference": `PractitionerRole/${practitionerRoleIdentifier}`
             }
         ],
         "custodian": {
             // TODO: This should be changed to the department identifier for the practitioner
-            "reference": `Organization/afa1000145`,
-            "identifier": {
-                "system": "http://dips.no/fhir/namingsystem/dips-organizationid",
-                "value": "22"
-            }
+            "reference": `Organization/afa1000145`
         },
         "description": description,
         "content": content
