@@ -36,6 +36,8 @@ import {
     randomLegeerklaeringDokumentReferanse
 } from "@/models/LegeerklaeringDokumentReferanse";
 import { legeerklaeringDokumentReferanseSchema } from "@/models/yup/LegeerklaeringDokumentReferanseSchema";
+import { dipsDepartmentReferenceSchema } from "@/models/yup/DipsDepartmentReferenceSchema";
+import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -88,9 +90,11 @@ const bidiagnosekodeValidator: ObjectSchema<Diagnosekode> = yup.object({
 })
 
 const dokumentReferanseValidator: Schema<LegeerklaeringDokumentReferanse> = legeerklaeringDokumentReferanseSchema().required();
+const dokumentAnsvarligValidator: Schema<DipsDepartmentReference> = dipsDepartmentReferenceSchema().required()
 
 const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
     dokumentReferanse: dokumentReferanseValidator,
+    dokumentAnsvarlig: dokumentAnsvarligValidator,
     barn: yup.object({
         name: yup.string().trim()
             .required(tekst("legeerklaering.om-barnet.navn.paakrevd"))
@@ -108,7 +112,8 @@ const schema: ObjectSchema<LegeerklaeringDokument> = yup.object({
         hprNumber: yup.string().required(tekst("legeerklaering.om-legen.hpr-nummer.paakrevd")),
         name: yup.string().required(tekst("legeerklaering.om-legen.navn.paakrevd")),
         activeSystemUser: yup.boolean().required("legens systemstatus (aktiv) er påkrevd"),
-        practitionerRoleId: yup.string().required("Legens practitionerRoleId er påkrevd")
+        practitionerRoleId: yup.string().required("Legens practitionerRoleId er påkrevd"),
+        departmentReference: dipsDepartmentReferenceSchema().required(),
     }),
     sykehus: yup.object({
         ehrId: yup.string().optional(),
@@ -145,6 +150,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
         resolver: yupResolver(schema),
         defaultValues: {
             dokumentReferanse: randomLegeerklaeringDokumentReferanse(),
+            dokumentAnsvarlig: doctor?.departmentReference,
             barn: {
                 name: patient?.name,
                 ehrId: patient?.ehrId,
@@ -157,6 +163,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                 activeSystemUser: doctor?.activeSystemUser || false,
                 ehrId: doctor?.ehrId,
                 practitionerRoleId: doctor?.practitionerRoleId,
+                departmentReference: doctor?.departmentReference,
             },
             sykehus: {
                 name: hospital?.name,

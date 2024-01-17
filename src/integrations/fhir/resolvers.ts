@@ -9,7 +9,7 @@ import {
     IAddress,
     IBundle,
     IContactPoint,
-    IdentifierUseKind,
+    IdentifierUseKind, IExtension,
     IHumanName,
     IIdentifier,
     IPeriod,
@@ -24,6 +24,7 @@ import { R4 } from "@ahryman40k/ts-fhir-types";
 import { HprNumber } from "@/models/HprNumber";
 import { PartialPractitioner } from "@/models/Practitioner";
 import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
+import { DipsDepartmentReference, isDipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 /**
  * https://hl7.org/fhir/R4/datatypes.html#dateTime
@@ -251,13 +252,43 @@ export const trueIfUndefined = (active: boolean | undefined): boolean => active 
 export const resolvePractitionerFromIPractitionerRole = (practitionerRole: IPractitionerRole): PartialPractitioner => {
     const identifierValue = practitionerRole.practitioner?.identifier?.value
     const practitioner = iPractitionerFromListing(practitionerRole.contained || [])
+    // get the departmentReference for the user, if possible.
+    const departmentReference = resolveUsersDepartmentReference(practitionerRole.extension || [])
     return {
         ehrId: identifierValue,
         hprNumber: hprNumberFromIdentifiers(practitionerRole.identifier || []),
         practitionerRoleId: practitionerRole.id,
         name: officialHumanNameResolver(practitioner?.name),
-        activeSystemUser: trueIfUndefined(practitionerRole.active)
+        activeSystemUser: trueIfUndefined(practitionerRole.active),
+        departmentReference
     }
+}
+
+/**
+ * extract a dips department reference with given url from an extension array
+ */
+export const dipsDepartmentReferenceFromExtensions = (extensions: IExtension[], matchUrl: `http://dips.no/fhir/StructureDefinition/R4/${string}`): DipsDepartmentReference | undefined => {
+    for(const extension of extensions) {
+        if(
+            extension.url === matchUrl &&
+            extension.valueReference !== undefined &&
+            extension.valueReference.reference !== undefined &&
+            isDipsDepartmentReference(extension.valueReference.reference)
+        ) {
+            return extension.valueReference.reference
+        }
+    }
+    return undefined
+}
+
+export const resolveUsersDepartmentReference = (extensions: IExtension[]): DipsDepartmentReference | undefined => {
+    // The user can have two department references set in extension. Often they're the same, but not always.
+    // We should use the DIPSPractitionerRoleUserRoleDepartment reference if set, otherwise try using
+    // DIPSPractitionerRoleHealthcarePartyDepartment. (https://jira.adeo.no/browse/TSF-3837).
+    const userRoleDepartmentUrl = "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleUserRoleDepartment"
+    const healthcarePartyDepartmentUrl = "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleHealthcarePartyDepartment"
+    return dipsDepartmentReferenceFromExtensions(extensions, userRoleDepartmentUrl) ||
+        dipsDepartmentReferenceFromExtensions(extensions, healthcarePartyDepartmentUrl)
 }
 
 export const resolvePractitionerFromIPractitioner = (iPractitioner: IPractitioner): PartialPractitioner => {

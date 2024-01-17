@@ -1,4 +1,5 @@
 import { HprNumber } from "@/models/HprNumber";
+import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 export default interface Practitioner {
     readonly ehrId: string;
@@ -6,7 +7,9 @@ export default interface Practitioner {
     readonly practitionerRoleId: string | undefined;
     readonly name: string;
     readonly activeSystemUser: boolean;
-
+    // If the users practitionerRole is connected to a department, its reference is set here.
+    // This is then used as a default value for custodian on created documents.
+    readonly departmentReference: DipsDepartmentReference | undefined;
 }
 
 /**
