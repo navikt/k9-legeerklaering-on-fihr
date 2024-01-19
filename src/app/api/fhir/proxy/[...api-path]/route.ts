@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FhirProxy } from "@/integrations/fhir/FhirProxy";
 import { logRequest, logResponse } from "@/utils/loggerUtils";
-import { FhirSessionValidator } from "@/auth/fhir/FhirSessionValidator";
+import { FhirSession } from "@/auth/fhir/FhirSession";
 import { FhirAuthError } from "@/auth/fhir/FhirAuthError";
+import { JwtVerificationInput } from "@/auth/fhir/JwtVerificationInput";
 
 const authErrorResponse = (text: string): Response => {
     return new NextResponse(text, {status: 401});
@@ -13,9 +14,8 @@ const proxyHandler = async (request: NextRequest): Promise<Response> => {
     const authHeader = request.headers.get("Authorization")
     if(authHeader !== null) {
         try {
-            // This verifies that incoming JWT is issued by a valid issuer.
-            // TODO Consider adding more checks
-            await FhirSessionValidator.verifyJWT(authHeader)
+            // This verifies that incoming JWT is issued by a valid issuer and has a hpr-nummer claim
+            await FhirSession.fromVerifiedJWT(JwtVerificationInput.fromAuthorizationHeader(authHeader))
         } catch (verifErr) {
             if(verifErr instanceof FhirAuthError) {
                 return authErrorResponse(verifErr.message)
