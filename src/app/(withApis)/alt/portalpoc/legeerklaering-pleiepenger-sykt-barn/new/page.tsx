@@ -2,9 +2,8 @@
 import CenterColumn from "../../CenterColumn";
 import InitDataDependentRender from "../../InitDataDependentRender";
 import React, { useContext } from "react";
-import { BaseApiContext } from "../../BaseApi";
 import PaddedPanel from "../../PaddedPanel";
-import { Box, Button, Checkbox, CheckboxGroup, Heading, HStack, Label, ReadMore, Textarea, } from "@navikt/ds-react";
+import { Box, Button, Heading, HStack, Label, ReadMore, Textarea, } from "@navikt/ds-react";
 import Section from "@/app/components/Section";
 import { tekst } from "@/utils/tekster";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
@@ -17,6 +16,7 @@ import { Diagnosekode } from "@navikt/diagnosekoder";
 import DatePeriod from "@/models/DatePeriod";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { logger } from "@navikt/next-logger";
+import { BaseApiContext } from "@/app/(withApis)/BaseApi";
 
 interface FormData {
     legensVurdering: string;

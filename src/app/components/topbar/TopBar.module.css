@@ -1,0 +1,96 @@
+
+.bar {
+    padding: var(--a-spacing-2, 8px);
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: var(--a-spacing-2, 8px);
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--a-bg-default, white);
+    /* We want the bar to be above inputs and other page content, but below popovers, modals, etc. */
+    z-index: calc(var(--a-z-index-popover, 1000) - 100);
+    transition: box-shadow 0.5s;
+    min-height: 64px;
+}
+.navlogo {
+    align-items: flex-start;
+}
+.topnavigation {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+.beta {
+    transform: rotate(-14deg);
+    transform-origin: -30px;
+    opacity: 0.8;
+    position: absolute;
+    left: 18rem;
+    top: 1rem;
+    z-index: -1;
+}
+.bottombordered {
+    box-shadow: var(--a-shadow-small);
+}
+
+.spacer {
+    width: fit-content;
+    block-size: fit-content;
+    flex-grow: 1;
+}
+
+.usersummary {
+    text-align: left;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas:
+        "avatar name downer"
+        "avatar hpr downer";
+    border-radius: var(--a-border-radius-medium);
+    padding: var(--a-spacing-1);
+}
+.usersummary:hover {
+    background-color: var(--a-surface-hover);
+/*var(--a-surface-action-subtle-hover);*/
+}
+
+.avatar {
+    color: var(--a-icon-subtle);
+    grid-area: avatar;
+    align-self: center;
+}
+.name {
+    grid-area: name;
+}
+.hpr {
+    grid-area: hpr;
+}
+.downer {
+    color: var(--a-icon-subtle);
+    grid-area: downer;
+    align-self: center;
+    justify-self: center;
+}
+
+
+.userframe {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    gap: var(--a-spacing-2);
+}
+
+.labelRight {
+    text-align: right;
+}
+
+.successColor {
+    color: var(--a-surface-success);
+}
+.warningColor {
+    color: var(--a-surface-warning);
+}

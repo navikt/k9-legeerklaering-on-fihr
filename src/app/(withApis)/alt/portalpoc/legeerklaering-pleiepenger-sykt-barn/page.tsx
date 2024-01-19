@@ -2,13 +2,13 @@
 import CenterColumn from "../CenterColumn";
 import { BodyShort, Box, Heading, HStack, Table, VStack } from "@navikt/ds-react";
 import React, { useContext } from "react";
-import { BaseApiContext } from "../BaseApi";
 import { ArrowRightIcon, PersonIcon } from "@navikt/aksel-icons";
 import PatientListing from "../PatientListing";
 import NavNextLink from "@/app/components/NavNextLink";
 import PaddedPanel from "../PaddedPanel";
 import InitDataDependentRender from "../InitDataDependentRender";
 import NavNextLinkButton from "@/app/components/NavNextLinkButton";
+import { BaseApiContext } from "@/app/(withApis)/BaseApi";
 
 interface Statement {
     readonly sentDate: Date | undefined;

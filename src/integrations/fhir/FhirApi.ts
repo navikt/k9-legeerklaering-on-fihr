@@ -4,5 +4,6 @@ import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokument
 export interface FhirApi {
     getInitState(): Promise<InitData>;
 
-    createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<boolean>;
+    createDocument(patientEhrId: string, practitionerRoleId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string>;
+    getDocumentPdf(documentId: string): Promise<Blob>;
 }

@@ -1,10 +1,10 @@
-import { BaseApi } from "./BaseApi";
 import UserListing from "./UserListing";
 import { Box, Button, Heading, HStack, VStack } from "@navikt/ds-react";
 import HospitalListing from "./HospitalListing";
 import { ArrowsCirclepathIcon, HospitalIcon, PersonCircleIcon } from "@navikt/aksel-icons";
 import InitDataDependentRender from "./InitDataDependentRender";
 import { componentSize } from '@/utils/constants';
+import { BaseApi } from "@/app/(withApis)/BaseApi";
 
 const StartStatus = (baseApi: BaseApi) => {
         return (

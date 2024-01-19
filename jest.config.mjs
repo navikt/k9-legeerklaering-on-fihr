@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 const config = {
   preset: 'ts-jest',
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: '@happy-dom/jest-environment',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   }
