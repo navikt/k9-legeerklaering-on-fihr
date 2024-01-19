@@ -2,11 +2,20 @@ import { FhirApi } from "@/integrations/fhir/FhirApi";
 import InitData from "@/models/InitData";
 import delay from "@/utils/delay";
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
+import { fakePdf } from "@/app/simulation/fakePdf";
 
 class Fake1FhirApi implements FhirApi {
-    createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    private readonly fakeDocumentId = "fakeDocumentId"
+    createDocument(patientEhrId: string, providerEhrId: string, hospitalEhrId: string, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string> {
+        return Promise.resolve(this.fakeDocumentId) // Currently it doesn't matter what value is returned here, the other fake apis don't use it.
     }
+    async getDocumentPdf(documentId: string): Promise<Blob> {
+        if(documentId !== this.fakeDocumentId) {
+            throw new Error(`Expected documentId to be ${this.fakeDocumentId}, was: ${documentId}`)
+        }
+        return await fakePdf()
+    }
+
     async getInitState(): Promise<InitData> {
         await delay(1000);
         return {
@@ -20,6 +29,7 @@ class Fake1FhirApi implements FhirApi {
                 name: "Fake doctor1",
                 hprNumber: "9911",
                 ehrId: "fakedoctor-1",
+                practitionerRoleId: "pracRoleId-1",
                 activeSystemUser: true,
             },
             hospital: {

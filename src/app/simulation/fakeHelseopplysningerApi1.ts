@@ -1,6 +1,5 @@
 import { HelseopplysningerApi } from "@/integrations/helseopplysningerserver/HelseopplysningerApi";
-import {readFile} from "node:fs/promises";
-import {resolve} from "node:path";
+import { fakePdf } from "@/app/simulation/fakePdf";
 import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
 
 /**
@@ -10,9 +9,7 @@ import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerser
 export class FakeHelseopplysningerApi1 implements HelseopplysningerApi {
 
     async generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob> {
-        const path = resolve('./src/app/simulation/fake-generated.pdf')
-        const content = await readFile(path)
-        return new Blob([content], {type: "application/pdf"})
+        return await fakePdf()
     }
 }
 

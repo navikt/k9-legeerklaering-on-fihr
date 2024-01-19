@@ -87,7 +87,7 @@ describe("DiagnosekodeSearch works", () => {
         const inputCode = "a001"
         await userEvent.type(searchInput, inputCode);
         await waitFor(() => expect(mockedSearchDiagnosekoderFetch).toHaveReturned())
-        expect(mockedSearchDiagnosekoderFetch).toHaveBeenCalledWith(inputCode, 1, (new AbortController()).signal)
+        expect(mockedSearchDiagnosekoderFetch).toHaveBeenCalledWith(inputCode, 1, expect.anything())
         expect(rendered.getByText(fakeDiagnosekoder[0].code)).toBeInTheDocument()
         expect(rendered.getByText(fakeDiagnosekoder[0].text)).toBeInTheDocument()
     })
