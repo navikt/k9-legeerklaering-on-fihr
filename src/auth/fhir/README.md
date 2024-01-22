@@ -20,6 +20,7 @@ public key that will be used to validate the session. In detail, it performs the
 5. Return a `JwtVerificationInput` with the auth token string and the public key fetcher, ready to be used for verification.
 
 The `FhirSession.fromAuthorizationHeader` then performs the desired verification of the auth token. It cryptographically
-verifies that the issuer claim and 'hpr-nummer' claim is correct, and returns a new class instance with these properties set.
+verifies that the 'issuer' claim and 'hpr-nummer' claim is correct, that the auth token was made for our client_id, and 
+returns a new class instance with the 'issuer' and 'hpr-nummer' properties set.
 
 If the incoming auth token cannot be verified, or does not have the required information, an error is thrown.
