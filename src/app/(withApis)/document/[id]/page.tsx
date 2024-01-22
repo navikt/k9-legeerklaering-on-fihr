@@ -50,7 +50,7 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
                     <BodyShort size="small" spacing>Pdf vises under i tilfelle du ønsker å skrive den ut med en gang.</BodyShort>
                 </Alert>
                 <Box className="flex justify-center">
-                    Lukk fanen, eller gå <NavNextLink href="/">til ny utfylling</NavNextLink>
+                    Lukk fanen, eller gå&nbsp;<NavNextLink href="/">til ny utfylling</NavNextLink>
                 </Box>
             </VStack>
             </Page.Block>
