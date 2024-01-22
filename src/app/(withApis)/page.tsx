@@ -12,12 +12,14 @@ import { Box, HStack, VStack } from '@navikt/ds-react';
 import TopBar from '@/app/components/topbar/TopBar';
 import { BaseApi, useBaseApi } from '@/app/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
-import { mapTilPSBLegeerklæringInnsending } from "@/app/api/oppsummering/mapper/mapper";
 import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
+import {
+    mapTilPSBLegeerklæringInnsending
+} from "@/integrations/helseopplysningerserver/types/mapTilPSBLegeerklæringInnsending";
 
 export const dynamic = 'force-dynamic'
 
