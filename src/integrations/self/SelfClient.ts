@@ -23,7 +23,7 @@ export class SelfClient implements SelfApi {
 
     async generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob> {
         const authToken = await this.fhirAuthToken()
-        const pdfResponse = await fetch(`/api/oppsummering/pdf`, {
+        const pdfResponse = await fetch(`/api/pdf`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
