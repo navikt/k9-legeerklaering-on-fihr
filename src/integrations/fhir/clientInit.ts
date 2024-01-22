@@ -14,7 +14,7 @@ import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapp
  *
  * @param isLaunch set to true when launching a new context in a existing window/tab, to force a re-authentication
  */
-export const clientInitInBrowser = async (isLaunch: boolean): Promise<FhirApi> => {
+export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> => {
     if (isLaunch) {
         sessionStorage.clear();
     }
@@ -32,8 +32,7 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<FhirApi> =
         console.warn(`client init not complete. patient id: ${client.patient.id}, token set? ${client.state.tokenResponse?.access_token !== undefined}`)
 
     }
-
-    return new ProxiedFhirClientWrapper(client)
+    return client
 }
 
 export const clientCopyWithProxyUrl = (client: Client, proxyUrl: URL): Client =>  {
