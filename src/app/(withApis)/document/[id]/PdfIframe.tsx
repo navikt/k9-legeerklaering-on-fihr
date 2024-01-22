@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+'use client';
+import React, { useEffect } from "react";
 
 export interface PdfIframeProps {
     readonly pdf: Blob;
@@ -7,21 +8,16 @@ export interface PdfIframeProps {
 }
 
 const PdfIframe = ({pdf, width, height}: PdfIframeProps) => {
-    const objectUrl = useRef<string | undefined>()
+    const objectUrl = URL.createObjectURL(pdf)
 
+    // Use effect to get cleanup of created object url when component is unmounted, to reclaim memory
     useEffect(() => {
-        const prevObjectUrl = objectUrl.current
-        const newObjectUrl = URL.createObjectURL(pdf)
-        objectUrl.current = newObjectUrl
-        if(prevObjectUrl !== undefined) { // cleanup previous objecturl before creating new
-            URL.revokeObjectURL(prevObjectUrl)
+        return () => { // unmount callback
+            URL.revokeObjectURL(objectUrl)
         }
-        return () => { // cleanup when component is unmounted
-            URL.revokeObjectURL(newObjectUrl)
-        }
-    }, [pdf]);
+    }, [objectUrl]);
 
-    return <iframe src={objectUrl.current} width={width} height={height} />
+    return <iframe src={objectUrl} width={width} height={height} />
 }
 
 export default PdfIframe
