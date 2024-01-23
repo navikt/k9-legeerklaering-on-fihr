@@ -31,10 +31,6 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
         await Promise.all([baseApi.refreshInitData(), loadDocument()])
     }
 
-    const close = () => {
-        window.close()
-    }
-
     return <Page>
         <TopBar
             loading={baseApi.loading !== false || isIniting(fhirApi)}
@@ -43,36 +39,31 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
         />
         <Box className="flex justify-center" padding={{xs: "2", md: "6"}}>
             <Page.Block width="lg">
+            <VStack gap="6">
+                <Alert variant="success">
+                    <Heading size="medium">Legeerklæring lagret</Heading>
+                    <BodyShort size="small" spacing>Legeerklæringen er nå lagret i pasientens journal.</BodyShort>
+                </Alert>
+                <Alert variant="info">
+                    <BodyShort size="small" spacing>Husk at den/de som skal søke om pleiepenger må få den overlevert elektronisk
+                        eller via papirutskrift, slik at den kan legges ved søknad til NAV.</BodyShort>
+                    <BodyShort size="small" spacing>Pdf vises under i tilfelle du ønsker å skrive den ut med en gang.</BodyShort>
+                </Alert>
                 <Box className="flex justify-center">
-                    <VStack gap="6">
-                        <Alert variant="success">
-                            <Heading size="medium">Legeerklæring lagret</Heading>
-                            <BodyShort size="small" spacing>Legeerklæringen er nå lagret i pasientens journal.</BodyShort>
-                        </Alert>
-                        <Alert variant="info">
-                            <BodyShort size="small" spacing>Husk at den/de som skal søke om pleiepenger må få den overlevert elektronisk
-                                eller via papirutskrift, slik at den kan legges ved søknad til NAV.</BodyShort>
-                            <BodyShort size="small" spacing>Pdf vises under i tilfelle du ønsker å skrive den ut med en gang.</BodyShort>
-                        </Alert>
-                        <Box className="flex justify-center">
-                            { window.opener !== null ? // window.close doesn't work when window was not opened by script. Not sure what the case is in smart on fhir, so testing it here.
-                                <Button type="button" onClick={close} size="xsmall" variant="tertiary">Lukk fanen</Button> :
-                                <span>Lukk fanen</span>
-                            }
-                            <span>, eller gå&nbsp;</span>
-                            <NavNextLink href="/">til ny utfylling</NavNextLink>
-                        </Box>
-                    </VStack>
+                    Lukk fanen, eller gå&nbsp;<NavNextLink href="/">til ny utfylling</NavNextLink>
                 </Box>
+            </VStack>
             </Page.Block>
         </Box>
-        <Page.Block width="lg">
-            <Heading size="small">Lagret PDF:</Heading>
+        <HStack align="center" justify="center" padding="6">
+            <Page.Block width="lg">
+                <Heading size="small">Lagret PDF:</Heading>
             {
                 pdfBlob !== undefined ?
                     <PdfIframe pdf={pdfBlob} width="100%" height="1250px"/> :
                     <LoadingIndicator txt="Henter PDF" />
             }
-        </Page.Block>
+            </Page.Block>
+        </HStack>
     </Page>
 }
