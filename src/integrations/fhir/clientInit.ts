@@ -1,9 +1,7 @@
 import { oauth2 } from 'fhirclient';
 
-import { fhirClientId } from '@/utils/environment';
 import Client from 'fhirclient/lib/Client';
-import { FhirApi } from "@/integrations/fhir/FhirApi";
-import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapper";
+import fhirClientId from "@/auth/fhir/fhirClientId";
 
 /**
  * Initializes the smart client. If the URL is a "launch url" coming from the EHR system, that is used, and the resulting
@@ -19,9 +17,8 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
         sessionStorage.clear();
     }
 
-    const clientId: string = await fhirClientId();
     const client: Client = await oauth2.init({
-        clientId: clientId,
+        clientId: fhirClientId,
         scope: "launch patient/*.read openid fhirUser profile",
         redirectUri: "/"
     });
