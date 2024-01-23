@@ -8,14 +8,13 @@ import { JwtVerificationInput } from "@/auth/fhir/JwtVerificationInput";
 import { FhirSession } from "@/auth/fhir/FhirSession";
 import { FhirAuthError } from "@/auth/fhir/FhirAuthError";
 import { FhirSessionIssuers } from "@/auth/fhir/FhirSessionIssuers";
-import { fhirClientId } from "@/utils/environment";
-
+import fhirClientId from "@/auth/fhir/fhirClientId";
 
 const prepareFakeValidVerificationInput = async (clientId?: string) => {
     const { publicKey, privateKey } = await jose.generateKeyPair('RS256')
     const issuer = FhirSessionIssuers.OPENDIPS_TEST
     const hprNumber = "111222"
-    const configuredClientId = clientId || await fhirClientId()
+    const configuredClientId = clientId || fhirClientId
     const fakeValidPayload: JWTPayload = {
         aud: "legeerklæring test",
         sub: "test1",

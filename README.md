@@ -14,7 +14,6 @@
 Create a .env file in the root of the project with the following variables:
 
 - `FHIR_BASE_URL=https://api.dips.no/fhir`
-- `FHIR_CLIENT_ID=NAV_legeerklaering`
 - `FHIR_SUBSCRIPTION_KEY` (can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile))
 - `HELSEOPPLYSNINGER_SERVER_BASE_URL=https://helseserver.intern.dev.nav.no`
 - `HELSEOPPLYSNINGER_SERVER_SCOPE=api://dev-gcp.helseopplysninger.server-helse/.default`
