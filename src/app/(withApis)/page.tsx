@@ -11,8 +11,8 @@ import { BaseApi, useBaseApi } from '@/app/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
-import CenterColumn from "@/app/(withApis)/alt/portalpoc/CenterColumn";
-import InitDataDependentRender from "@/app/(withApis)/alt/portalpoc/InitDataDependentRender";
+import CenterColumn from "@/app/components/CenterColumn";
+import InitDataDependentRender from "@/app/components/InitDataDependentRender";
 
 export const dynamic = 'force-dynamic'
 
