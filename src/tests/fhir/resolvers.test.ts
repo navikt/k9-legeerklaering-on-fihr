@@ -1,6 +1,7 @@
 import {
     dateTimePeriodResolver,
     dateTimeResolver,
+    dipsDepartmentReferenceFromExtensions,
     dnrFromIdentifier,
     dnrFromIdentifiers,
     fnrFromIdentifier,
@@ -10,12 +11,13 @@ import {
     isDateWithinPeriod,
     organizationNumberFromIdentifier,
     phoneContactResolver,
-    postalAddressResolver,
+    postalAddressResolver, resolveUsersDepartmentReference,
 } from "@/integrations/fhir/resolvers";
 import {
     ContactPointSystemKind,
     IContactPoint,
     IdentifierUseKind,
+    IExtension,
     IIdentifier,
     IPeriod
 } from "@ahryman40k/ts-fhir-types/lib/R4";
@@ -245,5 +247,66 @@ describe("fhir resolve fnr or dnr from identifiers", () => {
         expect(fnrFromIdentifiers(inp) || dnrFromIdentifiers(inp)).toEqual(fnrInput)
         inp = [fnrIdentifierInput, dnrIdentifierInput]
         expect(fnrFromIdentifiers(inp) || dnrFromIdentifiers(inp)).toEqual(fnrInput)
+    })
+})
+
+describe("fhir resolve DipsDepartmentReference from extension(s)", () => {
+    const extensionsSample1  = [
+        {
+            "url": "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleHealthCarePartyType",
+            "valueString": "Person"
+        },
+        {
+            "url": "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleHealthcarePartyDepartment",
+            "valueReference": {
+                "reference": "Organization/afaDepartment1",
+                "identifier": {
+                    "use": IdentifierUseKind._official,
+                    "system": "urn:oid:1.3.6.1.4.1.9038.70.3",
+                    "value": "1"
+                }
+            }
+        },
+        {
+            "url": "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleHospital",
+            "valueReference": {
+                "reference": "Organization/afm1",
+                "identifier": {
+                    "use": IdentifierUseKind._official,
+                    "system": "urn:oid:2.16.578.1.12.4.1.4.101",
+                    "value": "970948139"
+                }
+            }
+        },
+        {
+            "url": "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleUserRoleDepartment",
+            "valueReference": {
+                "reference": "Organization/afaDepartment2",
+                "identifier": {
+                    "use": IdentifierUseKind._official,
+                    "system": "urn:oid:1.3.6.1.4.1.9038.70.3",
+                    "value": "2"
+                }
+            }
+        },
+        {
+            "url": "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleUserRoleLastUpdated",
+            "valueDateTime": "2023-09-20T12:40:05+00:00"
+        }
+    ] satisfies IExtension[]
+    test("with non-existing url", () => {
+        expect(dipsDepartmentReferenceFromExtensions(extensionsSample1, "http://dips.no/fhir/StructureDefinition/R4/WRONG"))
+            .toBeUndefined()
+    })
+    test("with url matching value other than department reference", () => {
+        expect(dipsDepartmentReferenceFromExtensions(extensionsSample1, "http://dips.no/fhir/StructureDefinition/R4/DIPSPractitionerRoleHospital"))
+            .toBeUndefined()
+    })
+    test("with both references in input choose correct one", () => {
+        expect(resolveUsersDepartmentReference(extensionsSample1)).toEqual("Organization/afaDepartment2")
+    })
+    test("with only DIPSPractitionerRoleHealthcarePartyDepartment in input, choose it", () => {
+        const input = extensionsSample1.filter(r => !r.url.endsWith("DIPSPractitionerRoleUserRoleDepartment"))
+        expect(resolveUsersDepartmentReference(input)).toEqual("Organization/afaDepartment1")
     })
 })

@@ -31,6 +31,7 @@ class Fake1FhirApi implements FhirApi {
                 ehrId: "fakedoctor-1",
                 practitionerRoleId: "pracRoleId-1",
                 activeSystemUser: true,
+                departmentReference: "Organization/afaFakeDepartment-1"
             },
             hospital: {
                 name: "Fake hospital1",

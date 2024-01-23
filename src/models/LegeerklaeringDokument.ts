@@ -4,6 +4,7 @@ import Practitioner from "@/models/Practitioner";
 import Hospital from "@/models/Hospital";
 import { type Diagnosekode } from '@navikt/diagnosekoder'
 import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
+import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
 
 export default interface LegeerklaeringDokument {
     readonly dokumentReferanse: LegeerklaeringDokumentReferanse;
@@ -16,4 +17,5 @@ export default interface LegeerklaeringDokument {
     innleggelsesPerioder: DatePeriod[];
     lege: Practitioner;
     sykehus: Hospital;
+    readonly dokumentAnsvarlig: DipsDepartmentReference;
 }
