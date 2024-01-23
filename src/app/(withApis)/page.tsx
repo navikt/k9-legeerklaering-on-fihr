@@ -17,9 +17,6 @@ import { useRouter } from "next/navigation";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
-import {
-    mapTilPSBLegeerklæringInnsending
-} from "@/integrations/helseopplysningerserver/types/mapTilPSBLegeerklæringInnsending";
 
 export const dynamic = 'force-dynamic'
 
@@ -39,7 +36,7 @@ export default function Home() {
 
     const handleFormSubmit = async (submittedData: LegeerklaeringDokument) => {
         if(isInited(fhirApi)) {
-            const pdf = await helseOpplysningerApi.generatePdf(mapTilPSBLegeerklæringInnsending(submittedData))
+            const pdf = await helseOpplysningerApi.generatePdf(submittedData)
             const documentId = await fhirApi.createDocument(submittedData.barn.ehrId, submittedData.lege.practitionerRoleId!!, submittedData.dokumentAnsvarlig, submittedData.dokumentReferanse, pdf)
             router.push(`/document/${documentId}`)
         } else {
