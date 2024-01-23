@@ -1,6 +1,6 @@
 'use client'
-import CenterColumn from "../../CenterColumn";
-import InitDataDependentRender from "../../InitDataDependentRender";
+import CenterColumn from "@/app/components/CenterColumn";
+import InitDataDependentRender from "@/app/components/InitDataDependentRender";
 import React, { useContext } from "react";
 import PaddedPanel from "../../PaddedPanel";
 import { Box, Button, Heading, HStack, Label, ReadMore, Textarea, } from "@navikt/ds-react";

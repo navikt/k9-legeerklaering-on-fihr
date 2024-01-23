@@ -3,7 +3,7 @@
 import React from "react";
 
 import { BodyShort, Heading } from "@navikt/ds-react";
-import CenterColumn from "../../CenterColumn";
+import CenterColumn from "@/app/components/CenterColumn";
 import PaddedPanel from "../../PaddedPanel";
 import NavNextLink from "@/app/components/NavNextLink";
 import { ExternalLinkIcon } from "@navikt/aksel-icons";
