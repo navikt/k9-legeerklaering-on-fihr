@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Alert,
     BodyShort,
@@ -32,7 +32,7 @@ export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
     readonly patient: Patient | undefined;
     readonly hospital: Hospital | undefined;
-    onFormSubmit: (data: LegeerklaeringDokument) => void
+    onFormSubmit: (data: LegeerklaeringDokument) => Promise<void>
 }
 
 export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, patient}: EhrInfoLegeerklaeringForm) {
@@ -95,9 +95,15 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             setValue('barn.birthDate', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
         }
     });
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const onSubmit = (data: LegeerklaeringDokument) => {
-        onFormSubmit(data)
+    const onSubmit = async (data: LegeerklaeringDokument) => {
+        try {
+            setIsSubmitting(true)
+            await onFormSubmit(data)
+        } finally {
+            setIsSubmitting(false)
+        }
     };
 
     const onError: SubmitErrorHandler<LegeerklaeringDokument> = errors => {
@@ -229,6 +235,7 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
                         type="submit"
                         icon={<ChevronRightIcon aria-hidden/>}
                         iconPosition="right"
+                        loading={isSubmitting}
                     >
                         Lagre
                     </Button>
