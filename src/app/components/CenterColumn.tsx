@@ -1,7 +1,10 @@
 import ChildrenProp from "@/utils/ChildrenProp";
 
+import css from './CenterColumn.module.css';
+
 const CenterColumn = ({children}: ChildrenProp) => {
-    return <div className="mx-auto max-w-4xl p-4 pb-32">{children}</div>
+    const cssClass = `mx-auto ${css.centercolumn} p-4 pb-32`
+    return <div className={cssClass}>{children}</div>
 }
 
 export default CenterColumn;

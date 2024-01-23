@@ -8,6 +8,7 @@ import TopBar from "@/app/components/topbar/TopBar";
 import NavNextLink from "@/app/components/NavNextLink";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
 import PdfIframe from "@/app/(withApis)/document/[id]/PdfIframe";
+import CenterColumn from "@/app/components/CenterColumn";
 
 export default function DocumentViewPage({params}: {params: {id: string}}) {
     const fhirApi = useContext(FhirApiContext)
@@ -31,14 +32,13 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
         await Promise.all([baseApi.refreshInitData(), loadDocument()])
     }
 
-    return <Page>
+    return <VStack>
         <TopBar
             loading={baseApi.loading !== false || isIniting(fhirApi)}
             reload={reload}
             user={baseApi.initData?.practitioner}
         />
-        <Box className="flex justify-center" padding={{xs: "2", md: "6"}}>
-            <Page.Block width="lg">
+        <CenterColumn>
             <VStack gap="6">
                 <Alert variant="success">
                     <Heading size="medium">Legeerklæring lagret</Heading>
@@ -53,17 +53,12 @@ export default function DocumentViewPage({params}: {params: {id: string}}) {
                     Lukk fanen, eller gå&nbsp;<NavNextLink href="/">til ny utfylling</NavNextLink>
                 </Box>
             </VStack>
-            </Page.Block>
-        </Box>
-        <HStack align="center" justify="center" padding="6">
-            <Page.Block width="lg">
                 <Heading size="small">Lagret PDF:</Heading>
             {
                 pdfBlob !== undefined ?
                     <PdfIframe pdf={pdfBlob} width="100%" height="1250px"/> :
                     <LoadingIndicator txt="Henter PDF" />
             }
-            </Page.Block>
-        </HStack>
-    </Page>
+        </CenterColumn>
+    </VStack>
 }
