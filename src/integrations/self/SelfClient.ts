@@ -1,5 +1,5 @@
 import { SelfApi } from "@/integrations/self/SelfApi";
-import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 export type FhirAuthTokenResolver = () => Promise<string | undefined | null>
 
@@ -21,7 +21,7 @@ export class SelfClient implements SelfApi {
         return authToken
     }
 
-    async generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob> {
+    async generatePdf(innsending: LegeerklaeringDokument): Promise<Blob> {
         const authToken = await this.fhirAuthToken()
         const pdfResponse = await fetch(`/api/pdf`, {
             method: "POST",
