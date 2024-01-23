@@ -13,7 +13,9 @@ export const loadingTxt = (loading: BaseApi["loading"]): string | undefined =>
         "Kobler til journalsystem":
         loading === 'fhirLoading' ?
             "Henter informasjon fra Journalsystem" :
-            undefined ;
+            loading === 'hookIniting' ?
+                "Initialiserer klient":
+                undefined ;
 
 const LoadingIndicator = ({txt = "Laster EHR informasjon"}: LoadingIndicatorProps) => {
     return (
