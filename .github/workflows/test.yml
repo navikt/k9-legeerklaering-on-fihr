@@ -26,5 +26,3 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Kjøre tester
         run: npm test --maxWorkers=2
-        env:
-          HELSEOPPLYSNINGER_SERVER_SCOPE: api://not-a-real-scope
