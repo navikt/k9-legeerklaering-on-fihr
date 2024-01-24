@@ -5,14 +5,14 @@ import { FhirApi } from "@/integrations/fhir/FhirApi";
 import ensureError from "@/utils/ensureError";
 
 export interface BaseApi {
-    readonly loading: 'fhirConnecting' | 'fhirLoading' | false;
+    readonly loading: 'hookIniting' | 'fhirConnecting' | 'fhirLoading' | false;
     readonly error: Error | null;
     readonly initData: InitData | null;
     refreshInitData(): Promise<void>;
 }
 
 const defaultValue: BaseApi = {
-    loading: false,
+    loading: 'hookIniting',
     error: null,
     initData: null,
     async refreshInitData(): Promise<void> {

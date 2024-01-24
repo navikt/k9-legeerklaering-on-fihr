@@ -1,12 +1,12 @@
 'use client'
-import CenterColumn from "../CenterColumn";
+import CenterColumn from "@/app/components/CenterColumn"
 import { BodyShort, Box, Heading, HStack, Table, VStack } from "@navikt/ds-react";
 import React, { useContext } from "react";
 import { ArrowRightIcon, PersonIcon } from "@navikt/aksel-icons";
 import PatientListing from "../PatientListing";
 import NavNextLink from "@/app/components/NavNextLink";
 import PaddedPanel from "../PaddedPanel";
-import InitDataDependentRender from "../InitDataDependentRender";
+import InitDataDependentRender from "@/app/components/InitDataDependentRender";
 import NavNextLinkButton from "@/app/components/NavNextLinkButton";
 import { BaseApiContext } from "@/app/(withApis)/BaseApi";
 
