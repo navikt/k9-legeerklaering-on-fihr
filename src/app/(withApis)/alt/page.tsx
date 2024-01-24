@@ -1,4 +1,4 @@
-import CenterColumn from "./portalpoc/CenterColumn";
+import CenterColumn from "@/app/components/CenterColumn";
 import NextLink from "next/link";
 import { isSimulationAllowed } from "@/utils/environment";
 

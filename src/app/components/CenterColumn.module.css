@@ -1,0 +1,6 @@
+
+.centercolumn {
+    width: 796px;
+    max-width: 100%;
+    min-width: 456px; /* basert på enkel testing treng vi såpass */
+}

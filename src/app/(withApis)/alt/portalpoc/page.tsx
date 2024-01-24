@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { BodyShort, Heading, LinkPanel } from "@navikt/ds-react";
-import CenterColumn from "./CenterColumn";
+import CenterColumn from "@/app/components/CenterColumn";
 
 import NavNextLink from "@/app/components/NavNextLink";
 import StartStatus from "./StartStatus";
