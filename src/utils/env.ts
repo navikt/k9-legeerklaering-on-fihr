@@ -4,7 +4,6 @@ import * as yup from "yup";
 export type ServerEnv = yup.InferType<typeof serverEnvSchema>
 export const serverEnvSchema = yup.object().shape({
     // FHIR
-    FHIR_CLIENT_ID: yup.string().required(),
     FHIR_SUBSCRIPTION_KEY: yup.string().required(),
     FHIR_BASE_URL: yup.string().required(),
 
@@ -19,7 +18,6 @@ export const serverEnvSchema = yup.object().shape({
 
 const getRawServerConfig = () =>
     ({
-        FHIR_CLIENT_ID: process.env.FHIR_CLIENT_ID,
         FHIR_SUBSCRIPTION_KEY: process.env.FHIR_SUBSCRIPTION_KEY,
         FHIR_BASE_URL: process.env.FHIR_BASE_URL,
         HELSEOPPLYSNINGER_SERVER_BASE_URL: process.env.HELSEOPPLYSNINGER_SERVER_BASE_URL,
