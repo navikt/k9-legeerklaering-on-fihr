@@ -1,5 +1,5 @@
-import { PSBLegeerklæringInnsending } from "@/integrations/helseopplysningerserver/types/HelseopplysningerTypes";
+import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 
 export interface SelfApi {
-    generatePdf(innsending: PSBLegeerklæringInnsending): Promise<Blob>;
+    generatePdf(innsending: LegeerklaeringDokument): Promise<Blob>;
 }

@@ -1,9 +1,7 @@
 import { oauth2 } from 'fhirclient';
 
-import { fhirClientId } from '@/utils/environment';
 import Client from 'fhirclient/lib/Client';
-import { FhirApi } from "@/integrations/fhir/FhirApi";
-import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapper";
+import fhirClientId from "@/auth/fhir/fhirClientId";
 
 /**
  * Initializes the smart client. If the URL is a "launch url" coming from the EHR system, that is used, and the resulting
@@ -14,14 +12,13 @@ import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapp
  *
  * @param isLaunch set to true when launching a new context in a existing window/tab, to force a re-authentication
  */
-export const clientInitInBrowser = async (isLaunch: boolean): Promise<FhirApi> => {
+export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> => {
     if (isLaunch) {
         sessionStorage.clear();
     }
 
-    const clientId: string = await fhirClientId();
     const client: Client = await oauth2.init({
-        clientId: clientId,
+        clientId: fhirClientId,
         scope: "launch patient/*.read openid fhirUser profile",
         redirectUri: "/"
     });
@@ -32,8 +29,7 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<FhirApi> =
         console.warn(`client init not complete. patient id: ${client.patient.id}, token set? ${client.state.tokenResponse?.access_token !== undefined}`)
 
     }
-
-    return new ProxiedFhirClientWrapper(client)
+    return client
 }
 
 export const clientCopyWithProxyUrl = (client: Client, proxyUrl: URL): Client =>  {

@@ -12,7 +12,6 @@ import { Box, HStack, VStack } from '@navikt/ds-react';
 import TopBar from '@/app/components/topbar/TopBar';
 import { BaseApi, useBaseApi } from '@/app/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
-import { mapTilPSBLegeerklæringInnsending } from "@/app/api/oppsummering/mapper/mapper";
 import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
 import Practitioner from "@/models/Practitioner";
@@ -37,7 +36,7 @@ export default function Home() {
 
     const handleFormSubmit = async (submittedData: LegeerklaeringDokument) => {
         if(isInited(fhirApi)) {
-            const pdf = await helseOpplysningerApi.generatePdf(mapTilPSBLegeerklæringInnsending(submittedData))
+            const pdf = await helseOpplysningerApi.generatePdf(submittedData)
             const documentId = await fhirApi.createDocument(submittedData.barn.ehrId, submittedData.lege.practitionerRoleId!!, submittedData.dokumentAnsvarlig, submittedData.dokumentReferanse, pdf)
             router.push(`/document/${documentId}`)
         } else {
