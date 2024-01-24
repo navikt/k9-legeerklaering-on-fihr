@@ -73,7 +73,7 @@ export class FhirProxy {
                 method: incomingReq.method,
                 headers: newHeaders,
                 body: incomingReq.body,
-                // @ts-ignore
+                // @ts-ignore (duplex is not in ts type)
                 // https://github.com/nodejs/node/issues/46221
                 duplex: "half",
                 mode: incomingReq.mode,

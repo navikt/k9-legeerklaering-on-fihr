@@ -13,6 +13,9 @@ import AltLink from "@/app/(withApis)/alt/AltLink";
 import SimulationIndicator from "@/app/components/simulation/SimulationIndicator";
 import SelfApiContext from "@/app/(withApis)/SelfApiContext";
 import { SelfClient } from "@/integrations/self/SelfClient";
+import Client from "fhirclient/lib/Client";
+import { FhirApi } from "@/integrations/fhir/FhirApi";
+import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapper";
 
 export const dynamic = 'force-dynamic'
 
@@ -32,16 +35,28 @@ const Layout = ({children}: ChildrenProp) => {
             clearFakeFhirApiName()
         }
     }, [isLaunch])
-    const clientFactory = useCallback(() => {
+
+    // This callback can create the raw fhirclient instance
+    const fhirClientFactory: () => Promise<Client> = useCallback(() => {
+        return clientInitInBrowser(isLaunch)
+    }, [isLaunch])
+    // This callback can create a FhirApi instance, real or fake
+    const fhirApiFactory: () => Promise<FhirApi> = useCallback(() => {
         if (fakeFhirApiName.current === "fake1") {
             return initFakeFhirApi1()
         } else {
-            return clientInitInBrowser(isLaunch)
+            return fhirClientFactory().then(client => new ProxiedFhirClientWrapper(client))
         }
-    }, [isLaunch, fakeFhirApiName])
-    const fhirApi = useAsyncInit(clientFactory)
+    }, [fhirClientFactory, fakeFhirApiName])
 
-    const selfApi = new SelfClient()
+    const fhirApi = useAsyncInit(fhirApiFactory)
+
+    // The SelfClient needs to be able to retrieve the fhir client auth token so it can pass it to our own server
+    const fhirAuthTokenResolver = async () => {
+        const fhirClient = await fhirClientFactory()
+        return fhirClient.getAuthorizationHeader()
+    }
+    const selfApi = new SelfClient(fhirAuthTokenResolver)
 
     return <>
         <FhirApiContext.Provider value={fhirApi}>
