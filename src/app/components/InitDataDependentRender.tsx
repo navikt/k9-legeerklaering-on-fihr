@@ -3,7 +3,7 @@ import ErrorDisplay from "@/app/components/legeerklaering/ErrorDisplay";
 import { ReactNode } from "react";
 import ensureError from "@/utils/ensureError";
 import InitData from "@/models/InitData";
-import { BaseApi } from "@/app/(withApis)/BaseApi";
+import { BaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 export interface InitDataDependentRenderProps {
     readonly baseApi: BaseApi;

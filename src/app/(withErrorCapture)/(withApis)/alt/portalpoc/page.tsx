@@ -8,7 +8,7 @@ import NavNextLink from "@/app/components/NavNextLink";
 import StartStatus from "./StartStatus";
 import NavNextLinkPanel from "@/app/components/NavNextLinkPanel";
 import PaddedPanel from "./PaddedPanel";
-import { BaseApi, BaseApiContext } from "@/app/(withApis)/BaseApi";
+import { BaseApi, BaseApiContext } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 const Page = () => {
     const api: BaseApi = useContext(BaseApiContext)

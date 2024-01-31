@@ -1,13 +1,13 @@
 'use client'
-import FhirApiContext from "@/app/(withApis)/FhirApiContext";
+import FhirApiContext from "@/app/(withErrorCapture)/(withApis)/FhirApiContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { isInited, isInitError, isIniting } from "@/app/hooks/useAsyncInit";
 import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Page, VStack } from "@navikt/ds-react";
-import { useBaseApi } from "@/app/(withApis)/BaseApi";
+import { useBaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 import TopBar from "@/app/components/topbar/TopBar";
 import NavNextLink from "@/app/components/NavNextLink";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
-import PdfIframe from "@/app/(withApis)/document/[id]/PdfIframe";
+import PdfIframe from "@/app/(withErrorCapture)/(withApis)/document/[id]/PdfIframe";
 import CenterColumn from "@/app/components/CenterColumn";
 
 export default function DocumentViewPage({params}: {params: {id: string}}) {
