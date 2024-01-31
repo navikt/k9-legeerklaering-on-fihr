@@ -3,24 +3,18 @@ import NextErrorProps from "@/utils/NextErrorProps";
 import TopBar from "@/app/components/topbar/TopBar";
 import CenterColumn from "@/app/components/CenterColumn";
 import { Alert, BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
-import React, { useContext } from "react";
-import FhirApiContext from "@/app/(withErrorCapture)/(withApis)/FhirApiContext";
-import { BaseApi, useBaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
+import React from "react";
 import FeedbackEmail from "@/app/components/feedback/FeedbackEmail";
 import { subjectSuggestion } from "@/app/components/errorhandling/subjectSuggestion";
 
 const Error = ({error, reset}: NextErrorProps) => {
-    const fhirApi = useContext(FhirApiContext)
-    const baseApi: BaseApi = useBaseApi(fhirApi)
-
     const reload = async () => {
         reset()
-        await baseApi.refreshInitData()
     }
     return <VStack>
-        <TopBar loading={baseApi.loading !== false}
+        <TopBar loading={false}
                 reload={reload}
-                user={baseApi.initData?.practitioner}/>
+                user={undefined}/>
         <CenterColumn>
             <BodyLong size="large" spacing>
             <Alert variant="error">
