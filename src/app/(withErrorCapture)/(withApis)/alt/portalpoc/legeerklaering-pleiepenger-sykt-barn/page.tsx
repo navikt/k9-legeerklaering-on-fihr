@@ -8,7 +8,7 @@ import NavNextLink from "@/app/components/NavNextLink";
 import PaddedPanel from "../PaddedPanel";
 import InitDataDependentRender from "@/app/components/InitDataDependentRender";
 import NavNextLinkButton from "@/app/components/NavNextLinkButton";
-import { BaseApiContext } from "@/app/(withApis)/BaseApi";
+import { BaseApiContext } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 interface Statement {
     readonly sentDate: Date | undefined;

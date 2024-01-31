@@ -2,14 +2,14 @@
 
 import "@navikt/ds-css";
 import React, { useContext } from 'react';
-import FhirApiContext from "@/app/(withApis)/FhirApiContext";
+import FhirApiContext from "@/app/(withErrorCapture)/(withApis)/FhirApiContext";
 import { isInited } from '@/app/hooks/useAsyncInit';
 import LegeerklaeringForm from '@/app/components/legeerklaering/LegeerklaeringForm';
 import { VStack } from '@navikt/ds-react';
 import TopBar from '@/app/components/topbar/TopBar';
-import { BaseApi, useBaseApi } from '@/app/(withApis)/BaseApi';
+import { BaseApi, useBaseApi } from '@/app/(withErrorCapture)/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
-import SelfApiContext from "@/app/(withApis)/SelfApiContext";
+import SelfApiContext from "@/app/(withErrorCapture)/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
 import CenterColumn from "@/app/components/CenterColumn";
 import InitDataDependentRender from "@/app/components/InitDataDependentRender";

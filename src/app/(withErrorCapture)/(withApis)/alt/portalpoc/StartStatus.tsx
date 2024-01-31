@@ -4,7 +4,7 @@ import HospitalListing from "./HospitalListing";
 import { ArrowsCirclepathIcon, HospitalIcon, PersonCircleIcon } from "@navikt/aksel-icons";
 import InitDataDependentRender from "@/app/components/InitDataDependentRender";
 import { componentSize } from '@/utils/constants';
-import { BaseApi } from "@/app/(withApis)/BaseApi";
+import { BaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 const StartStatus = (baseApi: BaseApi) => {
         return (
