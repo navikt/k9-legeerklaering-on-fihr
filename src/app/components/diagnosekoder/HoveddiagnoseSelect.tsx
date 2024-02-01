@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Button, Label, ReadMore } from "@navikt/ds-react";
+import { Button, Label, ReadMore, VStack } from "@navikt/ds-react";
 import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import React, { ReactNode, useId, useRef, useState } from "react";
 import type { Diagnosekode } from "@navikt/diagnosekoder";
@@ -9,7 +9,6 @@ import DiagnosekodeSearchModal from "@/app/components/diagnosekoder/Diagnosekode
 import dkCss from './diagnosekoder.module.css';
 import ErrorMessager from "@/app/components/diagnosekoder/ErrorMessager";
 import { componentSize } from '@/utils/constants';
-import { tekst } from "@/utils/tekster";
 
 export interface HoveddiagnoseSelectProps {
     readonly value?: Diagnosekode;
@@ -50,7 +49,7 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
             <ReadMore size={componentSize} header="Sett hoveddiagnose (ICD-10) hvis mulig">
                 Hvis barnet er under utredning og det ikke er fastsatt noen diagnose trenger du ikke fylle ut dette.
             </ReadMore>
-            <Box className={dkCss.framedlisting} onClick={handleInputClick}>
+            <VStack className={dkCss.framedlisting} onClick={handleInputClick}>
                 {value &&
                     <div key={value.code} className={dkCss.line}>
                         <div className={dkCss.value}>
@@ -71,7 +70,7 @@ const HoveddiagnoseSelect = ({value, onChange, className, error}: HoveddiagnoseS
                                    onClick={() => setShowModal(true)} icon={<PlusIcon/>}>
                     Legg til hoveddiagnose
                 </Button>}
-            </Box>
+            </VStack>
             <ErrorMessager error={error}/>
             <DiagnosekodeSearchModal open={showModal} onClose={() => setShowModal(false)}
                                      onSelectedDiagnose={handleSelectedDiagnose}/>
