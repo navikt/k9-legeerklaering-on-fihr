@@ -8,7 +8,7 @@ export interface FeedbackEmailProps {
 const escapeRegex = /\s/g
 const escapeSpaces = (str: string) => str.replaceAll(escapeRegex, "%20")
 
-export const defaultSubjectSuggestion = "Feedback legeerklæring pilot"
+export const defaultSubjectSuggestion = "Tilbakemelding legeerklæring pilot"
 
 const FeedbackEmail = ({subjectSuggestion = defaultSubjectSuggestion}: FeedbackEmailProps) => {
     return <a href={`mailto:${feedbackEmailAddress}?subject=${escapeSpaces(subjectSuggestion)}`}>{feedbackEmailAddress}</a>
