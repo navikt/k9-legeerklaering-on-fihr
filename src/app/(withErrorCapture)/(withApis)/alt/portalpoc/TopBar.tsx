@@ -10,7 +10,7 @@ import validateRoute from "@/utils/validateRoute";
 import { pagename } from "./pagenames";
 import UserListing from "./UserListing";
 import { componentSize } from '@/utils/constants';
-import { BaseApi } from "@/app/(withApis)/BaseApi";
+import { BaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 export interface UserProps {
     readonly user: Practitioner | undefined;
