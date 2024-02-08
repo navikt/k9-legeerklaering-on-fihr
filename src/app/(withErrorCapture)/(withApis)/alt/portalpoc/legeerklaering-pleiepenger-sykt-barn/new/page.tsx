@@ -16,7 +16,7 @@ import { Diagnosekode } from "@navikt/diagnosekoder";
 import DatePeriod from "@/models/DatePeriod";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { logger } from "@navikt/next-logger";
-import { BaseApiContext } from "@/app/(withApis)/BaseApi";
+import { BaseApiContext } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 interface FormData {
     legensVurdering: string;
