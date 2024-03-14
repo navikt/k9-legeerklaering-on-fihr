@@ -16,6 +16,7 @@ import { SelfClient } from "@/integrations/self/SelfClient";
 import Client from "fhirclient/lib/Client";
 import { FhirApi } from "@/integrations/fhir/FhirApi";
 import ProxiedFhirClientWrapper from "@/integrations/fhir/ProxiedFhirClientWrapper";
+import { BaseApi, BaseApiContext, useBaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 
 export const dynamic = 'force-dynamic'
 
@@ -57,11 +58,14 @@ const Layout = ({children}: ChildrenProp) => {
         return fhirClient.getAuthorizationHeader()
     }
     const selfApi = new SelfClient(fhirAuthTokenResolver)
+    const baseApi: BaseApi = useBaseApi(fhirApi)
 
     return <>
         <FhirApiContext.Provider value={fhirApi}>
             <SelfApiContext.Provider value={selfApi}>
-                {children}
+                <BaseApiContext.Provider value={baseApi}>
+                    {children}
+                </BaseApiContext.Provider>
             </SelfApiContext.Provider>
         </FhirApiContext.Provider>
         <AltLink></AltLink>
