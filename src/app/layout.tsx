@@ -1,9 +1,9 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Source_Sans_3 } from 'next/font/google'
 import {Metadata} from "next";
 import { Suspense } from "react";
 
-const inter = Inter({ subsets: ['latin'] })
+const sourceSans3 = Source_Sans_3({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     robots: "noindex, nofollow", // This is not a website meant for public use, so don't want any indexing
@@ -21,7 +21,7 @@ export default function RootLayout({
     // an issue for this project since we have 'use-client' and 'force-dynamic' on the (withApis)/layout.tsx
   return (
       <html lang="no">
-      <body className={inter.className}>
+      <body className={sourceSans3.className}>
           <Suspense>
               {children}
           </Suspense>
