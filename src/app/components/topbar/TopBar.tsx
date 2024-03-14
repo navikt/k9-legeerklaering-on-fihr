@@ -7,6 +7,8 @@ import { ArrowsCirclepathIcon, CaretDownIcon, PersonCircleIcon } from "@navikt/a
 import UserListing from "./UserListing";
 import { componentSize } from '@/utils/constants';
 import NavNextLink from "@/app/components/NavNextLink";
+import { InformationSquareIcon } from '@navikt/aksel-icons';
+import NavNextLinkButton from "@/app/components/NavNextLinkButton";
 
 export interface UserProps {
     readonly user: Practitioner | undefined;
@@ -55,6 +57,10 @@ const ReloadBtn = ({loading, reload}: ReloadBtnProps) => {
     </Button>
 }
 
+const AboutLink = () => {
+    return <NavNextLinkButton size={componentSize} variant="tertiary-neutral" href="/about" icon={<InformationSquareIcon title="Info om systemet" />}></NavNextLinkButton>
+}
+
 const TopNavigation = () => {
     return (
         <div className={css.topnavigation}>
@@ -95,6 +101,7 @@ const TopBar = ({user, reload, loading}: TopBarProps) => {
             <TopNavigation />
             <div className={css.spacer}/>
             <ReloadBtn reload={reload} loading={loading} />
+            <AboutLink />
             <UserPart user={user} />
         </header>
     )

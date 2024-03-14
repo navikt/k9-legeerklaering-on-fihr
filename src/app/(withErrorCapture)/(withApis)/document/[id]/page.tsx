@@ -2,8 +2,8 @@
 import FhirApiContext from "@/app/(withErrorCapture)/(withApis)/FhirApiContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { isInited, isInitError, isIniting } from "@/app/hooks/useAsyncInit";
-import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Page, VStack } from "@navikt/ds-react";
-import { useBaseApi } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
+import { Alert, BodyShort, Box, Heading, VStack } from "@navikt/ds-react";
+import { BaseApiContext } from "@/app/(withErrorCapture)/(withApis)/BaseApi";
 import TopBar from "@/app/components/topbar/TopBar";
 import NavNextLink from "@/app/components/NavNextLink";
 import LoadingIndicator from "@/app/components/legeerklaering/LoadingIndicator";
@@ -12,7 +12,7 @@ import CenterColumn from "@/app/components/CenterColumn";
 
 export default function DocumentViewPage({params}: {params: {id: string}}) {
     const fhirApi = useContext(FhirApiContext)
-    const baseApi = useBaseApi(fhirApi)
+    const baseApi = useContext(BaseApiContext)
     const [pdfBlob, setPdfBlob] = useState<Blob | undefined>()
 
     const loadDocument = useCallback(async() => {
