@@ -7,7 +7,7 @@ import { isInited } from '@/app/hooks/useAsyncInit';
 import LegeerklaeringForm from '@/app/components/legeerklaering/LegeerklaeringForm';
 import { VStack } from '@navikt/ds-react';
 import TopBar from '@/app/components/topbar/TopBar';
-import { BaseApi, useBaseApi } from '@/app/(withErrorCapture)/(withApis)/BaseApi';
+import { BaseApi, BaseApiContext } from '@/app/(withErrorCapture)/(withApis)/BaseApi';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
 import SelfApiContext from "@/app/(withErrorCapture)/(withApis)/SelfApiContext";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic'
 export default function Home() {
     const fhirApi = useContext(FhirApiContext)
     const helseOpplysningerApi = useContext(SelfApiContext)
-    const baseApi: BaseApi = useBaseApi(fhirApi)
+    const baseApi: BaseApi = useContext(BaseApiContext)
     const router = useRouter()
 
     const handleFormSubmit = async (submittedData: LegeerklaeringDokument) => {
