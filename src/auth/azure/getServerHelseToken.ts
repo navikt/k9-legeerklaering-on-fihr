@@ -33,7 +33,7 @@ const getIssuer = async (): Promise<Issuer<Client>> => {
 }
 
 let _client: BaseClient | null = null
-const getClient = async (): Promise<BaseClient> => {
+export const getClient = async (): Promise<BaseClient> => {
     if(_client === null) {
         const config = getConfig()
         const metadata: ClientMetadata = {
