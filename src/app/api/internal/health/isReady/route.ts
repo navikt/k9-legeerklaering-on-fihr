@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { getServerEnv } from '@/utils/env';
-import AzureClientConfiguration from '@/auth/azure/AzureClientConfiguration';
+import { getClient } from '@/auth/azure/getServerHelseToken';
 
 export const GET = async (): Promise<NextResponse> => {
     try {
         getServerEnv();
-        await AzureClientConfiguration.getClient();
+        await getClient();
     } catch (error) {
         return NextResponse.json({}, {status: 500});
     }
