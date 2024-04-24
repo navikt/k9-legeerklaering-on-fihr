@@ -8,13 +8,15 @@
     "https://k9-legeerklaering.ekstern.dev.nav.no"
   ],
   "externalHosts": [
-    "api.dips.no"
+    "api.dips.no",
+    "https://helseopplysninger-unleash-web.nav.cloud.nais.io"
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",
     "HELSEOPPLYSNINGER_SERVER_BASE_URL": "http://server-helse",
     "HELSEOPPLYSNINGER_SERVER_SCOPE": "api://dev-gcp.helseopplysninger.server-helse/.default",
     "SIMULATION_ALLOWED": "true",
-    "SYNTHETIC_IDENTIFIER_ALLOWED": "true"
+    "SYNTHETIC_IDENTIFIER_ALLOWED": "true",
+    "UNLEASH_SERVER_API_URL": "https://helseopplysninger-unleash-web.nav.cloud.nais.io/api"
   }
 }
