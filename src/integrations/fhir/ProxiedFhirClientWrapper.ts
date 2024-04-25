@@ -1,5 +1,4 @@
 import Client from "fhirclient/lib/Client";
-import { clientCopyWithProxyUrl } from "@/integrations/fhir/clientInit";
 import FhirClientWrapper from "@/integrations/fhir/FhirClientWrapper";
 
 
@@ -14,4 +13,12 @@ export default class ProxiedFhirClientWrapper extends FhirClientWrapper {
         // Create the FhirClientWrapper with the proxied client
         super(proxyingClient)
     }
+}
+
+const clientCopyWithProxyUrl = (client: Client, proxyUrl: URL): Client =>  {
+    const newClientState = {
+        ...client.state,
+        serverUrl: proxyUrl.toString(),
+    }
+    return new Client(client.environment, newClientState)
 }
