@@ -32,7 +32,8 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
              * user/*.* - UNUSED
              * offline_access - UNUSED
             **/
-            scope: "openid profile fhirUser launch patient/Patient.read", // TODO patient/*.read fungerer med DIPS, ikke med WebMed
+            // scope: "openid profile fhirUser launch patient/Patient.read", // TODO works with WebMed
+            scope: "openid profile fhirUser launch patient/*.read", // TODO Works with DIPS
             redirectUri: "/"
         });
 
