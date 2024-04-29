@@ -52,23 +52,27 @@ export default class FhirClientWrapper implements FhirApi {
         }
     }
 
+    /**
+     * TODO
+     *
+     * Varierende implementasjoner av SMART on FHIR har gjort til at data vi trenger ikke alltid
+     * er tilgjengelig. Ved å følge implementasjonsguide --> https://docs.smarthealthit.org/client-js/
+     * ser man at {client.getUserId()} og/eller {client.getFhirUser()} skal returnere ID på innlogget
+     * bruker.
+     *
+     * Vi følger dokumentasjonen og forventer at bruker skal være satt, derfor vil dette ikke fungere
+     * for enkelte EPJ-leverandører.
+     */
     protected async getPractitionerDirectly(): Promise<Practitioner & {
         readonly organizationReference: string | undefined
     } | undefined> {
-        console.info("[REMOVE] this.client.getUserId()", this.client.getUserId())
-        console.info("[REMOVE] this.client.user.id", this.client.user.id)
-        console.info("[REMOVE] this.client.getFhirUser()", this.client.getFhirUser())
-        console.info("[REMOVE] this.client.state.tokenResponse?.[\"practitioner\"]", this.client.state.tokenResponse?.["practitioner"])
+        // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
+        // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
 
         const iPractitioner = await this.client.user.read()
 
-        console.info("[REMOVE] iPractitioner", iPractitioner)
-        console.info("[REMOVE] this.client.user.fhirUser", this.client.user.fhirUser)
-
         if (R4.RTTI_Practitioner.is(iPractitioner)) {
-            console.info("[FhirClientWrapper] client.user.read() (iPractitioner):", JSON.stringify(iPractitioner))
             const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
-            console.info("[FhirClientWrapper] direct resolved practitioner", practitioner)
             if (
                 practitioner.ehrId !== undefined &&
                 practitioner.name !== undefined
