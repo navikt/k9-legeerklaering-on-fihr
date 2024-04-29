@@ -55,7 +55,6 @@ const Layout = ({children}: ChildrenProp) => {
             return initFakeFhirApi1()
         } else {
             return fhirClientFactory().then(client => {
-                console.info("[layout] fhirClientFactory", JSON.stringify(client))
                 const serverUrl = client.state.serverUrl
                 switch (serverUrl) {
                     case recognizedServers.OPENDIPS_TEST:
@@ -78,7 +77,6 @@ const Layout = ({children}: ChildrenProp) => {
     }
     const selfApi = new SelfClient(fhirAuthTokenResolver)
     const baseApi: BaseApi = useBaseApi(fhirApi)
-    console.info("[layout] fhirApi", JSON.stringify(fhirApi))
 
     return <>
         <FhirApiContext.Provider value={fhirApi}>

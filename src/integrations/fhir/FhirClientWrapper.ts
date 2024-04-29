@@ -1,6 +1,6 @@
-import Practitioner, { PartialPractitioner } from "@/models/Practitioner";
-import { R4 } from "@ahryman40k/ts-fhir-types";
-import { validateOrThrow } from "@/integrations/fhir/fhirValidator";
+import Practitioner, {PartialPractitioner} from "@/models/Practitioner";
+import {R4} from "@ahryman40k/ts-fhir-types";
+import {validateOrThrow} from "@/integrations/fhir/fhirValidator";
 import {
     dateTimeResolver,
     dnrFromIdentifiers,
@@ -16,15 +16,15 @@ import {
 } from "@/integrations/fhir/resolvers";
 import Patient from "@/models/Patient";
 import Client from "fhirclient/lib/Client";
-import { FhirApi } from "@/integrations/fhir/FhirApi";
+import {FhirApi} from "@/integrations/fhir/FhirApi";
 import Hospital from "@/models/Hospital";
 import IncompletePractitioner from "@/models/errors/IncompletePractitioner";
 import InitData from "@/models/InitData";
-import { DocumentReferenceStatusKind, IBinary, IDocumentReference } from '@ahryman40k/ts-fhir-types/lib/R4';
-import { createAndValidateDocumentReferencePayload } from '@/integrations/fhir/utils/payloads';
-import { LegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
-import { base64ToBlob, blobToBase64 } from "@/utils/base64";
-import { DipsDepartmentReference } from "@/models/DipsDepartmentReference";
+import {DocumentReferenceStatusKind, IBinary, IDocumentReference} from '@ahryman40k/ts-fhir-types/lib/R4';
+import {createAndValidateDocumentReferencePayload} from '@/integrations/fhir/utils/payloads';
+import {LegeerklaeringDokumentReferanse} from "@/models/LegeerklaeringDokumentReferanse";
+import {base64ToBlob, blobToBase64} from "@/utils/base64";
+import {DipsDepartmentReference} from "@/models/DipsDepartmentReference";
 
 
 export default class FhirClientWrapper implements FhirApi {
@@ -52,31 +52,24 @@ export default class FhirClientWrapper implements FhirApi {
         }
     }
 
+    protected async getPractitionerDirectly(): Promise<Practitioner & {
+        readonly organizationReference: string | undefined
+    } | undefined> {
+        console.info("[REMOVE] this.client.getUserId()", this.client.getUserId())
+        console.info("[REMOVE] this.client.user.id", this.client.user.id)
+        console.info("[REMOVE] this.client.getFhirUser()", this.client.getFhirUser())
+        console.info("[REMOVE] this.client.state.tokenResponse?.[\"practitioner\"]", this.client.state.tokenResponse?.["practitioner"])
 
-    /**
-     * On WebMed the user id is returned in property "practitioner" in the tokenResponse.
-     * Our client does not automatically resolve the {user.id} prop from this, so we do it manually here.
-     *
-     * On Dips the user id is nowhere to be found on the tokenResponse, so this will not help there.
-     */
-    private fixClientUserId() {
-        console.info("[FhirClientWrapper] fixClientUserId()", JSON.stringify(this.client))
-
-        if(this.client.user.id == null) {
-            this.client.user.id = this.client.state.tokenResponse?.["practitioner"] || null
-        }
-    }
-
-    protected async getPractitionerDirectly(): Promise<Practitioner & { readonly organizationReference: string | undefined } | undefined> {
-        this.fixClientUserId()
-        const practitionerId = this.client.user.id
-        console.info("[FhirClientWrapper] client.user.id", practitionerId)
         const iPractitioner = await this.client.user.read()
-        if(R4.RTTI_Practitioner.is(iPractitioner)) {
-            console.info("[FhirClientWrapper] client.user (iPractitioner):", JSON.stringify(iPractitioner))
+
+        console.info("[REMOVE] iPractitioner", iPractitioner)
+        console.info("[REMOVE] this.client.user.fhirUser", this.client.user.fhirUser)
+
+        if (R4.RTTI_Practitioner.is(iPractitioner)) {
+            console.info("[FhirClientWrapper] client.user.read() (iPractitioner):", JSON.stringify(iPractitioner))
             const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
             console.info("[FhirClientWrapper] direct resolved practitioner", practitioner)
-            if(
+            if (
                 practitioner.ehrId !== undefined &&
                 practitioner.name !== undefined
             ) {
@@ -99,7 +92,7 @@ export default class FhirClientWrapper implements FhirApi {
 
     public async getPractitioner(): Promise<Practitioner & { readonly organizationReference: string | undefined }> {
         const practitioner = await this.getPractitionerDirectly()
-        if(practitioner !== undefined) {
+        if (practitioner !== undefined) {
             return practitioner
         }
         // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerRole" like we do below instead.
@@ -190,13 +183,13 @@ export default class FhirClientWrapper implements FhirApi {
                 },
             }
         );
-        if(created.id === undefined) {
+        if (created.id === undefined) {
             throw new Error(`Document was created, but returned without id.`)
         }
         return created.id
     }
 
-    public async getDocumentPdf(documentId:string): Promise<Blob> {
+    public async getDocumentPdf(documentId: string): Promise<Blob> {
         const url = new URL(`Binary/${documentId}`, this.client.state.serverUrl);
         const binary = validateOrThrow(R4.RTTI_Binary.decode(await this.client.request<IBinary>({
             url,
@@ -205,8 +198,8 @@ export default class FhirClientWrapper implements FhirApi {
                 "Content-Type": "application/json"
             }
         })))
-        if(binary.contentType === "application/pdf") {
-            if(binary.data !== undefined) {
+        if (binary.contentType === "application/pdf") {
+            if (binary.data !== undefined) {
                 return await base64ToBlob(binary.data, binary.contentType)
             } else {
                 throw new Error(`binary document ${documentId}: data undefined`)
