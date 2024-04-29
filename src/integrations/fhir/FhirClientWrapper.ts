@@ -60,6 +60,8 @@ export default class FhirClientWrapper implements FhirApi {
      * On Dips the user id is nowhere to be found on the tokenResponse, so this will not help there.
      */
     private fixClientUserId() {
+        console.info("[FhirClientWrapper] fixClientUserId()", JSON.stringify(this.client))
+
         if(this.client.user.id == null) {
             this.client.user.id = this.client.state.tokenResponse?.["practitioner"] || null
         }
@@ -68,12 +70,12 @@ export default class FhirClientWrapper implements FhirApi {
     protected async getPractitionerDirectly(): Promise<Practitioner & { readonly organizationReference: string | undefined } | undefined> {
         this.fixClientUserId()
         const practitionerId = this.client.user.id
-        console.debug("client.user.id", practitionerId)
+        console.info("[FhirClientWrapper] client.user.id", practitionerId)
         const iPractitioner = await this.client.user.read()
         if(R4.RTTI_Practitioner.is(iPractitioner)) {
-            console.debug("client.user (iPractitioner):", iPractitioner)
+            console.info("[FhirClientWrapper] client.user (iPractitioner):", JSON.stringify(iPractitioner))
             const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
-            console.debug("direct resolved practitioner", practitioner)
+            console.info("[FhirClientWrapper] direct resolved practitioner", practitioner)
             if(
                 practitioner.ehrId !== undefined &&
                 practitioner.name !== undefined
@@ -90,7 +92,7 @@ export default class FhirClientWrapper implements FhirApi {
                 }
             }
         } else {
-            console.debug("client.user.read returned", iPractitioner)
+            console.info("[FhirClientWrapper] client.user.read returned", JSON.stringify(iPractitioner))
         }
         return undefined
     }

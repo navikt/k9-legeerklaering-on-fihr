@@ -14,10 +14,6 @@ const InitDataDependentRender = ({baseApi, render}: InitDataDependentRenderProps
     if (baseApi.loading !== false) {
         return <LoadingIndicator txt={loadingTxt(baseApi.loading)} />
     } else if (baseApi.error !== null) {
-
-        // TODO remove before prod
-        console.error("BaseAPI error state", JSON.stringify(baseApi))
-
         return <ErrorDisplay error={baseApi.error} heading="Feil i forbindelse med journalsystem" />
     } else if (baseApi.initData !== null) {
         return render(baseApi.initData)

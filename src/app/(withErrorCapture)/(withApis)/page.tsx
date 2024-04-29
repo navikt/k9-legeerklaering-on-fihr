@@ -22,11 +22,6 @@ export default function Home() {
     const baseApi: BaseApi = useContext(BaseApiContext)
     const router = useRouter()
 
-    // TODO remove before prod
-    console.info("fhirApi", JSON.stringify(fhirApi))
-    console.info("helseopplysningerApi", JSON.stringify(helseOpplysningerApi))
-    console.info("baseApi", JSON.stringify(baseApi))
-
     const handleFormSubmit = async (submittedData: LegeerklaeringDokument) => {
         if(isInited(fhirApi)) {
             const pdf = await helseOpplysningerApi.generatePdf(submittedData)
