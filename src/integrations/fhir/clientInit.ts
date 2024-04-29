@@ -28,12 +28,12 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
              * launch
              * launch/patient - UNUSED
              * launch/encounter - UNUSED
-             * patient/*.*
-             * user/*.* - UNUSED
+             * patient/*.* (.read | .write)
+             * user/*.* - UNUSED (.read | .write)
              * offline_access - UNUSED
             **/
-            // scope: "openid profile fhirUser launch patient/Patient.read", // TODO works with WebMed
-            scope: "openid profile fhirUser launch patient/*.read", // TODO Works with DIPS
+            scope: "openid profile fhirUser launch patient/Patient.read", // Works with WebMed
+            // scope: "openid profile fhirUser launch patient/*.read", // Works with DIPS
             redirectUri: "/"
         });
 

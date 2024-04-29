@@ -6,7 +6,7 @@
 
 - [Node.js](https://nodejs.org/en/) >= 18.x.x
 - [npm](https://www.npmjs.com/) >= 9.x.x
-- @Navikt packages authenticated with Github
+- @Navikt packages authenticated with GitHub
   Packages [Click here for guide](https://github.com/navikt/frontend#installere-pakker-lokalt)
 
 ### Environment variables

@@ -27,14 +27,14 @@ configureLogger({
 })
 
 const Layout = ({children}: ChildrenProp) => {
-    const searchParams = useSearchParams();
-    const isLaunch = searchParams.has("launch");
-    const prevIsLaunch = useRef<boolean | null>(null);
-    const fakeFhirApiName = useRef<FakeFhirApiName | null>(null);
+    const searchParams = useSearchParams()
+    const isLaunch = searchParams.has("launch")
+    const prevIsLaunch = useRef<boolean | null>(null)
+    const fakeFhirApiName = useRef<FakeFhirApiName | null>(null)
 
     useEffect(() => {
         if (prevIsLaunch.current !== isLaunch) {
-            prevIsLaunch.current = isLaunch;
+            prevIsLaunch.current = isLaunch
 
             if (!isLaunch) {
                 fakeFhirApiName.current = getFakeFhirApiName()
@@ -55,16 +55,16 @@ const Layout = ({children}: ChildrenProp) => {
             return initFakeFhirApi1()
         } else {
             return fhirClientFactory().then(client => {
-                const serverUrl = client.state.serverUrl;
+                const serverUrl = client.state.serverUrl
                 switch (serverUrl) {
                     case recognizedServers.OPENDIPS_TEST:
                         console.debug("Redirecting all traffic through proxy", serverUrl)
-                        return new ProxiedFhirClientWrapper(client);
+                        return new ProxiedFhirClientWrapper(client)
                     default:
                         console.debug("Direct client initialization from server", serverUrl)
-                        return new FhirClientWrapper(client);
+                        return new FhirClientWrapper(client)
                 }
-            })
+            });
         }
     }, [fhirClientFactory, fakeFhirApiName])
 
