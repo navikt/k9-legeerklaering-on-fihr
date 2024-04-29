@@ -58,10 +58,10 @@ const Layout = ({children}: ChildrenProp) => {
                 const serverUrl = client.state.serverUrl
                 switch (serverUrl) {
                     case recognizedServers.OPENDIPS_TEST:
-                        console.debug("Redirecting all traffic through proxy", serverUrl)
+                        console.info("Redirecting all traffic through proxy", serverUrl)
                         return new ProxiedFhirClientWrapper(client)
                     default:
-                        console.debug("Direct client initialization from server", serverUrl)
+                        console.info("Direct client initialization from server", serverUrl)
                         return new FhirClientWrapper(client)
                 }
             });
