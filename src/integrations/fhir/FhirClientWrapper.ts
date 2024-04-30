@@ -62,8 +62,6 @@ export default class FhirClientWrapper implements FhirApi {
      *
      * Vi følger dokumentasjonen og forventer at bruker skal være satt, derfor vil dette ikke fungere
      * for enkelte EPJ-leverandører.
-     *
-     * TODO this throws an error if
      */
     protected async getPractitionerDirectly(): Promise<Practitioner & {
         readonly organizationReference: string | undefined
@@ -71,37 +69,41 @@ export default class FhirClientWrapper implements FhirApi {
         // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
         // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
 
-        // TODO replace with
-        try {
-            const iPractitioner = await this.client.user.read()
+        // TODO allow throwing an exception
+        const iPractitioner = await this.client.user.read()
 
-            if (R4.RTTI_Practitioner.is(iPractitioner)) {
-                const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
-                if (practitioner.ehrId !== undefined && practitioner.name !== undefined) {
-                    return {
-                        ehrId: practitioner.ehrId,
-                        name: practitioner.name,
-                        activeSystemUser: practitioner.activeSystemUser,
-                        // TODO Resolve these:
-                        organizationReference: undefined,
-                        hprNumber: undefined,
-                        practitionerRoleId: undefined,
-                        departmentReference: undefined,
-                    }
+        if (R4.RTTI_Practitioner.is(iPractitioner)) {
+            const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
+            if (practitioner.ehrId !== undefined && practitioner.name !== undefined) {
+                return {
+                    ehrId: practitioner.ehrId,
+                    name: practitioner.name,
+                    activeSystemUser: practitioner.activeSystemUser,
+                    // TODO Resolve these:
+                    organizationReference: undefined,
+                    hprNumber: undefined,
+                    practitionerRoleId: undefined,
+                    departmentReference: undefined,
                 }
-                console.warn("[FhirClientWrapper] practitioner.ehrId and practitioner.name is undefined", JSON.stringify(practitioner))
             }
-        } catch (err) {
-            console.error("[FhirClientWrapper] error during client.user.read()", err)
-            return undefined
+            console.warn("[FhirClientWrapper.getPractitionerDirectly()] practitioner.ehrId and practitioner.name is undefined", JSON.stringify(practitioner))
+        } else {
+            console.warn("[FhirClientWrapper.getPractitionerDirectly()] client.user.read() is not R4.RTTI_Practitioner", JSON.stringify(iPractitioner))
         }
+        return undefined
     }
 
     public async getPractitioner(): Promise<Practitioner & { readonly organizationReference: string | undefined }> {
-        const practitioner = await this.getPractitionerDirectly()
-        if (practitioner !== undefined) {
-            return practitioner
+        try {
+            const directPractitioner = await this.getPractitionerDirectly()
+            if (directPractitioner !== undefined) {
+                return directPractitioner
+            }
+        } catch (err) {
+            console.error("[FhirClientWrapper.getPractitioner()] error during getPractitionerDirectly()", err)
+            console.info("Attempting to get practitioner via PractitionerRole")
         }
+
         // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerRole" like we do below instead.
         // This seems to contain the Practitioner info we in the smart api demo would get back from client.user.read.
         // I suspect this is a non-standard API call. Will perhaps need to make this more dynamic to adapt to other EHR systems.
