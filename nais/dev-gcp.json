@@ -8,7 +8,8 @@
     "https://k9-legeerklaering.ekstern.dev.nav.no"
   ],
   "externalHosts": [
-    "api.dips.no"
+    "api.dips.no",
+    "fhirapi.public.webmedepj.no"
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",

@@ -13,7 +13,7 @@ export const serverEnvSchema = yup.object().shape({
 
     // Flagg
     SIMULATION_ALLOWED: yup.boolean().required(),
-    SYNTHETIC_IDENTIFIER_ALLOWED: yup.boolean().required()
+    SYNTHETIC_IDENTIFIER_ALLOWED: yup.boolean().required(),
 });
 
 const getRawServerConfig = () =>
@@ -23,7 +23,7 @@ const getRawServerConfig = () =>
         HELSEOPPLYSNINGER_SERVER_BASE_URL: process.env.HELSEOPPLYSNINGER_SERVER_BASE_URL,
         HELSEOPPLYSNINGER_SERVER_SCOPE: process.env.HELSEOPPLYSNINGER_SERVER_SCOPE,
         SIMULATION_ALLOWED: process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" || process.env.SIMULATION_ALLOWED === "true",
-        SYNTHETIC_IDENTIFIER_ALLOWED: process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" || process.env.SYNTHETIC_IDENTIFIER_ALLOWED === "true"
+        SYNTHETIC_IDENTIFIER_ALLOWED: process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" || process.env.SYNTHETIC_IDENTIFIER_ALLOWED === "true",
     }) satisfies Partial<ServerEnv>
 
 /**
