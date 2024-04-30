@@ -62,6 +62,8 @@ export default class FhirClientWrapper implements FhirApi {
      *
      * Vi følger dokumentasjonen og forventer at bruker skal være satt, derfor vil dette ikke fungere
      * for enkelte EPJ-leverandører.
+     *
+     * TODO this throws an error if
      */
     protected async getPractitionerDirectly(): Promise<Practitioner & {
         readonly organizationReference: string | undefined
@@ -69,29 +71,30 @@ export default class FhirClientWrapper implements FhirApi {
         // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
         // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
 
-        const iPractitioner = await this.client.user.read()
+        // TODO replace with
+        try {
+            const iPractitioner = await this.client.user.read()
 
-        if (R4.RTTI_Practitioner.is(iPractitioner)) {
-            const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
-            if (
-                practitioner.ehrId !== undefined &&
-                practitioner.name !== undefined
-            ) {
-                return {
-                    ehrId: practitioner.ehrId,
-                    name: practitioner.name,
-                    activeSystemUser: practitioner.activeSystemUser,
-                    // TODO Resolve these:
-                    organizationReference: undefined,
-                    hprNumber: undefined,
-                    practitionerRoleId: undefined,
-                    departmentReference: undefined,
+            if (R4.RTTI_Practitioner.is(iPractitioner)) {
+                const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
+                if (practitioner.ehrId !== undefined && practitioner.name !== undefined) {
+                    return {
+                        ehrId: practitioner.ehrId,
+                        name: practitioner.name,
+                        activeSystemUser: practitioner.activeSystemUser,
+                        // TODO Resolve these:
+                        organizationReference: undefined,
+                        hprNumber: undefined,
+                        practitionerRoleId: undefined,
+                        departmentReference: undefined,
+                    }
                 }
+                console.warn("[FhirClientWrapper] practitioner.ehrId and practitioner.name is undefined", JSON.stringify(practitioner))
             }
-        } else {
-            console.info("[FhirClientWrapper] client.user.read returned", JSON.stringify(iPractitioner))
+        } catch (err) {
+            console.error("[FhirClientWrapper] error during client.user.read()", err)
+            return undefined
         }
-        return undefined
     }
 
     public async getPractitioner(): Promise<Practitioner & { readonly organizationReference: string | undefined }> {
