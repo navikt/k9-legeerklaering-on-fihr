@@ -28,12 +28,11 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
              * launch
              * launch/patient - UNUSED
              * launch/encounter - UNUSED
-             * patient/*.* (.read | .write)
-             * user/*.* - UNUSED (.read | .write)
+             * patient/*.* (.read | .write) (.r | .w)
+             * user/*.* - UNUSED (.read | .write) (.r | .w)
              * offline_access - UNUSED
             **/
-            // scope: "openid profile fhirUser launch patient/Patient.read", // Works with WebMed
-            scope: "openid profile fhirUser launch patient/*.read", // Works with DIPS
+            scope: "openid profile fhirUser launch patient/Patient.read", // all variations of patient/(Patient|*).(read|r) should work for all EHRs
             redirectUri: "/"
         });
 
