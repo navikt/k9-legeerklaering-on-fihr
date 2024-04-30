@@ -32,7 +32,8 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
              * user/*.* - UNUSED (.read | .write)
              * offline_access - UNUSED
             **/
-            scope: "openid profile fhirUser launch patient/Patient.read", // should allow patient/Patient.read, patient/*.read, patient/*.r
+            // scope: "openid profile fhirUser launch patient/Patient.read", // Works with WebMed
+            scope: "openid profile fhirUser launch patient/*.read", // Works with DIPS
             redirectUri: "/"
         });
 
