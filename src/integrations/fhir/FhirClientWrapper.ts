@@ -69,7 +69,6 @@ export default class FhirClientWrapper implements FhirApi {
         // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
         // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
 
-        // TODO allow throwing an exception
         const iPractitioner = await this.client.user.read()
 
         if (R4.RTTI_Practitioner.is(iPractitioner)) {

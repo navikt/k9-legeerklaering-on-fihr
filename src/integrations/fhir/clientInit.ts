@@ -11,6 +11,8 @@ import { FhirInitError } from "@/integrations/fhir/FhirInitError";
  * storage. If the auth token is not found in local storage, or is expired it will give a "not authorized" error. The
  * user must then reauthenticate by opening the window again from the EHR system to get a new launch url.
  *
+ * Supported FHIR scopes can be found [here](https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html#app-launch-scopes-and-launch-context)
+ *
  * @param isLaunch set to true when launching a new context in an existing window/tab, to force a re-authentication
  */
 export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> => {
@@ -21,18 +23,7 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
 
         const client: Client = await oauth2.init({
             clientId: fhirClientId,
-            /** SUPPORTED FHIR SCOPES
-             * openid
-             * profile
-             * fhirUser
-             * launch
-             * launch/patient - UNUSED
-             * launch/encounter - UNUSED
-             * patient/*.* (.read | .write) (.r | .w)
-             * user/*.* - UNUSED (.read | .write) (.r | .w)
-             * offline_access - UNUSED
-            **/
-            scope: "openid profile fhirUser launch patient/*.read", // all variations of patient/(Patient|*).(read|r) should work for all EHRs
+            scope: "openid profile fhirUser launch patient/*.read",
             redirectUri: "/"
         });
 
