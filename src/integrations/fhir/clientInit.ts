@@ -32,7 +32,7 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
              * user/*.* - UNUSED (.read | .write) (.r | .w)
              * offline_access - UNUSED
             **/
-            scope: "openid profile fhirUser launch patient/Patient.read", // all variations of patient/(Patient|*).(read|r) should work for all EHRs
+            scope: "openid profile fhirUser launch patient/*.read", // all variations of patient/(Patient|*).(read|r) should work for all EHRs
             redirectUri: "/"
         });
 
