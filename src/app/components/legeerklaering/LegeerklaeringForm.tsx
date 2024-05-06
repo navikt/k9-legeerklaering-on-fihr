@@ -1,32 +1,21 @@
-import React, { useState } from 'react';
-import {
-    Alert,
-    BodyShort,
-    Button,
-    Heading,
-    HStack,
-    ReadMore,
-    Textarea,
-    TextField,
-    useDatepicker,
-    VStack
-} from '@navikt/ds-react';
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form';
+import React, {useState} from 'react';
+import {Alert, BodyShort, Button, Heading, HStack, ReadMore, Textarea, TextField, VStack} from '@navikt/ds-react';
+import {Controller, SubmitErrorHandler, useForm} from 'react-hook-form';
 import Section from '@/app/components/Section';
-import { tekst } from '@/utils/tekster';
+import {tekst} from '@/utils/tekster';
 import HoveddiagnoseSelect from "@/app/components/diagnosekoder/HoveddiagnoseSelect";
 import BidiagnoseSelect from "@/app/components/diagnosekoder/BidiagnoseSelect";
 import Practitioner from "@/models/Practitioner";
 import Patient from "@/models/Patient";
 import Hospital from "@/models/Hospital";
-import { yupResolver } from "@hookform/resolvers/yup";
-import MultiDatePeriodInput, { DatePeriodInput } from "@/app/components/multidateperiod/MultiDatePeriodInput";
-import { logger } from '@navikt/next-logger';
-import { componentSize } from '@/utils/constants';
-import { ChevronRightIcon } from '@navikt/aksel-icons';
+import {yupResolver} from "@hookform/resolvers/yup";
+import MultiDatePeriodInput, {DatePeriodInput} from "@/app/components/multidateperiod/MultiDatePeriodInput";
+import {logger} from '@navikt/next-logger';
+import {componentSize} from '@/utils/constants';
+import {ChevronRightIcon} from '@navikt/aksel-icons';
 import LegeerklaeringDokument from "@/models/LegeerklaeringDokument";
-import { randomLegeerklaeringDokumentReferanse } from "@/models/LegeerklaeringDokumentReferanse";
-import { legeerklaeringDokumentSchema } from "@/app/components/legeerklaering/legeerklaeringDokumentSchema";
+import {randomLegeerklaeringDokumentReferanse} from "@/models/LegeerklaeringDokumentReferanse";
+import {legeerklaeringDokumentSchema} from "@/app/components/legeerklaering/legeerklaeringDokumentSchema";
 
 export interface EhrInfoLegeerklaeringForm {
     readonly doctor: Practitioner | undefined;
@@ -85,16 +74,6 @@ export default function LegeerklaeringForm({doctor, hospital, onFormSubmit, pati
             }],
         }
     })
-
-    const {
-        datepickerProps: barnFoedselDatepickerProps,
-        inputProps: barnFoedselsInputProps
-    } = useDatepicker({
-        defaultSelected: patient?.birthDate,
-        onDateChange: (dato) => {
-            setValue('barn.birthDate', dato, {shouldDirty: true, shouldTouch: true, shouldValidate: true})
-        }
-    });
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const onSubmit = async (data: LegeerklaeringDokument) => {
