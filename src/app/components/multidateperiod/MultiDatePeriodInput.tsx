@@ -69,7 +69,7 @@ export const DatePeriodInput = ({
                     </div>
                 </div>
             </DatePicker>
-            <ErrorMessager error={error} />
+            <ErrorMessager error={error}/>
         </div>
     )
 }
@@ -96,6 +96,7 @@ export default function MultiDatePeriodInput({
     // When a period has been added to value, we want to focus the start date input of the added period
     const prevValue = useRef(value);
     const lastStartInputRef = useRef<HTMLInputElement>(null)
+
     useEffect(() => {
         if (value.length > prevValue.current.length) {
             lastStartInputRef?.current?.focus()
@@ -124,20 +125,19 @@ export default function MultiDatePeriodInput({
 
     return (
         <div className={`navds-form-field ${css.multiwrapper} ${className}`}>
-            {value.map((datePeriod, idx) => {
-                return (
+            {value.map((datePeriod, idx) => (
                     <DatePeriodInput
                         key={`dpi-${value.length}-${idx}`}
                         hideLabel={idx > 0}
                         value={datePeriod}
-                        onChange={(changed) => handleChange(datePeriod, changed)}
+                        onChange={(changed) => {handleChange(datePeriod, changed)}}
                         actionSlot={<Button onClick={() => handleDelete(idx)} size="small" variant="secondary"
                                             icon={<TrashIcon/>}>Fjern</Button>}
                         startInputRef={idx === value.length - 1 ? lastStartInputRef : undefined}
                         error={valueErrors?.[idx]}
                     />
                 )
-            })}
+            )}
             <Button
                 className={css.addbutton}
                 disabled={hasIncompleteValue}
