@@ -71,6 +71,13 @@ export default class FhirClientWrapper implements FhirApi {
 
         const iPractitioner = await this.client.user.read()
 
+        // TODO logging for EHR debugging purposes to see which FHIR fields are available
+        try {
+            console.info("[DEBUG] client", JSON.stringify(this.client))
+        } catch (err) {
+            console.error(err)
+        }
+
         if (R4.RTTI_Practitioner.is(iPractitioner)) {
             const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
             if (practitioner.ehrId !== undefined && practitioner.name !== undefined) {
@@ -101,31 +108,6 @@ export default class FhirClientWrapper implements FhirApi {
         } catch (err) {
             console.error(err)
             console.info("Attempting to get practitioner via PractitionerRole")
-        }
-
-        // TODO [fhirclient](https://docs.smarthealthit.org/client-js/) docs test
-        try {
-            console.info("this.client", JSON.stringify(this.client))
-        } catch (err) {
-            console.error("this.client failed", err)
-        }
-
-        try {
-            console.info("this.client.user.read()", JSON.stringify(this.client.user.read()))
-        } catch (err) {
-            console.error("this.client.user.read() failed", err)
-        }
-
-        try {
-            console.info("this.client.patient.read()", JSON.stringify(this.client.patient.read()))
-        } catch (err) {
-            console.error("this.client.patient.read() failed", err)
-        }
-
-        try {
-            console.info("this.client.encounter.read()", JSON.stringify(this.client.encounter.read()))
-        } catch (err) {
-            console.error("this.client.encounter.read() failed", err)
         }
 
         // For DIPS, accessing the client.user.read or similar did not work, have to request the "PractitionerRole" like we do below instead.
