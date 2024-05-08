@@ -27,6 +27,7 @@ export const clientInitInBrowser = async (isLaunch: boolean): Promise<Client> =>
             redirectUri: "/"
         });
 
+        // TODO replace with FHIR.oauth2.ready()
         const clientInitIsComplete = client.patient.id !== null && client.state.tokenResponse?.access_token !== undefined;
         if (!clientInitIsComplete) {
             // TODO This should not happen according to how i interpret the client doc/code. Looks like some sort of race condition?
