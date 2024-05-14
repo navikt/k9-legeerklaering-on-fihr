@@ -56,14 +56,14 @@ const Layout = ({children}: ChildrenProp) => {
         } else {
             return fhirClientFactory().then(client => {
                 const serverUrl = client.state.serverUrl
-                switch (serverUrl) {
-                    case recognizedServers.OPENDIPS_TEST:
-                        console.info("Redirecting all traffic through proxy", serverUrl)
-                        return new ProxiedFhirClientWrapper(client)
-                    default:
+                //switch (serverUrl) {
+                //    case recognizedServers.OPENDIPS_TEST:
+                //        console.info("Redirecting all traffic through proxy", serverUrl)
+                //        return new ProxiedFhirClientWrapper(client)
+                //    default:
                         console.info("Direct client initialization from server", serverUrl)
                         return new FhirClientWrapper(client)
-                }
+                //}
             });
         }
     }, [fhirClientFactory, fakeFhirApiName])
