@@ -1,17 +1,17 @@
 # K9 Legeerklæring on FHIR
 
-## Getting Started
+## Start
 
-### Requirements
+### Forutsetninger
 
 - [Node.js](https://nodejs.org/en/) >= 18.x.x
 - [npm](https://www.npmjs.com/) >= 9.x.x
 - @Navikt packages authenticated with GitHub
   Packages [Click here for guide](https://github.com/navikt/frontend#installere-pakker-lokalt)
 
-### Environment variables
+### Miljøvariabler
 
-Create a .env file in the root of the project with the following variables:
+Lag en `.env` fil i roten av prosjektet med følgende variabler:
 
 - `FHIR_BASE_URL=https://api.dips.no/fhir`
 - `FHIR_SUBSCRIPTION_KEY` (can be retrieved [OPEN DIPS Profile](https://open.dips.no/profile))
@@ -19,43 +19,42 @@ Create a .env file in the root of the project with the following variables:
 - `HELSEOPPLYSNINGER_SERVER_SCOPE=api://dev-gcp.helseopplysninger.server-helse/.default`
 - `AZURE_APP_CLIENT_ID=k9-legeerklaering-on-fhir`
 - `AZURE_APP_CLIENT_SECRET=some-secret`
-- `AZURE_APP_WELL_KNOWN_URL=http://localhost:8080/default/.well-known/openid-configuration` (the well-known url for the
-  mocked azure ad container i docker-compose)
+- `AZURE_APP_WELL_KNOWN_URL=http://localhost:8080/default/.well-known/openid-configuration` (well-known URL for
+  mocked Azure AD-containeren i docker-compose)
 
-If you want to do frontend development with a fake _helseopplysninger_ backend instead of having to connect to a real
-service,
-set `FAKE_HELSEOPPLYSNINGER=fake1` in the _.env_ file. This avoids the need to run docker compose for the mocked azure
-ad container.
+Hvis du vil utføre frontend-utvikling med en falsk helseopplysninger-backend i stedet for å måtte koble til en ekte
+tjeneste må du sette `FAKE_HELSEOPPLYSNINGER=fake1` i `.env`-filen. Dette unngår behovet for å kjøre docker-compose med
+mocked Azure AD-container.
 
-### Install dependencies
+### Installer avhengigheter
 
 ```bash
 npm ci
  ```
 
-### Run the development server
+### Kjør utviklingsserveren
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tjenesten vises på [http://localhost:3000](http://localhost:3000).
 
-### Build the server with docker
+### Bygg med Docker
 
 ```bash
 docker build -t k9-legeerklaering-on-fihr .
 ```
 
-### Run the docker image
+### Kjør docker image
 
 ```bash
 docker run -p 8080:8080 k9-legeerklaering-on-fihr:latest
 ```
 
-### Run with docker-compose
+### Kjør med docker-compose
 
-To run with mocked azure ad, run the application with docker-compose.
+Kjør applikasjonen med docker-compose for å få med mock azure ad.
 
 ```bash
 docker compose -f docker-compose.yaml up --build
