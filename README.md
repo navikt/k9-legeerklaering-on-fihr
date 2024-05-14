@@ -67,13 +67,13 @@ i [Implementasjonsguide SMART App Launch Framework](https://helsenorge.atlassian
 
 ```mermaid
 sequenceDiagram
-    box EPJ
+    box DarkBlue EPJ
         participant EPJ as EPJ
         participant Browser as Integrert Nettleser
         participant AuthServer as Autorisasjonsserver
         participant FHIR as FHIR API
     end
-    box NAV
+    box DarkRed NAV
         participant App as k9-legeerklaering-on-fhir-klient
         participant AppBackend as k9-legeerklaering-on-fhir-server
     end
