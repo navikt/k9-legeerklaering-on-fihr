@@ -69,14 +69,14 @@ export default class FhirClientWrapper implements FhirApi {
         // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
         // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
 
-        const iPractitioner = await this.client.user.read()
-
         // TODO logging for EHR debugging purposes to see which FHIR fields are available
         try {
             console.info("[DEBUG] client", JSON.stringify(this.client))
         } catch (err) {
             console.error(err)
         }
+
+        const iPractitioner = await this.client.user.read()
 
         if (R4.RTTI_Practitioner.is(iPractitioner)) {
             const practitioner = resolvePractitionerFromIPractitioner(iPractitioner)
