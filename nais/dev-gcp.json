@@ -10,7 +10,8 @@
   "externalHosts": [
     "api.dips.no",
     "fhirapi.public.webmedepj.no",
-    "vir-web5459.ihelse.net"
+    "vir-web5459.ihelse.net",
+    "d-130.test.dips.ihelse.net"
   ],
   "env": {
     "FHIR_BASE_URL": "https://api.dips.no/fhir",
