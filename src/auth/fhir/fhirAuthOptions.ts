@@ -1,5 +1,5 @@
 const fhirAuthOptions = {
-    clientId: `NAV_legeerklæring`,
+    clientId: `NAV_legeerklaering`,
     scope: `openid profile fhirUser launch patient/*.read`,
     redirectUri: `/`,
 }
