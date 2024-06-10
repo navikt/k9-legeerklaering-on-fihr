@@ -1,7 +1,7 @@
 'use client'
 
 import ChildrenProp from "@/utils/ChildrenProp";
-import {useCallback} from "react";
+import {useCallback, useState} from "react";
 import {useAsyncInit} from "@/app/hooks/useAsyncInit";
 import FhirApiContext from "@/app/(withErrorCapture)/(withApis)/FhirApiContext";
 import {configureLogger} from "@navikt/next-logger";
@@ -23,14 +23,20 @@ configureLogger({
 
 const Layout = ({children}: ChildrenProp) => {
     const fhirClient = useFhirClient()
+    const [isLoading, setIsLoading] = useState(false)
 
     // This callback can create a FhirApi instance, real or fake
     const initFhirApi: () => Promise<FhirApi> = useCallback(async () => {
+        setIsLoading(true)
         console.info("Creating FhirApi instance...", JSON.stringify(fhirClient?.state, null, 2))
+
         if (!fhirClient) {
-            console.error("FHIR klienten er ikke initialisert")
-            throw new Error("FHIR klienten er ikke initialisert")
+            const errMessage = "FHIR client is not initialized"
+            console.error(errMessage)
+            throw new Error(errMessage)
         }
+
+        setIsLoading(false)
         const serverUrl = fhirClient.state.serverUrl
         console.info("FHIR server url:", serverUrl)
 
@@ -51,6 +57,7 @@ const Layout = ({children}: ChildrenProp) => {
     const getFhirAuthToken = async () => {
         console.info("Retrieving FHIR auth token...", JSON.stringify(fhirClient?.state, null, 2))
         if (fhirClient) {
+            setIsLoading(false) // TODO backup
             return fhirClient.getAuthorizationHeader()
         }
     }
@@ -64,11 +71,19 @@ const Layout = ({children}: ChildrenProp) => {
         <FhirApiContext.Provider value={fhirApi}>
             <SelfApiContext.Provider value={selfApi}>
                 <BaseApiContext.Provider value={baseApi}>
-                    {children}
+                    {
+                        isLoading ? (
+                            <div><h3>Laster FHIR ressurser...</h3></div>
+                        ) : (
+                            <>
+                                {children}
+                                <AltLink></AltLink>
+                            </>
+                        )
+                    }
                 </BaseApiContext.Provider>
             </SelfApiContext.Provider>
         </FhirApiContext.Provider>
-        <AltLink></AltLink>
     </>
 }
 
