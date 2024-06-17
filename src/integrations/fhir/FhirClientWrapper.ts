@@ -79,16 +79,15 @@ export default class FhirClientWrapper implements FhirApi {
         }
 
         const fromToken = await this.client.state.tokenResponse?.["practitioner"]
-        const fromUser = await this.client.user.read<Practitioner>()
 
         let iPractitioner
 
         if (fromToken) {
             console.info("[DEBUG] setting practitioner from client.token_response")
             iPractitioner = fromToken
-        } else if (fromUser) {
+        } else {
+            iPractitioner = await this.client.user.read<Practitioner>()
             console.info("[DEBUG] setting practitioner from client.user.read")
-            iPractitioner = fromUser
         }
 
         if (R4.RTTI_Practitioner.is(iPractitioner)) {
