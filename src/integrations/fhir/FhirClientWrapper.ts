@@ -76,12 +76,11 @@ export default class FhirClientWrapper implements FhirApi {
         let iPractitioner
 
         if (userId) {
-            console.info("[DEBUG] requesting practitioner from client")
+            console.info(`[DEBUG] requesting practitioner from request(Patient/${userId})`)
             iPractitioner = await this.client.request<Practitioner>(`Patient/${userId}`)
-            console.info("[DEBUG] client request result", iPractitioner)
         } else {
-            iPractitioner = await this.client.user.read<Practitioner>()
             console.info("[DEBUG] setting practitioner from client.user.read")
+            iPractitioner = await this.client.user.read<Practitioner>()
         }
 
         if (R4.RTTI_Practitioner.is(iPractitioner)) {
