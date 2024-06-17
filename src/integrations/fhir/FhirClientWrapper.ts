@@ -78,13 +78,14 @@ export default class FhirClientWrapper implements FhirApi {
             console.error(err)
         }
 
-        const fromToken = await this.client.state.tokenResponse?.["practitioner"]
+        const userId = await this.client.state.tokenResponse?.["practitioner"]
 
         let iPractitioner
 
-        if (fromToken) {
-            console.info("[DEBUG] setting practitioner from client.token_response")
-            iPractitioner = fromToken
+        if (userId) {
+            console.info("[DEBUG] requesting practitioner from client")
+            iPractitioner = await this.client.request<Practitioner>(`Patient/${userId}`)
+            console.info("[DEBUG] client request result", iPractitioner)
         } else {
             iPractitioner = await this.client.user.read<Practitioner>()
             console.info("[DEBUG] setting practitioner from client.user.read")
