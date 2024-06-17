@@ -67,16 +67,9 @@ export default class FhirClientWrapper implements FhirApi {
      */
     protected async getWebMedPractitioner(): Promise<Practitioner & {
         readonly organizationReference: string | undefined
-    } | undefined> {
+    }> {
         // this.client.getUserId() || this.client.getFhirUser() --> skal inneholde data
         // this.client.state.tokenResponse?.["practitioner"] --> eneste som fungerer, men følger en dårlig standard
-
-        // TODO logging for EHR debugging purposes to see which FHIR fields are available
-        try {
-            console.info("[DEBUG] client", JSON.stringify(this.client))
-        } catch (err) {
-            console.error(err)
-        }
 
         const userId = await this.client.state.tokenResponse?.["practitioner"]
 
@@ -112,7 +105,7 @@ export default class FhirClientWrapper implements FhirApi {
             console.warn("[DEBUG] client.user.read() is not R4.RTTI_Practitioner", JSON.stringify(iPractitioner))
         }
 
-        return undefined
+        throw new Error(`Could not get practitioner via client.request, or via client.user.read`)
     }
 
     /**
@@ -191,11 +184,12 @@ export default class FhirClientWrapper implements FhirApi {
     }
 
     public async getPractitioner(): Promise<Practitioner & { readonly organizationReference: string | undefined }> {
-        const practitioner = this.getWebMedPractitioner()
-        if (practitioner !== undefined) {
-            return this.getDipsPractitioner()
+        try {
+            return this.getWebMedPractitioner()
+        } catch (err) {
+            console.error(err)
         }
-        return practitioner
+        return this.getDipsPractitioner()
     }
 
     public async createDocument(patientEhrId: string, practitionerRoleId: string, custodianReference: DipsDepartmentReference, description: LegeerklaeringDokumentReferanse, pdf: Blob): Promise<string> {
