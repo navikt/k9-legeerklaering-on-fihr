@@ -1,5 +1,8 @@
 # K9 Legeerklæring on FHIR
 
+> [!NOTE]
+> Dette prosjektet er arkivert inntil vidare utviklingsarbeid eventuelt blir aktuelt igjen.
+
 ## Start
 
 ### Forutsetninger
